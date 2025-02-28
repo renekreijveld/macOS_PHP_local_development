@@ -145,14 +145,19 @@ RESTARTDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/r
 # Username of logged in user
 USERNAME=$(whoami)
 
-# Function to install Homebrow formulae
-install_formulae() {
+start() {
     tput clear
     echo "Welcome to the NginX, PHP, MariaDB local macOS development environment installer version ${VERSION}."
     echo " "
+    read -p "Press enter to start the installation. This will take a while."
 
+}
+
+# Function to install Homebrow formulae
+install_formulae() {
+    tput clear
     # Install Homebrew formula
-    read -p "Press enter to install Homebrew the formula. This will take a while."
+    read -p "Press enter to install Homebrew the formulae. This will take a while."
     brew tap shivammathur/php
     brew install wget mariadb shivammathur/php/php@7.4 shivammathur/php/php@8.3 shivammathur/php/php@8.4 nginx dnsmasq mkcert nss mailpit
     brew unlink php
@@ -164,17 +169,13 @@ mariadb_config() {
     tput clear
 
     # Start mariadb
-    read -p "Press enter to start mariadb."
+    echo "Installing and configuring MariaDB."
     brew services start mariadb
 
     # Set mariadb root password
-    echo " "
-    read -p "Press enter to set root password in mariadb."
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
 
     # Secure mariadb installation
-    echo " "
-    read -p "Press enter to secure MariaDB installation."
     echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation
 
     # Modify mariadb config file
@@ -182,17 +183,17 @@ mariadb_config() {
     NOW=$(date +"%Y%m%d-%H%M%S")
     cp ${MY_CNF_FILE} ${MY_CNF_FILE}.${NOW}
     # Modify config
-    echo " "
-    read -p "Press enter to modify configuration file my.cnf. Enter your password when requested."
     curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" > /dev/null
+    brew services stop mariadb
+}
+
+configure_php() {
+    tput clear
+    echo "Configuring PHP installations."
 }
 
 # Function to configure php fpm files
 configure_php_fpm() {
-    tput clear
-
-    # Modify PHP 7.4 FPM config
-    read -p "Press enter to update the PHP fpm config files."
     # Backup first
     NOW=$(date +"%Y%m%d-%H%M%S")
     cp ${PHP74_WWW_CONF} ${PHP74_WWW_CONF}.${NOW}
@@ -216,9 +217,6 @@ configure_php_fpm() {
 
 # Function to install php switcher script
 install_php_switcher() {
-    # Create php switcher script
-    echo " "
-    read -p "Press enter to install php switcher script."
     curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${SCRIPTS_DEST}/${PHP_SWITCHER}" > /dev/null
     sudo chmod +x "${SCRIPTS_DEST}/${PHP_SWITCHER}"
 }
@@ -227,7 +225,7 @@ install_php_switcher() {
 php_install_xdebug() {
     tput clear
     # Install XDebug in PHP versions
-    read -p "Press enter to install XDebug in PHP versions."
+    echo "Installing XDebug in PHP versions."
     sphp 7.4
     pecl install xdebug-3.1.6
 
@@ -242,9 +240,6 @@ php_install_xdebug() {
 
 # Function to configure php.ini files
 php_ini_configuration() {
-    tput clear
-    # Modify php.ini PHP 7.4 
-    read -p "Press enter to modify php.ini files. Enter your password when requested."
     # Backup first
     NOW=$(date +"%Y%m%d-%H%M%S")
     mv ${PHP74_INI} ${PHP74_INI}.${NOW}
@@ -270,8 +265,7 @@ php_ini_configuration() {
 nginx_configuration() {
     tput clear
     # Start nginx
-    read -p "Press enter to start nginx."
-    sudo nginx
+    echo "Configuring NginX."
 
     # Modify nginx config
     echo " "
@@ -291,8 +285,6 @@ nginx_configuration() {
 
 # Function to configure dnsmasq
 configure_dnsmasq() {
-    tput clear
-    read -p "Press enter to configure dnsmasq."
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
     sudo brew services start dnsmasq
     sudo mkdir -v /etc/resolver
@@ -301,8 +293,6 @@ configure_dnsmasq() {
 
 # Function to setup local development folders
 create_local_folders() {
-    tput clear
-    read -p "Press enter to create folders for local webprojects."
     mkdir -p ~/Development/Sites
     mkdir -p ~/Development/Backup
     echo '<h1>My User Web Root</h1>' > ~/Development/Sites/index.php
@@ -311,11 +301,10 @@ create_local_folders() {
 # Function to install SSL certificates
 install_ssl_certificates() {
     tput clear
-    read -p "Press enter to create local Certificate Authority. Enter your password when requested."
+    echo "Press enter to create local Certificate Authority. Input your password when requested."
     mkcert -install
     mkdir -p ${NGINX_CERTS_DIR}
     cd ${NGINX_CERTS_DIR}
-    read -p "Press enter to generate certificates for localhost and *.dev.test."
     mkcert localhost
     mkcert "*.dev.test"
 }
@@ -323,7 +312,7 @@ install_ssl_certificates() {
 # Function to install local scripts
 install_local_scripts() {
     tput clear
-    read -p "Press enter to install scripts."
+    echo "Installing scripts."
 
     echo "${ADDSITE}"
     curl -fsSL "${ADDSITE_SRC}" | sudo tee "${SCRIPTS_DEST}/${ADDSITE}" > /dev/null
@@ -402,9 +391,20 @@ install_local_scripts() {
     sudo chmod +x "${SCRIPTS_DEST}/${RESTARTDEV}"
 }
 
+the_end() {
+    tput clear
+    echo "Installation is finished."
+    echo " "
+    echo "You can now start your development environment with the command 'startdev'."
+    echo " "
+    echo "Enjoy your development environment."
+}
+
 # Run all installs and configurations
+start
 install_formulae
 mariadb_config
+configure_php
 configure_php_fpm
 install_php_switcher
 php_install_xdebug
@@ -414,3 +414,4 @@ configure_dnsmasq
 create_local_folders
 install_ssl_certificates
 install_local_scripts
+the_end
