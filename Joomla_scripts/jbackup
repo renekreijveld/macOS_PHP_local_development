@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# jbackup -- backup a Joomla website to a tar.gz file
+#
+# This scripts supports Joomla versions 2.5 - 3.x
+#
+# Copyright 2014+ Rene Kreijveld - email@renekreijveld.nl
+# This program is free software; you may redistribute it and/or modify it.
+#
+# Warning! This script needs the file jfunctions. This has to be installed in the same directory as this script.
+#
+# Version history
+# 1.0 Initial version
+# 1.1 Added check for .jch folder
+
+# general variables
+mypath=$(cd $(dirname ${0}); pwd -P)
+myname=$(basename ${0})
+
+# include general functions
+if [ ! -e ${mypath}/jfunctions ]
+then
+    echo ""
+    echo "Cannot continue: script jfunctions not found."
+    echo ""
+    exit 1
+else
+    # gather joomla information
+    . ${mypath}/jfunctions
+fi
+
+# version
+version=1.0
+
+echo ""
+echo "${myname} version ${version}, written by Rene Kreijveld."
+echo ""
+echo "This is a Joomla! ${versr}.${versd} site. Starting backup ..."
+
+if [ -e .vscode ]
+then
+    vscode=".vscode/"
+else
+    vscode=""
+fi
+
+if [ -d .git ]
+then
+    git=".git"
+else
+    git=""
+fi
+
+if [ -e .gitignore ]
+then
+    gitignore=".gitignore"
+else
+    gitignore=""
+fi
+
+# create date/time stamp
+now=$(date +"%Y%m%d.%H%M%S")
+
+${mypath}/jdbdump > /dev/null
+
+tar czf ${sitename}.${now}.tgz ${vscode} ${git} ${gitignore} *
+echo "Cleanup database dump"
+rm -f ${database}.sql
+echo "Backup is ready at:"
+ls -l ${sitename}.${now}.tgz

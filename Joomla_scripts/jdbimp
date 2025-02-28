@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# jdbimp -- Import a sql file into a Joomla database.
+# Supports Joomla versions 2.5 and up
+#
+# Copyright 2012+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This program is free software; you may redistribute it and/or modify it.
+#
+# Warning! This script needs the file jfunctions. This has to be installed in the same directory as this script.
+#
+# Version history
+# 1.0 Initial version
+# 1.1 Code rewrite
+# 1.2 Modification of all echo -e statements
+# 1.3 Added test if jfunctions exists
+# 1.4 Modified for use with MAMP PRO (removed --host and added --socket)
+
+# general variables
+mypath=$(cd $(dirname ${0}); pwd -P)
+myname=$(basename ${0})
+
+# include general functions
+if [ ! -e ${mypath}/jfunctions ]
+then
+	echo ""
+	echo "Cannot continue: script jfunctions not found."
+	echo ""
+	exit 1
+else
+	# gather joomla information
+	. ${mypath}/jfunctions
+fi
+
+# version
+version=1.4
+
+echo ""
+echo "${myname} version ${version}, written by Rene Kreijveld."
+echo ""
+echo "This is a Joomla! ${jversion} site. Starting database import of ${database}.sql."
+
+# check if database dump exists.
+if [ ! -e ${database}.sql ]
+then
+	echo "Database dump file not found. The filemname should be ${database}.sql."
+	echo ""
+	exit 1
+fi
+
+# import the database from a .sql file
+# if mysql --socket=/Applications/MAMP/tmp/mysql/mysql.sock --user=${dbuser} --password=${password} ${database} < ${database}.sql
+if mysql --user=${dbuser} --password=${password} ${database} < ${database}.sql
+then
+	echo "${database}.sql imported."
+	exit 0
+else
+	echo "Error importing database dump."
+	exit 1
+fi

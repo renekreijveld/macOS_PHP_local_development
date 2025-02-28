@@ -1,441 +1,180 @@
 #!/bin/bash
 
-# nginx_dev_installer -- Install a NginX, PHP, MariaDB development environment on a macOS system.
-#
-# This development installation runs with PHP 7.4, 8.3 and 8.4.
-#
-# After installation you can install and run websites on macOS.
-# Websites will have a SSL certificate installed.
-# For email testing mailpit is provided.
-#
-# Also a set of easy-to-use command line scripts will be installed to add and delete websites and database and to create website and database backups.
-#
-# Copyright 2025 René Kreijveld - email@renekreijveld.nl
-# This script is free software; you may redistribute it and/or modify it. This script comes with no warranties.
-#
-# Version history
-# 1.0 Initial version
-
-VERSION="1.0"
-
-# Scripts destination
+VERSION="1.1"
 SCRIPTS_DEST="/usr/local/bin"
+SITESROOT="${HOME}/Development/Sites"
+INSTALL_LOG="${HOME}/nginx_dev_install.log"
 
-# MariaDB main config file
+# MariaDB Config
 MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
 MY_CNF_ADDITION="https://raw.githubusercontent.com/renekreijveld/macOS_NginX_local_development/refs/heads/main/MariaDB/my.cnf.addition"
 
-# PHP 7.4 fpm config file
-PHP74_WWW_CONF="/opt/homebrew/etc/php/7.4/php-fpm.d/www.conf"
-# Source of new PHP 7.4 fpm config file
-PHP74_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php7.4.conf"
+# PHP Versions to Install
+PHP_VERSIONS=("7.4" "8.3" "8.4")
+PHP_REPO="shivammathur/php"
 
-# PHP 8.3 fpm config file
-PHP83_WWW_CONF="/opt/homebrew/etc/php/8.3/php-fpm.d/www.conf"
-# Source of new PHP 8.3 fpm config file
-PHP83_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php8.3.conf"
+# Homebrew Formulae to Install
+FORMULAE=("wget" "mariadb" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
-# PHP 8.4 fpm config file
-PHP84_WWW_CONF="/opt/homebrew/etc/php/8.4/php-fpm.d/www.conf"
-# Source of new PHP 8.4 fpm config file
-PHP84_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php8.4.conf"
+# Local scripts to install
+LOCAL_SCRIPTS=("addsite" "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm"
+            "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm"
+            "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm"
+            "startdev" "stopdev" "restartdev" "setrights")
 
-# Location of PHP switcher script
-PHP_SWITCHER="sphp"
-# Source of PHP switcher script
-PHP_SWITCHER_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/sphp"
+# GitHub Repo Base URL
+GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
 
-# PHP 7.4 php.ini file
-PHP74_INI="/opt/homebrew/etc/php/7.4/php.ini"
-# Source of new PHP 7.4 php.ini file
-PHP74_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php7.4.ini"
-
-# PHP 8.3 php.ini file
-PHP83_INI="/opt/homebrew/etc/php/8.3/php.ini"
-# Source of new PHP 8.3 php.ini file
-PHP83_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php8.3.ini"
-
-# PHP 8.4 php.ini file
-PHP84_INI="/opt/homebrew/etc/php/8.4/php.ini"
-# Source of new PHP 8.4 php.ini file
-PHP84_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php8.4.ini"
-
-# NginX config
-NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
-# Source of new nginx config file
-NGINX_CONF_NEW="https://gist.githubusercontent.com/renekreijveld/70e31fdb855a8a91ea98150a2e0bc9bb/raw/58b6cf5ce9977fcca8e9fa9f61696cde28dd51fb/nginx.conf"
-
-# NginX templates dir
-NGINX_TEMPLATES_DIR="/opt/homebrew/etc/nginx/templates"
-
-# Default website index.php
-INDEX_TEMPLATE="/opt/homebrew/etc/nginx/templates/index.php"
-# Source of default website index.php
-INDEX_TEMPLATE_SRC="https://gist.githubusercontent.com/renekreijveld/c22498dace75e275929172ca2dd05c9e/raw/ad60a648a648bf149af51ed271e3818cd425e36d/index.php.default"
-
-# Default nginx server template
-NGINX_SERVER_TEMPLATE="/opt/homebrew/etc/nginx/templates/template.conf"
-# Source of default nginx server template
-NGINX_SERVER_TEMPLATE_SRC="https://gist.githubusercontent.com/renekreijveld/ee666ea5dd051b57475763e69dd568e3/raw/9f954aad7aead2542b4741efb5e6d020d0c7a633/template.conf"
-
-# NginX servers folder
-NGINX_SERVERS_DIR="/opt/homebrew/etc/nginx/servers"
-
-# NginX certificates folder
-NGINX_CERTS_DIR="/opt/homebrew/etc/nginx/certs"
-
-# Scripts
-ADDSITE="addsite"
-ADDSITE_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/addsite"
-
-RESTARTDNSMASQ="restartdnsmasq"
-RESTARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartdnsmasq"
-
-RESTARTMAILPIT="restartmailpit"
-RESTARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmailpit"
-
-RESTARTMARIADB="restartmariadb"
-RESTARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmariadb"
-
-RESTARTNGINX="restartnginx"
-RESTARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartnginx"
-
-RESTARTPHPFPM="restartphpfpm"
-RESTARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartphpfpm"
-
-STARTDNSMASQ="startdnsmasq"
-STARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startdnsmasq"
-
-STARTMAILPIT="startmailpit"
-STARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmailpit"
-
-STARTMARIADB="startmariadb"
-STARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmariadb"
-
-STARTNGINX="startnginx"
-STARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startnginx"
-
-STARTPHPFPM="startphpfpm"
-STARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startphpfpm"
-
-STOPDNSMASQ="stopdnsmasq"
-STOPDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopdnsmasq"
-
-STOPMAILPIT="stopmailpit"
-STOPMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmailpit"
-
-STOPMARIADB="stopmariadb"
-STOPMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmariadb"
-
-STOPNGINX="stopnginx"
-STOPNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopnginx"
-
-STOPPHPFPM="stopphpfpm"
-STOPPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopphpfpm"
-
-STARTDEV="startdev"
-STARTDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startdev"
-
-STOPDEV="stopdev"
-STOPDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopdev"
-
-RESTARTDEV="restartdev"
-RESTARTDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartdev"
-
-# Username of logged in user
+# Logged-in User
 USERNAME=$(whoami)
 
-start() {
-    tput clear
-    echo "Welcome to the NginX, PHP, MariaDB local macOS development environment installer version ${VERSION}."
-    echo " "
-    read -p "Press enter to start the installation. This will take a while."
+trap "echo 'Installation interrupted. Exiting...'; exit 1" SIGINT
 
+start() {
+    clear
+    echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
+    read -p "Press Enter to start the installation..."
 }
 
-# Function to install Homebrow formulae
 install_formulae() {
-    tput clear
-    # Install Homebrew formula
-    brew tap shivammathur/php
-    echo "Install wget"
-    brew install --quiet wget 
-    tput clear
-    echo "Install mariadb"
-    brew install --quiet mariadb
-    tput clear
-    echo "Install php 7.4"
-    brew install --quiet shivammathur/php/php@7.4
-    tput clear
-    echo "Install php 8.3"
-    brew install --quiet shivammathur/php/php@8.3
-    tput clear
-    echo "Install php 8.4"
-    brew install --quiet shivammathur/php/php@8.4
-    tput clear
-    echo "Install nginx"
-    brew install --quiet nginx
-    tput clear
-    echo "Install dnsmasq"
-    brew install --quiet dnsmasq
-    tput clear
-    echo "Install mkcert"
-    brew install --quiet mkcert
-    tput clear
-    echo "Install nss"
-    brew install --quiet nss
-    tput clear
-    echo "Install mailpit"
-    brew install --quiet mailpit
-    tput clear
+    clear
+    echo "Installing required Homebrew formulae."
+
+    brew tap "${PHP_REPO}"
+
+    for formula in "${FORMULAE[@]}"; do
+        echo "Installing ${formula}"
+        brew install --quiet ${formula} >${INSTALL_LOG} 2>&1
+    done
+
+    for php_version in "${PHP_VERSIONS[@]}"; do
+        brew install --quiet "${PHP_REPO}/php@${php_version}" >${INSTALL_LOG} 2>&1
+    done
+
+    # Set commandline PHP version to 8.3
     brew unlink php
     brew link --overwrite --force php@8.3
 }
 
-# Function to install and configure mariadb
 mariadb_config() {
-    tput clear
-
-    # Start mariadb
-    echo "Installing and configuring MariaDB."
-    brew services start mariadb
-
-    echo "Waiting for MariaDB to start."
-    sleep 5    
-
-    # Set mariadb root password
+    clear
+    echo "Configuring MariaDB."
+    brew services start mariadb  >${INSTALL_LOG} 2>&1
+    sleep 5
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
+    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >${INSTALL_LOG} 2>&1
 
-    # Secure mariadb installation
-    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation
-
-    # Modify mariadb config file
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    cp ${MY_CNF_FILE} ${MY_CNF_FILE}.${NOW}
-    # Modify config
-    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" > /dev/null
+    cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
+    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" >${INSTALL_LOG} 2>&1
     brew services stop mariadb
+    sleep 5
 }
 
-configure_php() {
-    tput clear
-    echo "Configuring PHP installations."
-}
-
-# Function to configure php fpm files
 configure_php_fpm() {
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    cp ${PHP74_WWW_CONF} ${PHP74_WWW_CONF}.${NOW}
-    # Modify config
-    curl -fsSL "${PHP74_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP74_WWW_CONF}" > /dev/null
+    for php_version in "${PHP_VERSIONS[@]}"; do
+        CONF_FILE="/opt/homebrew/etc/php/${php_version}/php-fpm.d/www.conf"
+        BACKUP="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
+        CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
-    # Modify PHP 8.3 FPM config
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    cp ${PHP83_WWW_CONF} ${PHP83_WWW_CONF}.${NOW}
-    # Modify config
-    curl -fsSL "${PHP83_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP83_WWW_CONF}" > /dev/null
-
-    # Modify PHP 8.4 FPM config
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    cp ${PHP84_WWW_CONF} ${PHP84_WWW_CONF}.${NOW}
-    # Modify config
-    curl -fsSL "${PHP84_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP84_WWW_CONF}" > /dev/null
+        cp "${CONF_FILE}" "${BACKUP}"
+        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${CONF_FILE}" > /dev/null
+    done
 }
 
-# Function to install php switcher script
 install_php_switcher() {
-    curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${SCRIPTS_DEST}/${PHP_SWITCHER}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${PHP_SWITCHER}"
+    curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/sphp"
 }
 
-# Function to install XDebug in PHP versions
 php_install_xdebug() {
-    tput clear
-    # Install XDebug in PHP versions
-    echo "Installing XDebug in PHP versions."
-    sphp 7.4
-    pecl install xdebug-3.1.6
-
-    tput clear
-    sphp 8.3
-    pecl install xdebug
-
-    tput clear
-    sphp 8.4
-    pecl install xdebug
+    clear
+    echo "Installing XDebug for PHP versions..."
+    for php_version in "${PHP_VERSIONS[@]}"; do
+        sphp "${php_version}"
+        if [ "${php_version}" == "7.4" ]; then
+            pecl install xdebug-3.1.6
+        else    
+        pecl install xdebug
+    done
 }
 
-# Function to configure php.ini files
 php_ini_configuration() {
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    mv ${PHP74_INI} ${PHP74_INI}.${NOW}
-    # Modify config PHP 7.4
-    curl -fsSL "${PHP74_INI_NEW}" | sudo tee "${PHP74_INI}" > /dev/null
+    for php_version in "${PHP_VERSIONS[@]}"; do
+        INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
+        BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
+        INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
-    # Modify php.ini PHP 8.3
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    mv ${PHP83_INI} ${PHP83_INI}.${NOW}
-    # Modify config PHP 8.3
-    curl -fsSL "${PHP83_INI_NEW}" | sudo tee "${PHP83_INI}" > /dev/null
-
-    # Modify php.ini PHP 8.4
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    mv ${PHP84_INI} ${PHP84_INI}.${NOW}
-    # Modify config PHP 8.3
-    curl -fsSL "${PHP84_INI_NEW}" | sudo tee "${PHP84_INI}" > /dev/null
+        cp "${INI_FILE}" "${BACKUP}"
+        curl -fsSL "${INI_NEW}" | sudo tee "${INI_FILE}" > /dev/null
+    done
 }
 
-# Function to configure nginx
 nginx_configuration() {
-    tput clear
-    # Start nginx
-    echo "Configuring NginX."
+    clear
+    echo "Configuring NginX..."
+    NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
+    NGINX_CONF_NEW="${GITHUB_BASE}/nginx.conf"
 
-    # Modify nginx config
-    echo " "
-    read -p "Press enter to modify nginx config."
-    # Backup first
-    NOW=$(date +"%Y%m%d-%H%M%S")
-    cp ${NGINX_CONF} ${NGINX_CONF}.${NOW}
-    # Modify nginx config
+    cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}" > /dev/null
-
-    echo " "
-    read -p "Press enter to install website index en server config templates."
-    mkdir -p ${NGINX_TEMPLATES_DIR}
-    curl -fsSL "${INDEX_TEMPLATE_SRC}" | sudo tee "${INDEX_TEMPLATE}" > /dev/null
-    curl -fsSL "${NGINX_SERVER_TEMPLATE_SRC}" | sudo tee "${NGINX_SERVER_TEMPLATE}" > /dev/null
 }
 
-# Function to configure dnsmasq
 configure_dnsmasq() {
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
-    sudo brew services start dnsmasq
-    sudo mkdir -v /etc/resolver
-    sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+    sudo mkdir -p /etc/resolver
+    echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test > /dev/null
 }
 
-# Function to setup local development folders
 create_local_folders() {
-    mkdir -p ~/Development/Sites
-    mkdir -p ~/Development/Backup
-    echo '<h1>My User Web Root</h1>' > ~/Development/Sites/index.php
+    mkdir -p "$HOME/Development/Sites" "$HOME/Development/Backup"
+    echo '<h1>My User Web Root</h1>' > "$HOME/Development/Sites/index.php"
 }
 
-# Function to install SSL certificates
 install_ssl_certificates() {
-    tput clear
-    echo "Press enter to create local Certificate Authority. Input your password when requested."
+    clear
+    echo "Creating local Certificate Authority. Input your password when requested."
     mkcert -install
-    mkdir -p ${NGINX_CERTS_DIR}
-    cd ${NGINX_CERTS_DIR}
-    mkcert localhost
-    mkcert "*.dev.test"
+    mkdir -p /opt/homebrew/etc/nginx/certs
+    cd /opt/homebrew/etc/nginx/certs
+    mkcert localhost "*.dev.test"
 }
 
-# Function to install local scripts
 install_local_scripts() {
-    tput clear
-    echo "Installing scripts."
+    clear
+    echo "Installing local scripts."
+    echo " "
 
-    echo "${ADDSITE}"
-    curl -fsSL "${ADDSITE_SRC}" | sudo tee "${SCRIPTS_DEST}/${ADDSITE}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${ADDSITE}"
+    for script in "${LOCAL_SCRIPTS[@]}"; do
+        echo "Installing ${script}"
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
+        sudo chmod +x "${SCRIPTS_DEST}/${script}"
+    done
+}
 
-    echo "${RESTARTDNSMASQ}"
-    curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTDNSMASQ}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTDNSMASQ}"
+install_joomla_scripts() {
+    clear
+    echo "Installing Joomla scripts..."
+    curl -fsSL "${GITHUB_BASE}/Scripts/jfunctions" | sudo tee "${SCRIPTS_DEST}/jfunctions" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/jfunctions"
+}
 
-    echo "${RESTARTMAILPIT}"
-    curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTMAILPIT}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTMAILPIT}"
-
-    echo "${RESTARTMARIADB}"
-    curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTMARIADB}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTMARIADB}"
-
-    echo "${RESTARTNGINX}"
-    curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTNGINX}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTNGINX}"
-
-    echo "${RESTARTPHPFPM}"
-    curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTPHPFPM}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTPHPFPM}"
-
-    echo "${STARTDNSMASQ}"
-    curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTDNSMASQ}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTDNSMASQ}"
-
-    echo "${STARTMAILPIT}"
-    curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTMAILPIT}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTMAILPIT}"
-
-    echo "${STARTMARIADB}"
-    curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTMARIADB}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTMARIADB}"
-
-    echo "${STARTNGINX}"
-    curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTNGINX}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTNGINX}"
-
-    echo "${STARTPHPFPM}"
-    curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTPHPFPM}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTPHPFPM}"
-
-    echo "${STOPDNSMASQ}"
-    curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPDNSMASQ}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPDNSMASQ}"
-
-    echo "${STOPMAILPIT}"
-    curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPMAILPIT}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPMAILPIT}"
-
-    echo "${STOPMARIADB}"
-    curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPMARIADB}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPMARIADB}"
-
-    echo "${STOPNGINX}"
-    curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPNGINX}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPNGINX}"
-
-    echo "${STOPPHPFPM}"
-    curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPPHPFPM}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPPHPFPM}"
-
-    echo "${STARTDEV}"
-    curl -fsSL "${STARTDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTDEV}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STARTDEV}"
-
-    echo "${STOPDEV}"
-    curl -fsSL "${STOPDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPDEV}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${STOPDEV}"
-
-    echo "${RESTARTDEV}"
-    curl -fsSL "${RESTARTDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTDEV}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTDEV}"
+install_root_tools() {
+    cd "${SITESROOT}"
+    curl -L "https://www.adminer.org/latest.php" > adminer.php
+    echo "<?php phpinfo();" > phpinfo.php
 }
 
 the_end() {
-    tput clear
-    echo "Installation is finished."
-    echo " "
-    echo "You can now start your development environment with the command 'startdev'."
-    echo " "
-    echo "Enjoy your development environment."
+    clear
+    echo "Installation completed!"
+    echo "Run 'startdev' to start your environment."
+    echo "Enjoy your development setup!"
 }
 
-# Run all installs and configurations
+# Execute the script in order
 start
 install_formulae
 mariadb_config
-configure_php
 configure_php_fpm
 install_php_switcher
 php_install_xdebug
@@ -445,4 +184,6 @@ configure_dnsmasq
 create_local_folders
 install_ssl_certificates
 install_local_scripts
+install_joomla_scripts
+install_root_tools
 the_end

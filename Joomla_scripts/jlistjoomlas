@@ -1,0 +1,127 @@
+#!/bin/bash
+
+# jlistjoomlas -- Find Joomla instances on your Linux server.
+# Supports Joomla versions 1.0 - 5.x
+#
+# Copyright 20212+ René Kreijveld - email@renekreijveld.nl
+#
+# This program is free software; you may redistribute it and/or modify it.
+#
+# Version history:
+# 1.7 Updated for Joomla 5
+# 1.8 Code improvements and use of CONFIG_FILE
+
+# Constants
+VERSION=1.8
+MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+MYNAME=$(basename "$0")
+CONFIG_FILE="$HOME/.config/jbashscripts/config"
+
+# Check if the config file exists
+if [[ -f "$CONFIG_FILE" ]]; then
+    # Source the config file to load the variables
+    source "$CONFIG_FILE"
+else
+    echo "Error: Config file not found at $CONFIG_FILE"
+    exit 1
+fi
+
+STARTDIR=/Users/renekreijveld/Development/Sites
+
+# Variables
+SHORT="no"
+CSV="no"
+RELEASEVERSION=""
+
+# Display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+    echo ""
+    echo "Usage: ${MYNAME} [-s] [-c] [-h] [-r release]"
+    echo ""
+    echo "-s Short. Only display path and Joomla version."
+    echo "-r Release version. Only display information about Joomla sites with given release version (e.g., 1.5, 2.5, 3.4)."
+    echo "-c CSV. Output values in CSV format."
+    echo "-h Help. Display this info."
+    echo ""
+    exit 0
+}
+
+# Argument parsing
+while getopts "schr:" opt; do
+    case "${opt}" in
+        s) SHORT="yes" ;;
+        c) CSV="yes" ;;
+        r) RELEASEVERSION="$OPTARG" ;;
+        h) usage ;;
+        *) usage ;;
+    esac
+done
+
+# Start output if not in CSV mode
+if [[ "${CSV}" == "no" ]]; then
+    if [[ "${SHORT}" == "no" ]]; then
+        echo ""
+        echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+        echo ""
+    fi
+fi
+
+# Output CSV header if in CSV mode
+if [[ "${CSV}" == "yes" ]]; then
+    echo "\"path\",\"name\",\"version\",\"database\",\"dbuser\",\"password\",\"host\",\"prefix\""
+fi
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
+    exit 1
+fi
+
+# Scan directories for Joomla instances
+find "$rootfolder" -maxdepth 2 -type d | while read -r DIR; do
+    if [[ -f "${DIR}/configuration.php" ]]; then
+        # Possible Joomla found, get information
+        if [[ "${CSV}" == "no" ]]; then
+            if [[ "${SHORT}" == "no" ]]; then
+                echo "Possible Joomla found in ${DIR}"
+            fi
+        fi
+
+        # Go to the directory where the site
+        cd $DIR
+
+        # Get Joomla information
+        source "${MYPATH}/jfunctions"
+
+        # Filter by release version if provided
+        if [[ -n "${RELEASEVERSION}" && "${RELEASEVERSION}" != "${jversion}" ]]; then
+            if [[ "${CSV}" == "no" && "${SHORT}" == "no" ]]; then
+                echo "Skipping, found version is ${jversion} and not ${RELEASEVERSION}."
+            fi
+            continue
+        fi
+
+        # Output information
+        if [[ "${CSV}" == "yes" ]]; then
+            echo "\"${DIR}\",\"${sitename}\",\"${jversion}\",\"${database}\",\"${dbuser}\",\"${password}\",\"${host}\",\"${prefix}\""
+        else
+            if [[ "${SHORT}" == "no" ]]; then
+                printf "Sitename    : %s\n" "${sitenameclean}"
+                printf "Version     : %s\n" "${jversion}"
+                printf "DB Name     : %s\n" "${database}"
+                printf "DB User     : %s\n" "${dbuser}"
+                printf "DB Password : %s\n" "${password}"
+                printf "DB Host     : %s\n" "${host}"
+                printf "DB Prefix   : %s\n" "${prefix}"
+                printf "Path        : %s\n" "$(pwd)"
+                echo ""
+            else
+                echo "Joomla found in ${DIR}"
+                echo "Version: ${jversion}"
+                echo ""
+            fi
+        fi
+    fi
+done
