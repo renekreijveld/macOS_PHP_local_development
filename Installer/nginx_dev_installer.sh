@@ -158,8 +158,27 @@ install_formulae() {
     tput clear
     # Install Homebrew formula
     read -p "Press enter to install Homebrew the formulae. This will take a while."
-    brew tap shivammathur/php
-    brew install wget mariadb shivammathur/php/php@7.4 shivammathur/php/php@8.3 shivammathur/php/php@8.4 nginx dnsmasq mkcert nss mailpit
+    brew --quiet tap shivammathur/php
+    echo "Install wget"
+    brew install --quiet wget 
+    echo "Install mariadb"
+    brew install --quiet mariadb
+    echo "Install php 7.4"
+    brew install --quiet shivammathur/php/php@7.4
+    echo "Install php 8.3"
+    brew install --quiet shivammathur/php/php@8.3
+    echo "Install php 8.4"
+    brew install --quiet shivammathur/php/php@8.4
+    echo "Install nginx"
+    brew install --quiet nginx
+    echo "Install dnsmasq"
+    brew install --quiet dnsmasq
+    echo "Install mkcert"
+    brew install --quiet mkcert
+    echo "Install nss"
+    brew install --quiet nss
+    echo "Install mailpit"
+    brew install --quiet mailpit
     brew unlink php
     brew link --overwrite --force php@8.3
 }
