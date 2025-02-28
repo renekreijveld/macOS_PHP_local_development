@@ -403,14 +403,14 @@ install_local_scripts() {
 }
 
 # Run all installs and configurations
-# install_formulae
-# mariadb_config
-# configure_php_fpm
-# install_php_switcher
-# php_install_xdebug
-# php_ini_configuration
-# nginx_configuration
-# configure_dnsmasq
-# create_local_folders
-# install_ssl_certificates
+install_formulae
+mariadb_config
+configure_php_fpm
+install_php_switcher
+php_install_xdebug
+php_ini_configuration
+nginx_configuration
+configure_dnsmasq
+create_local_folders
+install_ssl_certificates
 install_local_scripts
