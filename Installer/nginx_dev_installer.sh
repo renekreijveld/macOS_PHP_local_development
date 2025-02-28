@@ -158,27 +158,37 @@ install_formulae() {
     tput clear
     # Install Homebrew formula
     read -p "Press enter to install Homebrew the formulae. This will take a while."
-    brew --quiet tap shivammathur/php
+    brew tap shivammathur/php
     echo "Install wget"
     brew install --quiet wget 
+    tput clear
     echo "Install mariadb"
     brew install --quiet mariadb
+    tput clear
     echo "Install php 7.4"
     brew install --quiet shivammathur/php/php@7.4
+    tput clear
     echo "Install php 8.3"
     brew install --quiet shivammathur/php/php@8.3
+    tput clear
     echo "Install php 8.4"
     brew install --quiet shivammathur/php/php@8.4
+    tput clear
     echo "Install nginx"
     brew install --quiet nginx
+    tput clear
     echo "Install dnsmasq"
     brew install --quiet dnsmasq
+    tput clear
     echo "Install mkcert"
     brew install --quiet mkcert
+    tput clear
     echo "Install nss"
     brew install --quiet nss
+    tput clear
     echo "Install mailpit"
     brew install --quiet mailpit
+    tput clear
     brew unlink php
     brew link --overwrite --force php@8.3
 }
@@ -190,6 +200,9 @@ mariadb_config() {
     # Start mariadb
     echo "Installing and configuring MariaDB."
     brew services start mariadb
+
+    echo "Waiting for MariaDB to start."
+    sleep 5    
 
     # Set mariadb root password
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
