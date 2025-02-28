@@ -41,7 +41,7 @@ PHP84_WWW_CONF="/opt/homebrew/etc/php/8.4/php-fpm.d/www.conf"
 PHP84_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php8.4.conf"
 
 # Location of PHP switcher script
-PHP_SWITCHER="${SCRIPTS_DEST}/sphp"
+PHP_SWITCHER="sphp"
 # Source of PHP switcher script
 PHP_SWITCHER_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/sphp"
 
@@ -85,53 +85,62 @@ NGINX_SERVERS_DIR="/opt/homebrew/etc/nginx/servers"
 NGINX_CERTS_DIR="/opt/homebrew/etc/nginx/certs"
 
 # Scripts
-ADDSITE="${SCRIPTS_DEST}/addsite"
+ADDSITE="addsite"
 ADDSITE_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/addsite"
 
-RESTARTDNSMASQ="${SCRIPTS_DEST}/restartdnsmasq"
+RESTARTDNSMASQ="restartdnsmasq"
 RESTARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartdnsmasq"
 
-RESTARTMAILPIT="${SCRIPTS_DEST}/restartmailpit"
+RESTARTMAILPIT="restartmailpit"
 RESTARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmailpit"
 
-RESTARTMARIADB="${SCRIPTS_DEST}/restartmariadb"
+RESTARTMARIADB="restartmariadb"
 RESTARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmariadb"
 
-RESTARTNGINX="${SCRIPTS_DEST}/restartnginx"
+RESTARTNGINX="restartnginx"
 RESTARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartnginx"
 
-RESTARTPHPFPM="${SCRIPTS_DEST}/restartphpfpm"
+RESTARTPHPFPM="restartphpfpm"
 RESTARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartphpfpm"
 
-STARTDNSMASQ="${SCRIPTS_DEST}/startdnsmasq"
+STARTDNSMASQ="startdnsmasq"
 STARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startdnsmasq"
 
-STARTMAILPIT="${SCRIPTS_DEST}/startmailpit"
+STARTMAILPIT="startmailpit"
 STARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmailpit"
 
-STARTMARIADB="${SCRIPTS_DEST}/startmariadb"
+STARTMARIADB="startmariadb"
 STARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmariadb"
 
-STARTNGINX="${SCRIPTS_DEST}/startnginx"
+STARTNGINX="startnginx"
 STARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startnginx"
 
-STARTPHPFPM="${SCRIPTS_DEST}/startphpfpm"
+STARTPHPFPM="startphpfpm"
 STARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startphpfpm"
 
-STOPDNSMASQ="${SCRIPTS_DEST}/stopdnsmasq"
+STOPDNSMASQ="stopdnsmasq"
 STOPDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopdnsmasq"
 
-STOPMAILPIT="${SCRIPTS_DEST}/stopmailpit"
+STOPMAILPIT="stopmailpit"
 STOPMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmailpit"
 
-STOPMARIADB="${SCRIPTS_DEST}/stopmariadb"
+STOPMARIADB="stopmariadb"
 STOPMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmariadb"
 
-STOPNGINX="${SCRIPTS_DEST}/stopnginx"
+STOPNGINX="stopnginx"
 STOPNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopnginx"
 
-STOPPHPFPM="${SCRIPTS_DEST}/stopphpfpm"
+STOPPHPFPM="stopphpfpm"
 STOPPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopphpfpm"
+
+STARTDEV="startdev"
+STARTDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startdev"
+
+STOPDEV="stopdev"
+STOPDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopdev"
+
+RESTARTDEV="restartdev"
+RESTARTDEV_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartdev"
 
 # Username of logged in user
 USERNAME=$(whoami)
@@ -210,8 +219,8 @@ install_php_switcher() {
     # Create php switcher script
     echo " "
     read -p "Press enter to install php switcher script."
-    curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${PHP_SWITCHER}" > /dev/null
-    sudo chmod +x "${PHP_SWITCHER}"
+    curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${SCRIPTS_DEST}/${PHP_SWITCHER}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${SCRIPTS_DEST}/${PHP_SWITCHER}"
 }
 
 # Function to install XDebug in PHP versions
@@ -316,53 +325,81 @@ install_local_scripts() {
     tput clear
     read -p "Press enter to install scripts."
 
-    curl -fsSL "${ADDSITE_SRC}" | sudo tee "${ADDSITE}" > /dev/null
-    sudo chmod +x "${ADDSITE}"
+    echo "${ADDSITE}"
+    curl -fsSL "${ADDSITE_SRC}" | sudo tee "${SCRIPTS_DEST}/${ADDSITE}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${ADDSITE}"
 
-    curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${RESTARTDNSMASQ}" > /dev/null
-    sudo chmod +x "${RESTARTDNSMASQ}"
+    echo "${RESTARTDNSMASQ}"
+    curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTDNSMASQ}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTDNSMASQ}"
 
-    curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${RESTARTMAILPIT}" > /dev/null
-    sudo chmod +x "${RESTARTMAILPIT}"
+    echo "${RESTARTMAILPIT}"
+    curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTMAILPIT}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTMAILPIT}"
 
-    curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${RESTARTMARIADB}" > /dev/null
-    sudo chmod +x "${RESTARTMARIADB}"
+    echo "${RESTARTMARIADB}"
+    curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTMARIADB}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTMARIADB}"
 
-    curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${RESTARTNGINX}" > /dev/null
-    sudo chmod +x "${RESTARTNGINX}"
+    echo "${RESTARTNGINX}"
+    curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTNGINX}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTNGINX}"
 
-    curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${RESTARTPHPFPM}" > /dev/null
-    sudo chmod +x "${RESTARTPHPFPM}"
+    echo "${RESTARTPHPFPM}"
+    curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTPHPFPM}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTPHPFPM}"
 
-    curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${STARTDNSMASQ}" > /dev/null
-    sudo chmod +x "${STARTDNSMASQ}"
+    echo "${STARTDNSMASQ}"
+    curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTDNSMASQ}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTDNSMASQ}"
 
-    curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${STARTMAILPIT}" > /dev/null
-    sudo chmod +x "${STARTMAILPIT}"
+    echo "${STARTMAILPIT}"
+    curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTMAILPIT}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTMAILPIT}"
 
-    curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${STARTMARIADB}" > /dev/null
-    sudo chmod +x "${STARTMARIADB}"
+    echo "${STARTMARIADB}"
+    curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTMARIADB}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTMARIADB}"
 
-    curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${STARTNGINX}" > /dev/null
-    sudo chmod +x "${STARTNGINX}"
+    echo "${STARTNGINX}"
+    curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTNGINX}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTNGINX}"
 
-    curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${STARTPHPFPM}" > /dev/null
-    sudo chmod +x "${STARTPHPFPM}"
+    echo "${STARTPHPFPM}"
+    curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTPHPFPM}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTPHPFPM}"
 
-    curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${STOPDNSMASQ}" > /dev/null
-    sudo chmod +x "${STOPDNSMASQ}"
+    echo "${STOPDNSMASQ}"
+    curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPDNSMASQ}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPDNSMASQ}"
 
-    curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${STOPMAILPIT}" > /dev/null
-    sudo chmod +x "${STOPMAILPIT}"
+    echo "${STOPMAILPIT}"
+    curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPMAILPIT}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPMAILPIT}"
 
-    curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${STOPMARIADB}" > /dev/null
-    sudo chmod +x "${STOPMARIADB}"
+    echo "${STOPMARIADB}"
+    curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPMARIADB}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPMARIADB}"
 
-    curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${STOPNGINX}" > /dev/null
-    sudo chmod +x "${STOPNGINX}"
+    echo "${STOPNGINX}"
+    curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPNGINX}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPNGINX}"
 
-    curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
-    sudo chmod +x "${STOPPHPFPM}"
+    echo "${STOPPHPFPM}"
+    curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPPHPFPM}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPPHPFPM}"
+
+    echo "${STARTDEV}"
+    curl -fsSL "${STARTDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${STARTDEV}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STARTDEV}"
+
+    echo "${STOPDEV}"
+    curl -fsSL "${STOPDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${STOPDEV}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${STOPDEV}"
+
+    echo "${RESTARTDEV}"
+    curl -fsSL "${RESTARTDEV_SRC}" | sudo tee "${SCRIPTS_DEST}/${RESTARTDEV}" > /dev/null
+    sudo chmod +x "${SCRIPTS_DEST}/${RESTARTDEV}"
 }
 
 # Run all installs and configurations
