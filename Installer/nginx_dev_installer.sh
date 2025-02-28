@@ -155,7 +155,7 @@ mariadb_config() {
     tput clear
 
     # Start mariadb
-    read -p "Formula installations done. Press enter to start mariadb."
+    read -p "Press enter to start mariadb."
     brew services start mariadb
 
     # Set mariadb root password
@@ -183,7 +183,7 @@ configure_php_fpm() {
     tput clear
 
     # Modify PHP 7.4 FPM config
-    read -p "MariaDB installation and configuration done. Press enter to update the PHP fpm config files."
+    read -p "Press enter to update the PHP fpm config files."
     # Backup first
     NOW=$(date +"%Y%m%d-%H%M%S")
     cp ${PHP74_WWW_CONF} ${PHP74_WWW_CONF}.${NOW}
@@ -218,7 +218,7 @@ install_php_switcher() {
 php_install_xdebug() {
     tput clear
     # Install XDebug in PHP versions
-    read -p "PHP fpm configurations done. Press enter to install XDebug in PHP versions."
+    read -p "Press enter to install XDebug in PHP versions."
     sphp 7.4
     pecl install xdebug-3.1.6
 
@@ -235,7 +235,7 @@ php_install_xdebug() {
 php_ini_configuration() {
     tput clear
     # Modify php.ini PHP 7.4 
-    read -p "XDebug installations done. Press enter to modify php.ini files. Enter your password when requested."
+    read -p "Press enter to modify php.ini files. Enter your password when requested."
     # Backup first
     NOW=$(date +"%Y%m%d-%H%M%S")
     mv ${PHP74_INI} ${PHP74_INI}.${NOW}
