@@ -362,7 +362,7 @@ install_local_scripts() {
     sudo chmod +x "${STOPNGINX}"
 
     curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
-    sudo chmod +x "${STOPPHPFPM}"}
+    sudo chmod +x "${STOPPHPFPM}"
 }
 
 # Run all installs and configurations
