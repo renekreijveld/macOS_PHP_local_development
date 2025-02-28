@@ -75,7 +75,7 @@ brew install cask iterm2
 
 After installation quit the default terminal and consider adding the iTerm2 icon to your dock.
 
-Start iTerm2 and let's configure it. 
+Start iTerm2 and configure it. 
 
 - In the menu bar choose iTerm2 > Settings.
 - General > Closing: check Quit when all windows are closed.
