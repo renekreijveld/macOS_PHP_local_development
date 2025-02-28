@@ -1,0 +1,4 @@
+#!/opt/homebrew/bin/bash
+
+# Start MariaDB
+brew services start mariadb@10.6

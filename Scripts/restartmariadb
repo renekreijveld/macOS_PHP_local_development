@@ -1,0 +1,4 @@
+#!/opt/homebrew/bin/bash
+
+# Restart MariaDB
+brew services restart mariadb@10.6

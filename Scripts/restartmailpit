@@ -1,0 +1,9 @@
+#!/opt/homebrew/bin/bash
+
+# Restart Mailpit
+
+# Stop Mailpit
+brew services stop mailpit
+
+# Start Mailpit
+brew services start mailpit
