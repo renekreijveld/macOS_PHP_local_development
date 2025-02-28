@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Download latest Joomla version and save as joomla_latest.zip
+curl -L https://www.joomla.org/latest > joomla_latest.zip
+
+# Unzip joomla_latest.zip
+unzip -q -o joomla_latest.zip
+
+# Cleanup joomla_latest.zip
+rm joomla_latest.zip
+
+# Set correct files and folders rights
+/usr/local/bin/setrights
