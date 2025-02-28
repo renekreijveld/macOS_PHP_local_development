@@ -63,7 +63,7 @@ install_formulae() {
 }
 
 mariadb_config() {
-    echo "Configuring MariaDB, input your password when requested:"
+    echo "Configuring MariaDB"
     echo " "
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
@@ -88,12 +88,13 @@ configure_php_fpm() {
 }
 
 install_php_switcher() {
-    echo "Installing PHP switcher script, input your password when requested:"
+    echo "Installing PHP switcher script, when the prompt 'Password:' appears, type your password and press enter:"
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
     sudo chmod +x "${SCRIPTS_DEST}/sphp"
 }
 
 php_install_xdebug() {
+    echo "Installing XDebug:"
     for php_version in "${PHP_VERSIONS[@]}"; do
         echo "Installing XDebug for php ${php_version}"
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
@@ -127,6 +128,7 @@ nginx_configuration() {
 }
 
 configure_dnsmasq() {
+    echo "Configuring Dnsmasq, when the prompt 'Password:' appears, type your password and press enter:"
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
     sudo mkdir -p /etc/resolver
     echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test > /dev/null
@@ -138,7 +140,7 @@ create_local_folders() {
 }
 
 install_ssl_certificates() {
-    echo "Creating local Certificate Authority, input your password when requested:"
+    echo "Creating local Certificate Authority, when the prompt 'Password:' appears, type your password and press enter:"
     echo " "
     mkcert -install
     mkdir -p /opt/homebrew/etc/nginx/certs
@@ -158,7 +160,6 @@ install_local_scripts() {
 
 install_joomla_scripts() {
     echo "Installing Joomla scripts:"
-
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "Installing ${script}"
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
@@ -168,7 +169,7 @@ install_joomla_scripts() {
 
 install_root_tools() {
     cd "${SITESROOT}"
-    echo "Installing adminer.php script"
+    echo "Installing adminer.php script:"
     curl -L "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
