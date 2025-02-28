@@ -1,0 +1,202 @@
+#!/bin/bash
+
+# addsite - add a new site to the local NginX configuration
+#
+# Copyright 2024+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This script is free software; you may redistribute it and/or modify it.
+#
+# Version history
+# 1.0 Initial version
+
+# Variables
+# version
+version=1.0
+# name of this
+myname=$(basename ${0})
+# get the current username
+username=$(whoami)
+# default index.php template
+index_template=/opt/homebrew/etc/nginx/templates/index.php
+# nginx folder for website configurations
+nginx_conf_dir=/opt/homebrew/etc/nginx/servers
+# nginx configuration template
+nginx_template=/opt/homebrew/etc/nginx/templates/template.conf
+
+# show message function
+showmessage() {
+    if [ "$silent" == "no" ]; then
+        echo "$1"
+    fi
+}
+
+# display usage information
+usage() {
+    echo ""
+    echo "$myname version $version, written by René Kreijveld."
+    echo ""
+    echo "Usage: $myname -n <name> -p <php_version> [-d <database_name>] [-o] [-s] [-h]"
+    echo ""
+    echo " -n the name for the new website (input without spaces, mandatory)."
+    echo " -p the PHP version for the new website (mandatory)."
+    echo " -d the database name for the new website (optional)."
+    echo " -o open the new website in the browser after creation (optional)."
+    echo " -s silent, no messages will be shown (optional)."
+    echo " -h display this help."
+    echo ""
+    exit 0
+}
+
+# Function to check if the site name contains spaces
+contains_spaces() {
+    if [[ "$1" =~ \  ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check if PHP version is valid
+is_valid_php_version() {
+    php_version=$1
+    if [ -d "/opt/homebrew/etc/php/$php_version" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check if database exists
+database_exists() {
+    database_name=$1
+    if mysql -u root -proot -e "use $database_name" 2>/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Parse command line arguments
+silent="no"
+open="no"
+while getopts ":n:p:d:osh" opt; do
+    case ${opt} in
+    n)
+        website_name=$OPTARG
+        ;;
+    p)
+        php_version=$OPTARG
+        ;;
+    d)
+        database_name=$OPTARG
+        ;;
+    o)
+        open="yes"
+        ;;
+    s)
+        silent="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    :)
+        echo "Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
+    esac
+done
+
+showmessage "$myname version $version, written by René Kreijveld."
+showmessage "Adds a new website to the NginX configuration."
+showmessage ""
+
+# check if mandatory parameters are provided
+if [ -z "$website_name" ] || [ -z "$php_version" ]; then
+    echo "Error: -n, and -p are mandatory parameters."
+    usage
+fi
+
+# check if the site name contains spaces
+if contains_spaces "$website_name"; then
+    echo "Error: Site name '$name' contains spaces. Please provide a name without spaces."
+    exit 1
+fi
+
+# check if the PHP version is valid
+if ! is_valid_php_version "$php_version"; then
+    echo "Error: PHP version $php_version is not installed."
+    echo "Installed PHP versions are:"
+    ls /opt/homebrew/etc/php
+    exit 1
+fi
+
+# Check if the site folder already exists
+site_folder="/Users/$USER/Development/Sites/$website_name"
+if [ -d "$site_folder" ]; then
+    echo "Error: The website folder '$site_folder' already exists."
+    exit 1
+fi
+
+# check if the database name contains spaces
+if contains_spaces "$database_name"; then
+    echo "Error: Database name '$name' contains spaces. Please provide a name without spaces."
+    exit 1
+fi
+
+# Check if the database already exists
+if [ ! -z "$database_name" ]; then
+    if database_exists "$database_name"; then
+        echo "Error: The database '$database_name' already exists."
+        exit 1
+    fi
+fi
+
+# Create the website directory
+website_dir=~/Development/Sites/$website_name
+showmessage "Create website root folder $website_name."
+mkdir -p $website_dir
+
+# Copy and modify the index.php website template
+index_php_file=$website_dir/index.php
+cp $index_template $index_php_file
+sed -i '' "s/#website_name#/$website_name/g" $index_php_file
+sed -i '' "s/#username#/$USER/g" $index_php_file
+sed -i '' "s/#database_name#/$database_name/g" $index_php_file
+sed -i '' "s/#php_version#/$php_version/g" $index_php_file
+
+# Set the php-fpm URL based on the PHP version
+case $php_version in
+"7.4")
+    php_fpm_url="127.0.0.1:9074"
+    ;;
+"8.3")
+    php_fpm_url="127.0.0.1:9083"
+    ;;
+"8.4")
+    php_fpm_url="127.0.0.1:9084"
+    ;;
+esac
+
+# Copy and modify the nginx configuration template
+nginx_conf_file=$nginx_conf_dir/$website_name.conf
+cp $nginx_template $nginx_conf_file
+sed -i '' "s/<website_name>/$website_name/g" $nginx_conf_file
+sed -i '' "s/<your_username>/$USER/g" $nginx_conf_file
+sed -i '' "s/<php_fpm_url>/$php_fpm_url/g" $nginx_conf_file
+
+if [ ! -z "$database_name" ]; then
+    # Create the database
+    mariadb -u root -proot -e "CREATE DATABASE $database_name COLLATE 'utf8mb4_general_ci';"
+    showmessage "Database $database_name created."
+fi
+
+showmessage "Restarting nginx, you may need to enter your password."
+sudo brew services restart nginx
+
+if [ "$open" == "yes" ]; then
+    open "https://$website_name.dev.test"
+fi
