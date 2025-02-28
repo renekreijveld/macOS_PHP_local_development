@@ -37,13 +37,13 @@ trap "echo 'Installation interrupted. Exiting...'; exit 1" SIGINT
 start() {
     clear
     echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
-    read -p "Press Enter to start the installation..."
+    read -p "Press Enter to start the installation."
     touch "${INSTALL_LOG}"
 }
 
 install_formulae() {
-    clear
-    echo "Installing required Homebrew formulae."
+    echo " "
+    echo "Installing Homebrew formulae:"
 
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
@@ -53,7 +53,7 @@ install_formulae() {
     done
 
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing PHP ${php_version}"
+        echo "Installing php ${php_version}"
         brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
@@ -63,15 +63,15 @@ install_formulae() {
 }
 
 mariadb_config() {
-    clear
-    echo "Configuring MariaDB. Input your password when requested."
+    echo "Configuring MariaDB, input your password when requested:"
+    echo " "
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
     echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}"  > /dev/null
+    curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 }
@@ -83,19 +83,20 @@ configure_php_fpm() {
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
         cp "${CONF_FILE}" "${BACKUP}"
-        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${CONF_FILE}"  > /dev/null
+        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${CONF_FILE}" > /dev/null
     done
 }
 
 install_php_switcher() {
+    echo "Installing PHP switcher script, input your password when requested:"
+    echo " "
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
     sudo chmod +x "${SCRIPTS_DEST}/sphp"
 }
 
 php_install_xdebug() {
-    clear
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing XDebug for PHP ${php_version}"
+        echo "Installing XDebug for php ${php_version}"
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
         if [ "${php_version}" == "7.4" ]; then
             pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
@@ -107,24 +108,24 @@ php_install_xdebug() {
 }
 
 php_ini_configuration() {
+    echo "Installing php.ini files"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
         BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
-        curl -fsSL "${INI_NEW}" | sudo tee "${INI_FILE}"  > /dev/null
+        curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
     done
 }
 
 nginx_configuration() {
-    clear
-    echo "Configuring NginX..."
+    echo "Configuring NginX"
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
-    NGINX_CONF_NEW="${GITHUB_BASE}/nginx.conf"
+    NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}"  > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${NGINX_CONF}" > /dev/null
 }
 
 configure_dnsmasq() {
@@ -139,46 +140,44 @@ create_local_folders() {
 }
 
 install_ssl_certificates() {
-    clear
-    echo "Creating local Certificate Authority. Input your password when requested."
+    echo "Creating local Certificate Authority, input your password when requested:"
+    echo " "
     mkcert -install
     mkdir -p /opt/homebrew/etc/nginx/certs
     cd /opt/homebrew/etc/nginx/certs
-    mkcert localhost "*.dev.test" >>${INSTALL_LOG} 2>&1
+    mkcert localhost >>${INSTALL_LOG} 2>&1
+    mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
 }
 
 install_local_scripts() {
-    clear
-    echo "Installing local scripts."
-    echo " "
+    echo "Installing local scripts:"
 
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "Installing ${script}"
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}"  > /dev/null
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
-    clear
-    echo "Installing Joomla scripts."
-    echo " "
+    echo "Installing Joomla scripts:"
 
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "Installing ${script}"
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}"  > /dev/null
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_root_tools() {
     cd "${SITESROOT}"
-    curl -fsSL "https://www.adminer.org/latest.php" | sudo tee "adminer.php"  > /dev/null
+    curl -L "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
 
 the_end() {
-    clear
+    /usr/local/bin/stopphpfpm > /dev/null 2>&1
+    echo " "
     echo "Installation completed!"
     echo " "
     echo "The installation log is available at ${INSTALL_LOG}"
