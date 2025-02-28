@@ -1,6 +1,6 @@
 # Local NginX/MariaDB/PHP development stack for macOS
 
-This setup installs a NginX/MariaDB/PHP-based development stack on your M1/M2/M3/M4 based macOS system.
+This setup installs a NginX/MariaDB/PHP-based development stack on your Apple Silicon M1/M2/M3/M4 based macOS computer.
 
 You will get a setup with the following elements:
 
