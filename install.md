@@ -83,6 +83,7 @@ Start iTerm2 and let's configure it.
 - Profiles > Text: Check blinking cursor.
 - Profiles > Text: Font: Menlo, regular, 16.
 - Profiles > Window: Columns: 120, Rows: 40.
+- Click on the Other actions button at the left bottom and choose 'Set as default'.
 
 ## Install the development environment
 
