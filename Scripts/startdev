@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Start Dnsmasq
+/usr/local/bin/startdnsmasq
+
+# Start PHP-FPM
+/usr/local/bin/startphpfpm
+
+# Start NginX
+/usr/local/bin/startnginx
+
+# Start MariaDB
+/usr/local/bin/startmariadb
+
+# Start Mailpit
+/usr/local/bin/startmailpit

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Stop Mailpit
+/usr/local/bin/stopmailpit
+
+# Stop MariaDB
+/usr/local/bin/stopmariadb
+
+# Stop NginX
+/usr/local/bin/stopnginx
+
+# Stop PHP-FPM
+/usr/local/bin/stopphpfpm
+
+# Stop Dnsmasq
+/usr/local/bin/stopdnsmasq

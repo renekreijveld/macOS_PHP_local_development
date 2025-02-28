@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Restart Dnsmasq
+/usr/local/bin/restartdnsmasq
+
+# Restart PHP-FPM
+/usr/local/bin/restartphpfpm
+
+# Restart NginX
+/usr/local/bin/restartnginx
+
+# Restart MariaDB
+/usr/local/bin/restartmariadb
+
+# Restart Mailpit
+/usr/local/bin/restartmailpit
+
