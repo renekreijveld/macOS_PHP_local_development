@@ -7,7 +7,8 @@ You will get a setup with the following elements:
 - NginX webserver.
 - MariaDB database server.
 - PHP 7.4/8.3/8.4, you can have multiple local sites running at the same time with different PHP versions.
-- SSL certificate on all local websites.
+- SSL certificate on all local websites installed automatically.
 - Mailpit for easy email testing.
 - Handy scripts to install and delete local websites and database.
 
+Follow these <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/install.md" target="_blank">installation instructions</a> to get everything up and running.
