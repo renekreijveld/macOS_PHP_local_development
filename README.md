@@ -11,4 +11,4 @@ You will get a setup with the following elements:
 - Mailpit for easy email testing.
 - Handy scripts to install and delete local websites and database.
 
-Follow these <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/install.md" target="_blank">installation instructions</a> to get everything up and running.
+Follow these <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/install.md">installation instructions</a> to get everything up and running.
