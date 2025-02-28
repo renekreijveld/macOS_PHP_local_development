@@ -47,43 +47,11 @@ The Homebrew version is then displayed. The Homebrew version at the time of this
 
 ## Optional: install Visual Studio Code through Homebrew
 
-Yes, you can also install complete applications with Homebrew :-)
-
-In the terminal enter the following command:
-
-```
-brew install cask visual-studio-code
-```
-
-After installation consider adding the Visual Studio Code (VSCode) icon to your dock.
-
-- Start VSCode and configure to your desire. When done, click on Command-Shift-P.
-- Type 'path' (without the quotes).
-- Choose Shell Command: Install 'code' command in PATH.
-- Click OK.
-- Type your password and click OK.
-
-VSCode is now configured so you can start it from the commandline in the terminal.
+To install Visual Studio Code <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/Casks/install_vscode.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Optional: Install and configure iTerm2 through Homebrew
 
-iTerm2 is a very good alternative for the default terminal on macOS. In the terminal enter the following command:
-
-```
-brew install cask iterm2
-```
-
-After installation quit the default terminal and consider adding the iTerm2 icon to your dock.
-
-Start iTerm2 and configure it. 
-
-- In the menu bar choose iTerm2 > Settings.
-- General > Closing: check Quit when all windows are closed.
-- Appearance > General: Theme: Dark.
-- Profiles > Text: Check blinking cursor.
-- Profiles > Text: Font: Menlo, regular, 16.
-- Profiles > Window: Columns: 120, Rows: 40.
-- Click on the Other actions button at the left bottom and choose 'Set as default'.
+To install iTerm2 <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/Casks/install_iterm2.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Install the development environment
 
@@ -92,4 +60,3 @@ In the terminal enter the following command:
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_NginX_local_development/refs/heads/main/Installer/nginx_dev_installer.sh)"
 ```
-
