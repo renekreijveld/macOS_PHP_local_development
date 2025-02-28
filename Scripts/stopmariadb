@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/bash
+#!/bin/bash
 
 # Stop MariaDB
-brew services stop mariadb@10.6
+brew services stop mariadb

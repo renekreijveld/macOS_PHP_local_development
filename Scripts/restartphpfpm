@@ -2,7 +2,5 @@
 
 # Restart PHP-FPM
 brew services restart php@7.4
-brew services restart php@8.1
-brew services restart php@8.2
 brew services restart php@8.3
-brew services restart php@8.4
+brew services restart php
