@@ -9,6 +9,7 @@ You will get a setup with the following elements:
 - PHP 7.4/8.3/8.4, you can have multiple local sites running at the same time with different PHP versions.
 - SSL certificate on all local websites installed automatically.
 - Mailpit for easy email testing.
-- Handy scripts to install and delete local websites and database.
+- Handy scripts to install and delete local websites and databases.
+- A comprehensive set of bash scripts tweaked for local Joomla CMS website development.
 
 Follow these <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/install.md">installation instructions</a> to get everything up and running.
