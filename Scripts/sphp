@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# PHP switcher for Homebrew based NginX, MariaDB, PHP development stack
+# Written by: René Kreijveld, july 2024
+# Based on the work of Phil Cook and Andy Miller.
+
+homebrew_path=$(brew --prefix)
+brew_array=("7.4","8.3","8.4")
+php_array=("php@7.4" "php@8.3" "php@8.4")
+php_unlink_array=("php@7.4" "php@8.3" "php")
+php_version="php@$1"
+
+# What versions of php are installed via brew
+for i in ${php_array[*]}; do
+    version=$(echo "$i" | sed 's/^php@//')
+    if [[ -d "$homebrew_path/etc/php/$version" ]]; then
+        php_installed_array+=("$i")
+    fi
+done
+
+# Check that the requested version is supported
+if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
+    # Check that the requested version is installed
+    if [[ " ${php_installed_array[*]} " == *"$php_version"* ]]; then
+
+        echo "Switching to $php_version"
+
+        # Unlink all php versions
+        for i in ${php_unlink_array[@]}; do
+            brew unlink $i >/dev/null 2>&1
+        done
+
+        brew link --overwrite --force "$php_version" >/dev/null 2>&1
+
+        # Stop running versions
+        for i in ${php_array[@]}; do
+            brew services stop $i >/dev/null 2>&1
+        done
+
+        # Start requested version
+        brew services start $php_version >/dev/null 2>&1
+
+    	echo ""
+        php -v
+        echo ""
+
+        echo "All done!"
+    else
+        echo "Sorry, but $php_version is not installed via brew. Install by running: brew install $php_version"
+    fi
+else
+    echo "Unknown version of PHP. PHP Switcher can only handle arguments of:" ${brew_array[@]}
+fi
