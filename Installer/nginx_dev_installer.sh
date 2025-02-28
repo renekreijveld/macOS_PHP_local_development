@@ -157,7 +157,6 @@ start() {
 install_formulae() {
     tput clear
     # Install Homebrew formula
-    read -p "Press enter to install Homebrew the formulae. This will take a while."
     brew tap shivammathur/php
     echo "Install wget"
     brew install --quiet wget 
