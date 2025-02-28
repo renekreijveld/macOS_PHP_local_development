@@ -89,7 +89,6 @@ configure_php_fpm() {
 
 install_php_switcher() {
     echo "Installing PHP switcher script, input your password when requested:"
-    echo " "
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
     sudo chmod +x "${SCRIPTS_DEST}/sphp"
 }
@@ -103,7 +102,6 @@ php_install_xdebug() {
         else    
             pecl install xdebug >>${INSTALL_LOG} 2>&1
         fi
-        echo " "
     done
 }
 
@@ -151,7 +149,6 @@ install_ssl_certificates() {
 
 install_local_scripts() {
     echo "Installing local scripts:"
-
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "Installing ${script}"
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
@@ -164,13 +161,14 @@ install_joomla_scripts() {
 
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "Installing ${script}"
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_root_tools() {
     cd "${SITESROOT}"
+    echo "Downloading Adminer script
     curl -L "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
