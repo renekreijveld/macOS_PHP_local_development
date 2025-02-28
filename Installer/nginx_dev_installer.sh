@@ -18,54 +18,52 @@
 
 VERSION="1.0"
 
+# Scripts destination
+SCRIPTS_DEST="/usr/local/bin"
+
 # MariaDB main config file
 MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
-MY_CNF_ADDITION="https://gist.githubusercontent.com/renekreijveld/30a81f570f297a345474eea5d681d17c/raw/d39a544e18d2433023852cbc851bb3fd7ffd3daa/my.cfg.extra"
+MY_CNF_ADDITION="https://raw.githubusercontent.com/renekreijveld/macOS_NginX_local_development/refs/heads/main/MariaDB/my.cnf.addition"
 
 # PHP 7.4 fpm config file
 PHP74_WWW_CONF="/opt/homebrew/etc/php/7.4/php-fpm.d/www.conf"
 # Source of new PHP 7.4 fpm config file
-PHP74_WWW_CONF_NEW="https://gist.githubusercontent.com/renekreijveld/e845ba3ccfe4519b19273539f5258f68/raw/f603e291ee0691ad1614ce2799073ea2342a38c4/www_conf_php74"
+PHP74_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php7.4.conf"
 
 # PHP 8.3 fpm config file
 PHP83_WWW_CONF="/opt/homebrew/etc/php/8.3/php-fpm.d/www.conf"
 # Source of new PHP 8.3 fpm config file
-PHP83_WWW_CONF_NEW="https://gist.githubusercontent.com/renekreijveld/def8491afb91d547e540bf3fb629c24e/raw/4e303b4d2cc2f54911270c635a1cd0c196f41715/www_conf_php83"
+PHP83_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php8.3.conf"
 
 # PHP 8.4 fpm config file
 PHP84_WWW_CONF="/opt/homebrew/etc/php/8.4/php-fpm.d/www.conf"
 # Source of new PHP 8.4 fpm config file
-PHP84_WWW_CONF_NEW="https://gist.githubusercontent.com/renekreijveld/9b67250f6114f1bbe55726557e7a6ee8/raw/32d0c558c19888bdac7e64e3484e43f9a7218a75/www_conf_php84"
+PHP84_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_fpm_configs/php8.4.conf"
 
 # Location of PHP switcher script
-PHP_SWITCHER="/usr/local/bin/sphp"
+PHP_SWITCHER="${SCRIPTS_DEST}/sphp"
 # Source of PHP switcher script
-PHP_SWITCHER_SCRIPT="https://gist.githubusercontent.com/renekreijveld/58e255f475068bfb785cf3f2d1b0a503/raw/ae364677681502b888d11f603a1f44304803055e/sphp"
+PHP_SWITCHER_SCRIPT="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/sphp"
 
 # PHP 7.4 php.ini file
 PHP74_INI="/opt/homebrew/etc/php/7.4/php.ini"
 # Source of new PHP 7.4 php.ini file
-PHP74_INI_NEW="https://gist.githubusercontent.com/renekreijveld/51827b13f2f8b3d7f6329d8da861252e/raw/dc6c8c967e68e818a33211324263f975969208d2/php_ini_php74"
+PHP74_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php7.4.ini"
 
 # PHP 8.3 php.ini file
 PHP83_INI="/opt/homebrew/etc/php/8.3/php.ini"
 # Source of new PHP 8.3 php.ini file
-PHP83_INI_NEW="https://gist.githubusercontent.com/renekreijveld/c89e428d4860559e933a2dd4c125e060/raw/c4b54cbbac423e8166bf29102b7ab7a365a1a81f/php_ini_php83"
+PHP83_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php8.3.ini"
 
 # PHP 8.4 php.ini file
 PHP84_INI="/opt/homebrew/etc/php/8.4/php.ini"
 # Source of new PHP 8.4 php.ini file
-PHP84_INI_NEW="https://gist.githubusercontent.com/renekreijveld/6d2cec19068670a94814f44355b828cc/raw/04f78660d4f0d0cd7ddf9d0fae90ac8a4fedccb1/php_ini_php84"
+PHP84_INI_NEW="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/PHP_ini_files/php8.4.ini"
 
 # NginX config
 NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
 # Source of new nginx config file
 NGINX_CONF_NEW="https://gist.githubusercontent.com/renekreijveld/70e31fdb855a8a91ea98150a2e0bc9bb/raw/58b6cf5ce9977fcca8e9fa9f61696cde28dd51fb/nginx.conf"
-
-# Default index file location
-DEFAULT_INDEX="/opt/homebrew/var/www/index.html"
-# Source of new default index file
-DEFAULT_INDEX_NEW="https://gist.githubusercontent.com/renekreijveld/75f998c3dc0cad16a468fc48710d3412/raw/50dfdbbfc31c88c6276938516087d40d005d8edd/index.php.new"
 
 # NginX templates dir
 NGINX_TEMPLATES_DIR="/opt/homebrew/etc/nginx/templates"
@@ -85,6 +83,55 @@ NGINX_SERVERS_DIR="/opt/homebrew/etc/nginx/servers"
 
 # NginX certificates folder
 NGINX_CERTS_DIR="/opt/homebrew/etc/nginx/certs"
+
+# Scripts
+ADDSITE="${SCRIPTS_DEST}/addsite"
+ADDSITE_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/addsite"
+
+RESTARTDNSMASQ="${SCRIPTS_DEST}/restartdnsmasq"
+RESTARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartdnsmasq"
+
+RESTARTMAILPIT="${SCRIPTS_DEST}/restartmailpit"
+RESTARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmailpit"
+
+RESTARTMARIADB="${SCRIPTS_DEST}/restartmariadb"
+RESTARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartmariadb"
+
+RESTARTNGINX="${SCRIPTS_DEST}/restartnginx"
+RESTARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartnginx"
+
+RESTARTPHPFPM="${SCRIPTS_DEST}/restartphpfpm"
+RESTARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/restartphpfpm"
+
+STARTDNSMASQ="${SCRIPTS_DEST}/startdnsmasq"
+STARTDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startdnsmasq"
+
+STARTMAILPIT="${SCRIPTS_DEST}/startmailpit"
+STARTMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmailpit"
+
+STARTMARIADB="${SCRIPTS_DEST}/startmariadb"
+STARTMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startmariadb"
+
+STARTNGINX="${SCRIPTS_DEST}/startnginx"
+STARTNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startnginx"
+
+STARTPHPFPM="${SCRIPTS_DEST}/startphpfpm"
+STARTPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/startphpfpm"
+
+STOPDNSMASQ="${SCRIPTS_DEST}/stopdnsmasq"
+STOPDNSMASQ_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopdnsmasq"
+
+STOPMAILPIT="${SCRIPTS_DEST}/stopmailpit"
+STOPMAILPIT_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmailpit"
+
+STOPMARIADB="${SCRIPTS_DEST}/stopmariadb"
+STOPMARIADB_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopmariadb"
+
+STOPNGINX="${SCRIPTS_DEST}/stopnginx"
+STOPNGINX_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopnginx"
+
+STOPPHPFPM="${SCRIPTS_DEST}/stopphpfpm"
+STOPPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/stopphpfpm"
 
 # Username of logged in user
 USERNAME=$(whoami)
@@ -211,15 +258,6 @@ cp ${NGINX_CONF} ${NGINX_CONF}.${NOW}
 # Modify nginx config
 curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}" > /dev/null
 
-# Modify old default index.html
-echo " "
-read -p "Press enter to modify default index file."
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-mv ${DEFAULT_INDEX} ${DEFAULT_INDEX}.${NOW}
-# Place new index file
-curl -fsSL "${DEFAULT_INDEX_NEW}" | sudo tee "${DEFAULT_INDEX}" > /dev/null
-
 # Install nginx website index and server config templates
 echo " "
 read -p "Press enter to install website index en server config templates."
@@ -254,3 +292,57 @@ cd ${NGINX_CERTS_DIR}
 read -p "Press enter to generate certificates for localhost and *.dev.test."
 mkcert localhost
 mkcert "*.dev.test"
+
+tput clear
+
+# Install scripts
+read -p "Press enter to install scripts."
+
+curl -fsSL "${ADDSITE_SRC}" | sudo tee "${ADDSITE}" > /dev/null
+chmod +x "${ADDSITE}"
+
+curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${RESTARTDNSMASQ}" > /dev/null
+chmod +x "${RESTARTDNSMASQ}"
+
+curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${RESTARTMAILPIT}" > /dev/null
+chmod +x "${RESTARTMAILPIT}"
+
+curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${RESTARTMARIADB}" > /dev/null
+chmod +x "${RESTARTMARIADB}"
+
+curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${RESTARTNGINX}" > /dev/null
+chmod +x "${RESTARTNGINX}"
+
+curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${RESTARTPHPFPM}" > /dev/null
+chmod +x "${RESTARTPHPFPM}"
+
+curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${STARTDNSMASQ}" > /dev/null
+chmod +x "${STARTDNSMASQ}"
+
+curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${STARTMAILPIT}" > /dev/null
+chmod +x "${STARTMAILPIT}"
+
+curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${STARTMARIADB}" > /dev/null
+chmod +x "${STARTMARIADB}"
+
+curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${STARTNGINX}" > /dev/null
+chmod +x "${STARTNGINX}"
+
+curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${STARTPHPFPM}" > /dev/null
+chmod +x "${STARTPHPFPM}"
+
+curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${STOPDNSMASQ}" > /dev/null
+chmod +x "${STOPDNSMASQ}"
+
+curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${STOPMAILPIT}" > /dev/null
+chmod +x "${STOPMAILPIT}"
+
+curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${STOPMARIADB}" > /dev/null
+chmod +x "${STOPMARIADB}"
+
+curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${STOPNGINX}" > /dev/null
+chmod +x "${STOPNGINX}"
+
+curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
+chmod +x "${STOPPHPFPM}"
+
