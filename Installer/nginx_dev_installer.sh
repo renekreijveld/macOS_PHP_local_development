@@ -220,7 +220,7 @@ install_php_switcher() {
     echo " "
     read -p "Press enter to install php switcher script."
     curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${SCRIPTS_DEST}/${PHP_SWITCHER}" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/${SCRIPTS_DEST}/${PHP_SWITCHER}"
+    sudo chmod +x "${SCRIPTS_DEST}/${PHP_SWITCHER}"
 }
 
 # Function to install XDebug in PHP versions
