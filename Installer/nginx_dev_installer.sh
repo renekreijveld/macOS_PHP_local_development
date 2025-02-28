@@ -43,7 +43,7 @@ PHP84_WWW_CONF_NEW="https://github.com/renekreijveld/macOS_NginX_local_developme
 # Location of PHP switcher script
 PHP_SWITCHER="${SCRIPTS_DEST}/sphp"
 # Source of PHP switcher script
-PHP_SWITCHER_SCRIPT="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/sphp"
+PHP_SWITCHER_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main/Scripts/sphp"
 
 # PHP 7.4 php.ini file
 PHP74_INI="/opt/homebrew/etc/php/7.4/php.ini"
@@ -136,213 +136,244 @@ STOPPHPFPM_SRC="https://github.com/renekreijveld/macOS_NginX_local_development/r
 # Username of logged in user
 USERNAME=$(whoami)
 
-tput clear
-echo "Welcome to the NginX, PHP, MariaDB local macOS development environment installer version ${VERSION}."
-echo " "
+# Function to install Homebrow formulae
+install_formulae() {
+    tput clear
+    echo "Welcome to the NginX, PHP, MariaDB local macOS development environment installer version ${VERSION}."
+    echo " "
 
-# Install Homebrew formula
-read -p "Press enter to install Homebrew the formula. This will take a while."
-brew tap shivammathur/php
-brew install wget mariadb shivammathur/php/php@7.4 shivammathur/php/php@8.3 shivammathur/php/php@8.4 nginx dnsmasq mkcert nss mailpit
-brew unlink php
-brew link --overwrite --force php@8.3
+    # Install Homebrew formula
+    read -p "Press enter to install Homebrew the formula. This will take a while."
+    brew tap shivammathur/php
+    brew install wget mariadb shivammathur/php/php@7.4 shivammathur/php/php@8.3 shivammathur/php/php@8.4 nginx dnsmasq mkcert nss mailpit
+    brew unlink php
+    brew link --overwrite --force php@8.3
+}
 
-tput clear
+# Function to install and configure mariadb
+mariadb_config() {
+    tput clear
 
-# Start mariadb
-read -p "Formula installations done. Press enter to start mariadb."
-brew services start mariadb
+    # Start mariadb
+    read -p "Formula installations done. Press enter to start mariadb."
+    brew services start mariadb
 
-# Set mariadb root password
-echo " "
-read -p "Press enter to set root password in mariadb."
-mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
+    # Set mariadb root password
+    echo " "
+    read -p "Press enter to set root password in mariadb."
+    mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
 
-# Secure mariadb installation
-echo " "
-read -p "Press enter to secure MariaDB installation."
-echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation
+    # Secure mariadb installation
+    echo " "
+    read -p "Press enter to secure MariaDB installation."
+    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation
 
-# Modify mariadb config file
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-cp ${MY_CNF_FILE} ${MY_CNF_FILE}.${NOW}
-# Modify config
-echo " "
-read -p "Press enter to modify configuration file my.cnf. Enter your password when requested."
-curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" > /dev/null
+    # Modify mariadb config file
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    cp ${MY_CNF_FILE} ${MY_CNF_FILE}.${NOW}
+    # Modify config
+    echo " "
+    read -p "Press enter to modify configuration file my.cnf. Enter your password when requested."
+    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" > /dev/null
+}
 
-tput clear
+# Function to configure php fpm files
+configure_php_fpm() {
+    tput clear
 
-# Modify PHP 7.4 FPM config
-read -p "MariaDB installation and configuration done. Press enter to update the PHP fpm config files."
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-cp ${PHP74_WWW_CONF} ${PHP74_WWW_CONF}.${NOW}
-# Modify config
-curl -fsSL "${PHP74_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP74_WWW_CONF}" > /dev/null
+    # Modify PHP 7.4 FPM config
+    read -p "MariaDB installation and configuration done. Press enter to update the PHP fpm config files."
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    cp ${PHP74_WWW_CONF} ${PHP74_WWW_CONF}.${NOW}
+    # Modify config
+    curl -fsSL "${PHP74_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP74_WWW_CONF}" > /dev/null
 
-# Modify PHP 8.3 FPM config
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-cp ${PHP83_WWW_CONF} ${PHP83_WWW_CONF}.${NOW}
-# Modify config
-curl -fsSL "${PHP83_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP83_WWW_CONF}" > /dev/null
+    # Modify PHP 8.3 FPM config
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    cp ${PHP83_WWW_CONF} ${PHP83_WWW_CONF}.${NOW}
+    # Modify config
+    curl -fsSL "${PHP83_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP83_WWW_CONF}" > /dev/null
 
-# Modify PHP 8.4 FPM config
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-cp ${PHP84_WWW_CONF} ${PHP84_WWW_CONF}.${NOW}
-# Modify config
-curl -fsSL "${PHP84_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP84_WWW_CONF}" > /dev/null
+    # Modify PHP 8.4 FPM config
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    cp ${PHP84_WWW_CONF} ${PHP84_WWW_CONF}.${NOW}
+    # Modify config
+    curl -fsSL "${PHP84_WWW_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${PHP84_WWW_CONF}" > /dev/null
+}
 
-# Create php switcher script
-echo " "
-read -p "Press enter to install php switcher script."
-curl -fsSL "${PHP_SWITCHER_SCRIPT}" | sudo tee "${PHP_SWITCHER}" > /dev/null
-sudo chmod 755 "${PHP_SWITCHER}"
+# Function to install php switcher script
+install_php_switcher() {
+    # Create php switcher script
+    echo " "
+    read -p "Press enter to install php switcher script."
+    curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${PHP_SWITCHER}" > /dev/null
+    sudo chmod 755 "${PHP_SWITCHER}"
+}
 
-tput clear
+# Function to install XDebug in PHP versions
+php_install_xdebug() {
+    tput clear
+    # Install XDebug in PHP versions
+    read -p "PHP fpm configurations done. Press enter to install XDebug in PHP versions."
+    sphp 7.4
+    pecl install xdebug-3.1.6
 
-# Install XDebug in PHP versions
-read -p "PHP fpm configurations done. Press enter to install XDebug in PHP versions."
-sphp 7.4
-pecl install xdebug-3.1.6
+    tput clear
+    sphp 8.3
+    pecl install xdebug
 
-tput clear
+    tput clear
+    sphp 8.4
+    pecl install xdebug
+}
 
-sphp 8.3
-pecl install xdebug
+# Function to configure php.ini files
+php_ini_configuration() {
+    tput clear
+    # Modify php.ini PHP 7.4 
+    read -p "XDebug installations done. Press enter to modify php.ini files. Enter your password when requested."
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    mv ${PHP74_INI} ${PHP74_INI}.${NOW}
+    # Modify config PHP 7.4
+    curl -fsSL "${PHP74_INI_NEW}" | sudo tee "${PHP74_INI}" > /dev/null
 
-tput clear
+    # Modify php.ini PHP 8.3
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    mv ${PHP83_INI} ${PHP83_INI}.${NOW}
+    # Modify config PHP 8.3
+    curl -fsSL "${PHP83_INI_NEW}" | sudo tee "${PHP83_INI}" > /dev/null
 
-sphp 8.4
-pecl install xdebug
+    # Modify php.ini PHP 8.4
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    mv ${PHP84_INI} ${PHP84_INI}.${NOW}
+    # Modify config PHP 8.3
+    curl -fsSL "${PHP84_INI_NEW}" | sudo tee "${PHP84_INI}" > /dev/null
+}
 
-tput clear
+# Function to configure nginx
+nginx_configuration() {
+    tput clear
+    # Start nginx
+    read -p "Press enter to start nginx."
+    sudo nginx
 
-# Modify php.ini PHP 7.4 
-read -p "XDebug installations done. Press enter to modify php.ini files. Enter your password when requested."
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-mv ${PHP74_INI} ${PHP74_INI}.${NOW}
-# Modify config PHP 7.4
-curl -fsSL "${PHP74_INI_NEW}" | sudo tee "${PHP74_INI}" > /dev/null
+    # Modify nginx config
+    echo " "
+    read -p "Press enter to modify nginx config."
+    # Backup first
+    NOW=$(date +"%Y%m%d-%H%M%S")
+    cp ${NGINX_CONF} ${NGINX_CONF}.${NOW}
+    # Modify nginx config
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}" > /dev/null
 
-# Modify php.ini PHP 8.3
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-mv ${PHP83_INI} ${PHP83_INI}.${NOW}
-# Modify config PHP 8.3
-curl -fsSL "${PHP83_INI_NEW}" | sudo tee "${PHP83_INI}" > /dev/null
+    echo " "
+    read -p "Press enter to install website index en server config templates."
+    mkdir -p ${NGINX_TEMPLATES_DIR}
+    curl -fsSL "${INDEX_TEMPLATE_SRC}" | sudo tee "${INDEX_TEMPLATE}" > /dev/null
+    curl -fsSL "${NGINX_SERVER_TEMPLATE_SRC}" | sudo tee "${NGINX_SERVER_TEMPLATE}" > /dev/null
+}
 
-# Modify php.ini PHP 8.4
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-mv ${PHP84_INI} ${PHP84_INI}.${NOW}
-# Modify config PHP 8.3
-curl -fsSL "${PHP84_INI_NEW}" | sudo tee "${PHP84_INI}" > /dev/null
+# Function to configure dnsmasq
+configure_dnsmasq() {
+    tput clear
+    read -p "Press enter to configure dnsmasq."
+    echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
+    sudo brew services start dnsmasq
+    sudo mkdir -v /etc/resolver
+    sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+}
 
-tput clear
+# Function to setup local development folders
+create_local_folders() {
+    tput clear
+    read -p "Press enter to create folders for local webprojects."
+    mkdir -p ~/Development/Sites
+    mkdir -p ~/Development/Backup
+    echo '<h1>My User Web Root</h1>' > ~/Development/Sites/index.php
+}
 
-# Start nginx
-read -p "Php.ini files configured. Press enter to start nginx."
-sudo nginx
+# Function to install SSL certificates
+install_ssl_certificates() {
+    tput clear
+    read -p "Press enter to create local Certificate Authority. Enter your password when requested."
+    mkcert -install
+    mkdir -p ${NGINX_CERTS_DIR}
+    cd ${NGINX_CERTS_DIR}
+    read -p "Press enter to generate certificates for localhost and *.dev.test."
+    mkcert localhost
+    mkcert "*.dev.test"
+}
 
-# Modify nginx config
-echo " "
-read -p "Press enter to modify nginx config."
-# Backup first
-NOW=$(date +".%Y%m%d-%H%M%S")
-cp ${NGINX_CONF} ${NGINX_CONF}.${NOW}
-# Modify nginx config
-curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}" > /dev/null
+# Function to install local scripts
+install_local_scripts() {
+    tput clear
+    read -p "Press enter to install scripts."
 
-# Install nginx website index and server config templates
-echo " "
-read -p "Press enter to install website index en server config templates."
-mkdir -p ${NGINX_TEMPLATES_DIR}
-curl -fsSL "${INDEX_TEMPLATE_SRC}" | sudo tee "${INDEX_TEMPLATE}" > /dev/null
-curl -fsSL "${NGINX_SERVER_TEMPLATE_SRC}" | sudo tee "${NGINX_SERVER_TEMPLATE}" > /dev/null
+    curl -fsSL "${ADDSITE_SRC}" | sudo tee "${ADDSITE}" > /dev/null
+    chmod +x "${ADDSITE}"
 
-tput clear
+    curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${RESTARTDNSMASQ}" > /dev/null
+    chmod +x "${RESTARTDNSMASQ}"
 
-# Configure dnsmasq
-read -p "Ngninx configurations done. Press enter to configure dnsmasq."
-echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
-sudo brew services start dnsmasq
-sudo mkdir -v /etc/resolver
-sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+    curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${RESTARTMAILPIT}" > /dev/null
+    chmod +x "${RESTARTMAILPIT}"
 
-tput clear
+    curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${RESTARTMARIADB}" > /dev/null
+    chmod +x "${RESTARTMARIADB}"
 
-# Create folders for your local webprojects
-read -p "Press enter to create folders for local webprojects."
-mkdir -p ~/Development/Sites
-mkdir -p ~/Development/Backup
-echo '<h1>My User Web Root</h1>' > ~/Development/Sites/index.php
+    curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${RESTARTNGINX}" > /dev/null
+    chmod +x "${RESTARTNGINX}"
 
-tput clear
+    curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${RESTARTPHPFPM}" > /dev/null
+    chmod +x "${RESTARTPHPFPM}"
 
-# Setup SSL
-read -p "Press enter to create local Certificate Authority. Enter your password when requested."
-mkcert -install
-mkdir -p ${NGINX_CERTS_DIR}
-cd ${NGINX_CERTS_DIR}
-read -p "Press enter to generate certificates for localhost and *.dev.test."
-mkcert localhost
-mkcert "*.dev.test"
+    curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${STARTDNSMASQ}" > /dev/null
+    chmod +x "${STARTDNSMASQ}"
 
-tput clear
+    curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${STARTMAILPIT}" > /dev/null
+    chmod +x "${STARTMAILPIT}"
 
-# Install scripts
-read -p "Press enter to install scripts."
+    curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${STARTMARIADB}" > /dev/null
+    chmod +x "${STARTMARIADB}"
 
-curl -fsSL "${ADDSITE_SRC}" | sudo tee "${ADDSITE}" > /dev/null
-chmod +x "${ADDSITE}"
+    curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${STARTNGINX}" > /dev/null
+    chmod +x "${STARTNGINX}"
 
-curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${RESTARTDNSMASQ}" > /dev/null
-chmod +x "${RESTARTDNSMASQ}"
+    curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${STARTPHPFPM}" > /dev/null
+    chmod +x "${STARTPHPFPM}"
 
-curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${RESTARTMAILPIT}" > /dev/null
-chmod +x "${RESTARTMAILPIT}"
+    curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${STOPDNSMASQ}" > /dev/null
+    chmod +x "${STOPDNSMASQ}"
 
-curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${RESTARTMARIADB}" > /dev/null
-chmod +x "${RESTARTMARIADB}"
+    curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${STOPMAILPIT}" > /dev/null
+    chmod +x "${STOPMAILPIT}"
 
-curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${RESTARTNGINX}" > /dev/null
-chmod +x "${RESTARTNGINX}"
+    curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${STOPMARIADB}" > /dev/null
+    chmod +x "${STOPMARIADB}"
 
-curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${RESTARTPHPFPM}" > /dev/null
-chmod +x "${RESTARTPHPFPM}"
+    curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${STOPNGINX}" > /dev/null
+    chmod +x "${STOPNGINX}"
 
-curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${STARTDNSMASQ}" > /dev/null
-chmod +x "${STARTDNSMASQ}"
+    curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
+    chmod +x "${STOPPHPFPM}"}
+}
 
-curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${STARTMAILPIT}" > /dev/null
-chmod +x "${STARTMAILPIT}"
-
-curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${STARTMARIADB}" > /dev/null
-chmod +x "${STARTMARIADB}"
-
-curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${STARTNGINX}" > /dev/null
-chmod +x "${STARTNGINX}"
-
-curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${STARTPHPFPM}" > /dev/null
-chmod +x "${STARTPHPFPM}"
-
-curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${STOPDNSMASQ}" > /dev/null
-chmod +x "${STOPDNSMASQ}"
-
-curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${STOPMAILPIT}" > /dev/null
-chmod +x "${STOPMAILPIT}"
-
-curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${STOPMARIADB}" > /dev/null
-chmod +x "${STOPMARIADB}"
-
-curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${STOPNGINX}" > /dev/null
-chmod +x "${STOPNGINX}"
-
-curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
-chmod +x "${STOPPHPFPM}"
-
+# Run all installs and configurations
+install_formulae
+mariadb_config
+configure_php_fpm
+install_php_switcher
+php_install_xdebug
+php_ini_configuration
+nginx_configuration
+configure_dnsmasq
+create_local_folders
+install_ssl_certificates
+install_local_scripts
