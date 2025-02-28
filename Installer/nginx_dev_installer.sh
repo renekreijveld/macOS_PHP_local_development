@@ -211,7 +211,7 @@ install_php_switcher() {
     echo " "
     read -p "Press enter to install php switcher script."
     curl -fsSL "${PHP_SWITCHER_SRC}" | sudo tee "${PHP_SWITCHER}" > /dev/null
-    sudo chmod 755 "${PHP_SWITCHER}"
+    sudo chmod +x "${PHP_SWITCHER}"
 }
 
 # Function to install XDebug in PHP versions
@@ -317,63 +317,63 @@ install_local_scripts() {
     read -p "Press enter to install scripts."
 
     curl -fsSL "${ADDSITE_SRC}" | sudo tee "${ADDSITE}" > /dev/null
-    chmod +x "${ADDSITE}"
+    sudo chmod +x "${ADDSITE}"
 
     curl -fsSL "${RESTARTDNSMASQ_SRC}" | sudo tee "${RESTARTDNSMASQ}" > /dev/null
-    chmod +x "${RESTARTDNSMASQ}"
+    sudo chmod +x "${RESTARTDNSMASQ}"
 
     curl -fsSL "${RESTARTMAILPIT_SRC}" | sudo tee "${RESTARTMAILPIT}" > /dev/null
-    chmod +x "${RESTARTMAILPIT}"
+    sudo chmod +x "${RESTARTMAILPIT}"
 
     curl -fsSL "${RESTARTMARIADB_SRC}" | sudo tee "${RESTARTMARIADB}" > /dev/null
-    chmod +x "${RESTARTMARIADB}"
+    sudo chmod +x "${RESTARTMARIADB}"
 
     curl -fsSL "${RESTARTNGINX_SRC}" | sudo tee "${RESTARTNGINX}" > /dev/null
-    chmod +x "${RESTARTNGINX}"
+    sudo chmod +x "${RESTARTNGINX}"
 
     curl -fsSL "${RESTARTPHPFPM_SRC}" | sudo tee "${RESTARTPHPFPM}" > /dev/null
-    chmod +x "${RESTARTPHPFPM}"
+    sudo chmod +x "${RESTARTPHPFPM}"
 
     curl -fsSL "${STARTDNSMASQ_SRC}" | sudo tee "${STARTDNSMASQ}" > /dev/null
-    chmod +x "${STARTDNSMASQ}"
+    sudo chmod +x "${STARTDNSMASQ}"
 
     curl -fsSL "${STARTMAILPIT_SRC}" | sudo tee "${STARTMAILPIT}" > /dev/null
-    chmod +x "${STARTMAILPIT}"
+    sudo chmod +x "${STARTMAILPIT}"
 
     curl -fsSL "${STARTMARIADB_SRC}" | sudo tee "${STARTMARIADB}" > /dev/null
-    chmod +x "${STARTMARIADB}"
+    sudo chmod +x "${STARTMARIADB}"
 
     curl -fsSL "${STARTNGINX_SRC}" | sudo tee "${STARTNGINX}" > /dev/null
-    chmod +x "${STARTNGINX}"
+    sudo chmod +x "${STARTNGINX}"
 
     curl -fsSL "${STARTPHPFPM_SRC}" | sudo tee "${STARTPHPFPM}" > /dev/null
-    chmod +x "${STARTPHPFPM}"
+    sudo chmod +x "${STARTPHPFPM}"
 
     curl -fsSL "${STOPDNSMASQ_SRC}" | sudo tee "${STOPDNSMASQ}" > /dev/null
-    chmod +x "${STOPDNSMASQ}"
+    sudo chmod +x "${STOPDNSMASQ}"
 
     curl -fsSL "${STOPMAILPIT_SRC}" | sudo tee "${STOPMAILPIT}" > /dev/null
-    chmod +x "${STOPMAILPIT}"
+    sudo chmod +x "${STOPMAILPIT}"
 
     curl -fsSL "${STOPMARIADB_SRC}" | sudo tee "${STOPMARIADB}" > /dev/null
-    chmod +x "${STOPMARIADB}"
+    sudo chmod +x "${STOPMARIADB}"
 
     curl -fsSL "${STOPNGINX_SRC}" | sudo tee "${STOPNGINX}" > /dev/null
-    chmod +x "${STOPNGINX}"
+    sudo chmod +x "${STOPNGINX}"
 
     curl -fsSL "${STOPPHPFPM_SRC}" | sudo tee "${STOPPHPFPM}" > /dev/null
-    chmod +x "${STOPPHPFPM}"}
+    sudo chmod +x "${STOPPHPFPM}"}
 }
 
 # Run all installs and configurations
-install_formulae
-mariadb_config
-configure_php_fpm
-install_php_switcher
-php_install_xdebug
-php_ini_configuration
-nginx_configuration
-configure_dnsmasq
-create_local_folders
-install_ssl_certificates
+# install_formulae
+# mariadb_config
+# configure_php_fpm
+# install_php_switcher
+# php_install_xdebug
+# php_ini_configuration
+# nginx_configuration
+# configure_dnsmasq
+# create_local_folders
+# install_ssl_certificates
 install_local_scripts
