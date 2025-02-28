@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# setrights - set the correct rights for files (644) and folders (755)
+# Copyright 2023+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This program is free software; you may redistribute it and/or modify it.
+
+# version
+version=1.0
+version=1.1
+
+myname=$(basename ${0})
+
+# display usage information
+usage() {
+    echo ""
+    echo "${myname} version ${version}, written by Rene Kreijveld."
+    echo ""
+    echo "Usage: ${myname} [-s] [-h]"
+    echo ""
+    echo "Set filerights in current directory and all subdirectories for files to 644 and for directory to 755."
+    echo "-s Silent. No messages will be shown."
+    echo "-h Help. Display this info."
+    echo ""
+    exit 0
+}
+
+# process the arguments
+silent="no"
+while getopts sh opt
+do
+    case "${opt}" in
+        s)  silent="yes"
+            ;;
+        h)  usage
+            ;;
+        \?) echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+
+if [ "${silent}" == "no" ]
+then
+    echo ""
+    echo "${myname} version ${version}, written by Rene Kreijveld."
+    echo ""
+fi
+
+# Set file rights
+if [ "${silent}" == "no" ]
+then
+    echo "Setting file rights to 644 (-rw-r--r--)"
+fi
+# chmod -R 644 *
+find . -type f -exec chmod 644 {} +
+
+# Set folder rights
+if [ "${silent}" == "no" ]
+then
+    echo "Setting folder rights to 755 (-rwxr-xr-x)"
+fi
+# find . -type d -exec chmod 755 {} \;
+find . -type d -exec chmod 755 {} +
