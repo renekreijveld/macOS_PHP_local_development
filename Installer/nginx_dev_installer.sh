@@ -18,9 +18,13 @@ FORMULAE=("wget" "mariadb" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
 # Local scripts to install
 LOCAL_SCRIPTS=("addsite" "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm"
-            "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm"
-            "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm"
-            "startdev" "stopdev" "restartdev" "setrights")
+    "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm"
+    "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm"
+    "startdev" "stopdev" "restartdev" "setrights")
+
+# Joomla scripts to install
+JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jdbdropall" "jdbdumpall" "jdbimp" "jlistjoomlas" "joomlainfo"
+    "latestjoomla")
 
 # GitHub Repo Base URL
 GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
@@ -34,39 +38,41 @@ start() {
     clear
     echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
     read -p "Press Enter to start the installation..."
+    touch "${INSTALL_LOG}"
 }
 
 install_formulae() {
     clear
     echo "Installing required Homebrew formulae."
 
-    brew tap "${PHP_REPO}"
+    brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
     for formula in "${FORMULAE[@]}"; do
         echo "Installing ${formula}"
-        brew install --quiet ${formula} >${INSTALL_LOG} 2>&1
+        brew install --quiet ${formula} >>${INSTALL_LOG} 2>&1
     done
 
     for php_version in "${PHP_VERSIONS[@]}"; do
-        brew install --quiet "${PHP_REPO}/php@${php_version}" >${INSTALL_LOG} 2>&1
+        echo "Installing PHP ${php_version}"
+        brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
     # Set commandline PHP version to 8.3
-    brew unlink php
-    brew link --overwrite --force php@8.3
+    brew unlink php >>${INSTALL_LOG} 2>&1
+    brew link --overwrite --force php@8.3 >>${INSTALL_LOG} 2>&1
 }
 
 mariadb_config() {
     clear
-    echo "Configuring MariaDB."
-    brew services start mariadb  >${INSTALL_LOG} 2>&1
+    echo "Configuring MariaDB. Input your password when requested."
+    brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
-    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >${INSTALL_LOG} 2>&1
+    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}" >${INSTALL_LOG} 2>&1
-    brew services stop mariadb
+    curl -fsSL "${MY_CNF_ADDITION}" | sudo tee -a "${MY_CNF_FILE}"  > /dev/null
+    brew services stop mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 }
 
@@ -77,7 +83,7 @@ configure_php_fpm() {
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
         cp "${CONF_FILE}" "${BACKUP}"
-        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${CONF_FILE}" > /dev/null
+        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${CONF_FILE}"  > /dev/null
     done
 }
 
@@ -88,13 +94,15 @@ install_php_switcher() {
 
 php_install_xdebug() {
     clear
-    echo "Installing XDebug for PHP versions..."
     for php_version in "${PHP_VERSIONS[@]}"; do
-        sphp "${php_version}"
+        echo "Installing XDebug for PHP ${php_version}"
+        sphp "${php_version}" >>${INSTALL_LOG} 2>&1
         if [ "${php_version}" == "7.4" ]; then
-            pecl install xdebug-3.1.6
+            pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
         else    
-        pecl install xdebug
+            pecl install xdebug >>${INSTALL_LOG} 2>&1
+        fi
+        echo " "
     done
 }
 
@@ -105,7 +113,7 @@ php_ini_configuration() {
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
-        curl -fsSL "${INI_NEW}" | sudo tee "${INI_FILE}" > /dev/null
+        curl -fsSL "${INI_NEW}" | sudo tee "${INI_FILE}"  > /dev/null
     done
 }
 
@@ -116,7 +124,7 @@ nginx_configuration() {
     NGINX_CONF_NEW="${GITHUB_BASE}/nginx.conf"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}" > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | sudo tee "${NGINX_CONF}"  > /dev/null
 }
 
 configure_dnsmasq() {
@@ -136,7 +144,7 @@ install_ssl_certificates() {
     mkcert -install
     mkdir -p /opt/homebrew/etc/nginx/certs
     cd /opt/homebrew/etc/nginx/certs
-    mkcert localhost "*.dev.test"
+    mkcert localhost "*.dev.test" >>${INSTALL_LOG} 2>&1
 }
 
 install_local_scripts() {
@@ -146,27 +154,35 @@ install_local_scripts() {
 
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "Installing ${script}"
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}"  > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
     clear
-    echo "Installing Joomla scripts..."
-    curl -fsSL "${GITHUB_BASE}/Scripts/jfunctions" | sudo tee "${SCRIPTS_DEST}/jfunctions" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/jfunctions"
+    echo "Installing Joomla scripts."
+    echo " "
+
+    for script in "${JOOMLA_SCRIPTS[@]}"; do
+        echo "Installing ${script}"
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}"  > /dev/null
+        sudo chmod +x "${SCRIPTS_DEST}/${script}"
+    done
 }
 
 install_root_tools() {
     cd "${SITESROOT}"
-    curl -L "https://www.adminer.org/latest.php" > adminer.php
+    curl -fsSL "https://www.adminer.org/latest.php" | sudo tee "adminer.php"  > /dev/null
     echo "<?php phpinfo();" > phpinfo.php
 }
 
 the_end() {
     clear
     echo "Installation completed!"
+    echo " "
+    echo "The installation log is available at ${INSTALL_LOG}"
+    echo " "
     echo "Run 'startdev' to start your environment."
     echo "Enjoy your development setup!"
 }
