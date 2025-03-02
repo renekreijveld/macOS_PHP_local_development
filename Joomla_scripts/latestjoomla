@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download latest Joomla version and save as joomla_latest.zip
-curl -L https://www.joomla.org/latest > joomla_latest.zip
+curl -sL https://www.joomla.org/latest > joomla_latest.zip
 
 # Unzip joomla_latest.zip
 unzip -q -o joomla_latest.zip
