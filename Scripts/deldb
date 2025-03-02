@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# deldb - drop a MariaDB database
+#
+# Copyright 2024+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This script is free software; you may redistribute it and/or modify it.
+#
+# Version history
+# 1.0 Initial version
+
+# Variables 
+# version
+VERSION=1.0
+# name of this
+MYNAME=$(basename ${0})
+
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
+
+# display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by René Kreijveld."
+    echo ""
+    echo "Usage: ${MYNAME} -d <database_name> [-s] [-h]"
+    echo ""
+    echo " -d the name of the database to drop (mandatory)."
+    echo " -s silent, no messages will be shown (optional)."
+    echo " -h display this help."
+    echo ""
+    exit 0
+}
+
+# Function to check if database exists
+database_exists() {
+    DATABASE_NAME=$1
+    if mysql -u root -proot -e "use ${DATABASE_NAME}" 2>/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Parse command line arguments
+SILENT="no"
+while getopts ":d:sh" opt; do
+    case ${opt} in
+    d)
+        DATABASE_NAME=$OPTARG
+        ;;
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    :)
+        echo "Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
+    esac
+done
+
+showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+showmessage "Dropping database ${DATABASE_NAME}."
+
+# check if mandatory parameters are provided
+if [ -z "${DATABASE_NAME}" ]; then
+    echo "Error: database name not provided."
+    usage
+fi
+
+if ! database_exists "${DATABASE_NAME}"; then
+    echo "Error: The database '${DATABASE_NAME}' does not exist."
+    exit 1
+fi
+
+# Drop the database
+mariadb -u root -proot -e "DROP DATABASE IF EXISTS \`${DATABASE_NAME}\`;"
+showmessage "Database ${DATABASE_NAME} dropped."
