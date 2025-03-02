@@ -15,17 +15,6 @@ VERSION=1.6
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
 SILENT="no"
-CONFIG_FILE="$HOME/.config/jbashscripts/config"
-
-# Check if the config file exists
-if [[ -f "$CONFIG_FILE" ]]; then
-    # Source the config file to load the variables
-    source "$CONFIG_FILE"
-else
-    echo "Error: Config file not found at $CONFIG_FILE"
-    exit 1
-fi
-
 # Function to show messages (honoring silent mode)
 showmessage() {
     if [[ "${SILENT}" == "no" ]]; then
@@ -83,13 +72,7 @@ fi
 showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 showmessage "This is a Joomla! ${jversion} site. Starting database dump..."
 
-# Dump the database to a .sql file
-# Add a timestamp if requested
-if [[ "${USEFOLDER}" == "yes" ]]; then
-    DUMP_FILE="${backupfolder_databases}/${database}${NOW}.sql"
-else
-    DUMP_FILE="${database}${NOW}.sql"
-fi
+DUMP_FILE="${database}${NOW}.sql"
 
 if mysqldump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
     if [[ "${COMPRESS}" == "yes" ]]; then
