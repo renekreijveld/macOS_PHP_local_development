@@ -170,7 +170,7 @@ install_joomla_scripts() {
 install_root_tools() {
     cd "${SITESROOT}"
     echo "Installing adminer.php script:"
-    curl -L "https://www.adminer.org/latest.php" > adminer.php
+    curl -sL "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
 

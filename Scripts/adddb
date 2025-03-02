@@ -105,6 +105,6 @@ fi
 
 if [ ! -z "${DATABASE_NAME}" ]; then
     # Create the database
-    mariadb -u root -proot -e "CREATE DATABASE ${DATABASE_NAME} COLLATE 'utf8mb4_general_ci';"
+    mariadb -u root -proot -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
     showmessage "Database ${DATABASE_NAME} created."
 fi

@@ -199,8 +199,7 @@ sed -i '' "s/<your_username>/${USER}/g" ${NGINX_CONF_FILE}
 sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${NGINX_CONF_FILE}
 
 if [ ! -z "${DATABASE_NAME}" ]; then
-    # Create the database
-    mariadb -u root -proot -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
+    adddb -d ${DATABASE_NAME} -s
     showmessage "Database ${DATABASE_NAME} created."
 fi
 
