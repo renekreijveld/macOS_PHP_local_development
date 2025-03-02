@@ -17,11 +17,11 @@
 # 1.4 Modified for use with MAMP PRO (removed --host and added --socket)
 
 # general variables
-mypath=$(cd $(dirname ${0}); pwd -P)
-myname=$(basename ${0})
+MYPATH=$(cd $(dirname ${0}); pwd -P)
+MYNAME=$(basename ${0})
 
 # include general functions
-if [ ! -e ${mypath}/jfunctions ]
+if [ ! -e ${MYPATH}/jfunctions ]
 then
 	echo ""
 	echo "Cannot continue: script jfunctions not found."
@@ -29,14 +29,14 @@ then
 	exit 1
 else
 	# gather joomla information
-	. ${mypath}/jfunctions
+	. ${MYPATH}/jfunctions
 fi
 
 # version
-version=1.4
+VERSION=1.4
 
 echo ""
-echo "${myname} version ${version}, written by Rene Kreijveld."
+echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 echo ""
 echo "This is a Joomla! ${jversion} site. Starting database import of ${database}.sql."
 
@@ -49,8 +49,7 @@ then
 fi
 
 # import the database from a .sql file
-# if mysql --socket=/Applications/MAMP/tmp/mysql/mysql.sock --user=${dbuser} --password=${password} ${database} < ${database}.sql
-if mysql --user=${dbuser} --password=${password} ${database} < ${database}.sql
+if mariadb --user=${dbuser} --password=${password} ${database} < ${database}.sql
 then
 	echo "${database}.sql imported."
 	exit 0

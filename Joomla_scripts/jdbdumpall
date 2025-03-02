@@ -16,19 +16,13 @@
 VERSION=2.0
 
 # start folder where we start searching
-STARTDIR=/home
+STARTDIR="/Users/$USER/Development/Sites"
 
 # where to store backup files
-STOREPATH=/backups/mysql
-
-# rclone destination
-RCLONEDEST=pcloud:Sitebackups/web3
+STOREPATH="/Users/$USER/Development/Backup/mysql"
 
 # display messages
 SILENT="no"
-
-# upload backups
-UPLOAD="no"
 
 # determine path of script
 MYPATH=$(
@@ -43,11 +37,6 @@ if [ ! -d "${STOREPATH}" ]; then
     exit 1
 fi
 
-# create dummy folder if needed
-if [ ! -d /dummy ]; then
-    mkdir /dummy
-fi
-
 # display usage information
 usage() {
     echo ""
@@ -56,7 +45,6 @@ usage() {
     echo "Usage: ${MYNAME} [-s] [-u] [-h]"
     echo ""
     echo "-s Silent. Do not display any messages to standard output."
-    echo "-u Upload. Upload backup to Hetzner Storage Box."
     echo "-h Help. Display this info."
     echo ""
     exit 0
@@ -74,9 +62,6 @@ while getopts suh opt; do
     case "${opt}" in
     s)
         SILENT="yes"
-        ;;
-    u)
-        UPLOAD="yes"
         ;;
     h)
         usage
@@ -108,16 +93,11 @@ for DIR in $(find ${STARTDIR} -maxdepth 4 -type d); do
             . ${MYPATH}/jfunctions
         fi
 
-        # create backup folder to store backups
-        if [ ! -d ${STOREPATH}/${sitename} ]; then
-            mkdir ${STOREPATH}/${sitename}
-        fi
-
         # create backup
         NOW=$(date +"%Y%m%d-%H%M%S")
 
         # dump the database to a .sql file
-        if mysqldump --skip-opt --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host=${host} --user=${dbuser} --password=${password} ${database} > ${database}.sql; then
+        if mysqldump --skip-opt --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host=${host} --user=${dbuser} --password=${password} ${database} > ${STOREPATH}/${database}.${NOW}.sql; then
             showmessage "Database dump created for ${sitenameclean}"
         else
             showmessage "Error creating database dump."
@@ -126,18 +106,10 @@ for DIR in $(find ${STARTDIR} -maxdepth 4 -type d); do
 
         # gzip database dump
         showmessage "gzip ${database}.sql"
-        gzip -q ${database}.sql
-
-        if [ "${UPLOAD}" == "yes" ]; then
-            timestamp=$(date +"%a-%H")
-            destination=${RCLONEDEST}/${sitename}/mysql/${database}.${timestamp}.sql.gz
-            showmessage "Execute: /usr/bin/rclone copyto ${database}.sql.gz ${destination}"
-            /usr/bin/rclone copyto ${database}.sql.gz ${destination}
-        fi
-
-        # move database backup to storage location
-        mv ${database}.sql.gz ${STOREPATH}/${sitename}/${database}.${NOW}.sql.gz
+        gzip -q ${STOREPATH}/${database}.${NOW}.sql
 
         showmessage "Database backup for ${sitenameclean} finished."
     fi
 done
+
+showmessage "Your database backups are ready in ${STOREPATH}."
