@@ -9,23 +9,21 @@
 # Version history
 # 1.0 Initial version
 
-# Variables
+# Variables 
 # version
-version=1.0
+VERSION=1.0
 # name of this
-myname=$(basename ${0})
-# get the current username
-username=$(whoami)
+MYNAME=$(basename ${0})
 # default index.php template
-index_template=/opt/homebrew/etc/nginx/templates/index.php
+INDEX_TEMPLATE=/opt/homebrew/etc/nginx/templates/index.php
 # nginx folder for website configurations
-nginx_conf_dir=/opt/homebrew/etc/nginx/servers
+NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
 # nginx configuration template
-nginx_template=/opt/homebrew/etc/nginx/templates/template.conf
+NGINX_CONFIG_TEMPLATE=/opt/homebrew/etc/nginx/templates/template.conf
 
 # show message function
 showmessage() {
-    if [ "$silent" == "no" ]; then
+    if [ "${SILENT}" == "no" ]; then
         echo "$1"
     fi
 }
@@ -33,13 +31,14 @@ showmessage() {
 # display usage information
 usage() {
     echo ""
-    echo "$myname version $version, written by René Kreijveld."
+    echo "${MYNAME} version ${VERSION}, written by René Kreijveld."
     echo ""
-    echo "Usage: $myname -n <name> -p <php_version> [-d <database_name>] [-o] [-s] [-h]"
+    echo "Usage: ${MYNAME} -n <name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]"
     echo ""
     echo " -n the name for the new website (input without spaces, mandatory)."
     echo " -p the PHP version for the new website (mandatory)."
     echo " -d the database name for the new website (optional)."
+    echo " -j download and install the latest Joomla version (optional)."
     echo " -o open the new website in the browser after creation (optional)."
     echo " -s silent, no messages will be shown (optional)."
     echo " -h display this help."
@@ -58,8 +57,8 @@ contains_spaces() {
 
 # Function to check if PHP version is valid
 is_valid_php_version() {
-    php_version=$1
-    if [ -d "/opt/homebrew/etc/php/$php_version" ]; then
+    PHP_VERSION=$1
+    if [ -d "/opt/homebrew/etc/php/${PHP_VERSION}" ]; then
         return 0
     else
         return 1
@@ -68,8 +67,8 @@ is_valid_php_version() {
 
 # Function to check if database exists
 database_exists() {
-    database_name=$1
-    if mysql -u root -proot -e "use $database_name" 2>/dev/null; then
+    DATABASE_NAME=$1
+    if mysql -u root -proot -e "use ${DATABASE_NAME}" 2>/dev/null; then
         return 0
     else
         return 1
@@ -77,24 +76,28 @@ database_exists() {
 }
 
 # Parse command line arguments
-silent="no"
-open="no"
-while getopts ":n:p:d:osh" opt; do
+SILENT="no"
+OPEN="no"
+JOOMLA="no"
+while getopts ":n:p:d:josh" opt; do
     case ${opt} in
     n)
-        website_name=$OPTARG
+        WEBSITE_NAME=$OPTARG
         ;;
     p)
-        php_version=$OPTARG
+        PHP_VERSION=$OPTARG
         ;;
     d)
-        database_name=$OPTARG
+        DATABASE_NAME=$OPTARG
+        ;;
+    j)
+        JOOMLA="yes"
         ;;
     o)
-        open="yes"
+        OPEN="yes"
         ;;
     s)
-        silent="yes"
+        SILENT="yes"
         ;;
     h)
         usage
@@ -110,93 +113,106 @@ while getopts ":n:p:d:osh" opt; do
     esac
 done
 
-showmessage "$myname version $version, written by René Kreijveld."
-showmessage "Adds a new website to the NginX configuration."
-showmessage ""
+showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 
 # check if mandatory parameters are provided
-if [ -z "$website_name" ] || [ -z "$php_version" ]; then
+if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
     echo "Error: -n, and -p are mandatory parameters."
     usage
 fi
 
 # check if the site name contains spaces
-if contains_spaces "$website_name"; then
+if contains_spaces "${WEBSITE_NAME}"; then
     echo "Error: Site name '$name' contains spaces. Please provide a name without spaces."
     exit 1
 fi
 
 # check if the PHP version is valid
-if ! is_valid_php_version "$php_version"; then
-    echo "Error: PHP version $php_version is not installed."
+if ! is_valid_php_version "${PHP_VERSION}"; then
+    echo "Error: PHP version ${PHP_VERSION} is not installed."
     echo "Installed PHP versions are:"
     ls /opt/homebrew/etc/php
     exit 1
 fi
 
 # Check if the site folder already exists
-site_folder="/Users/$USER/Development/Sites/$website_name"
-if [ -d "$site_folder" ]; then
+SITE_FOLDER="/Users/$USER/Development/Sites/${WEBSITE_NAME}"
+if [ -d "${SITE_FOLDER}" ]; then
     echo "Error: The website folder '$site_folder' already exists."
     exit 1
 fi
 
 # check if the database name contains spaces
-if contains_spaces "$database_name"; then
-    echo "Error: Database name '$name' contains spaces. Please provide a name without spaces."
+if contains_spaces "${DATABASE_NAME}"; then
+    echo "Error: Database name '${DATABASE_NAME}' contains spaces. Please provide a name without spaces."
     exit 1
 fi
 
 # Check if the database already exists
-if [ ! -z "$database_name" ]; then
-    if database_exists "$database_name"; then
-        echo "Error: The database '$database_name' already exists."
+if [ ! -z "${DATABASE_NAME}" ]; then
+    if database_exists "${DATABASE_NAME}"; then
+        echo "Error: The database '${DATABASE_NAME}' already exists."
         exit 1
     fi
 fi
 
 # Create the website directory
-website_dir=~/Development/Sites/$website_name
-showmessage "Create website root folder $website_name."
-mkdir -p $website_dir
+WEBSITE_DIR=~/Development/Sites/${WEBSITE_NAME}
+showmessage "Create website root folder ${WEBSITE_DIR}."
+mkdir -p ${WEBSITE_DIR}
 
 # Copy and modify the index.php website template
-index_php_file=$website_dir/index.php
-cp $index_template $index_php_file
-sed -i '' "s/#website_name#/$website_name/g" $index_php_file
-sed -i '' "s/#username#/$USER/g" $index_php_file
-sed -i '' "s/#database_name#/$database_name/g" $index_php_file
-sed -i '' "s/#php_version#/$php_version/g" $index_php_file
+INDEX_PHP_FILE=${WEBSITE_DIR}/index.php
+showmessage "Installing index.php in root folder ${WEBSITE_NAME}."
+cp ${INDEX_TEMPLATE} ${INDEX_PHP_FILE}
+sed -i '' "s/#website_name#/${WEBSITE_NAME}/g" ${INDEX_PHP_FILE}
+sed -i '' "s/#username#/${USER}/g" ${INDEX_PHP_FILE}
+sed -i '' "s/#database_name#/${DATABASE_NAME}/g" ${INDEX_PHP_FILE}
+sed -i '' "s/#php_version#/${PHP_VERSION}/g" ${INDEX_PHP_FILE}
 
 # Set the php-fpm URL based on the PHP version
-case $php_version in
+case ${PHP_VERSION} in
 "7.4")
-    php_fpm_url="127.0.0.1:9074"
+    PHP_FPM_URL="127.0.0.1:9074"
+    ;;
+"8.1")
+    PHP_FPM_URL="127.0.0.1:9081"
+    ;;
+"8.2")
+    PHP_FPM_URL="127.0.0.1:9082"
     ;;
 "8.3")
-    php_fpm_url="127.0.0.1:9083"
+    PHP_FPM_URL="127.0.0.1:9083"
     ;;
 "8.4")
-    php_fpm_url="127.0.0.1:9084"
+    PHP_FPM_URL="127.0.0.1:9084"
     ;;
 esac
 
 # Copy and modify the nginx configuration template
-nginx_conf_file=$nginx_conf_dir/$website_name.conf
-cp $nginx_template $nginx_conf_file
-sed -i '' "s/<website_name>/$website_name/g" $nginx_conf_file
-sed -i '' "s/<your_username>/$USER/g" $nginx_conf_file
-sed -i '' "s/<php_fpm_url>/$php_fpm_url/g" $nginx_conf_file
+NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
+cp ${NGINX_CONFIG_TEMPLATE} ${NGINX_CONF_FILE}
+chmod 700 ${NGINX_CONF_FILE}
+sed -i '' "s/<website_name>/${WEBSITE_NAME}/g" ${NGINX_CONF_FILE}
+sed -i '' "s/<your_username>/${USER}/g" ${NGINX_CONF_FILE}
+sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${NGINX_CONF_FILE}
 
-if [ ! -z "$database_name" ]; then
+if [ ! -z "${DATABASE_NAME}" ]; then
     # Create the database
-    mariadb -u root -proot -e "CREATE DATABASE $database_name COLLATE 'utf8mb4_general_ci';"
-    showmessage "Database $database_name created."
+    mariadb -u root -proot -e "CREATE DATABASE ${DATABASE_NAME} COLLATE 'utf8mb4_general_ci';"
+    showmessage "Database ${DATABASE_NAME} created."
 fi
 
 showmessage "Restarting nginx, you may need to enter your password."
 sudo brew services restart nginx
 
-if [ "$open" == "yes" ]; then
-    open "https://$website_name.dev.test"
+if [ "${JOOMLA}" == "yes" ]; then
+    showmessage "Downloading and extracting the latest Joomla version."
+    cd ${WEBSITE_DIR}
+    latestjoomla
+fi
+
+if [ "${OPEN}" == "yes" ]; then
+    open "https://${WEBSITE_NAME}.dev.test"
 fi
