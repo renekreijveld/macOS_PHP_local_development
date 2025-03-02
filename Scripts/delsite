@@ -1,0 +1,165 @@
+#!/bin/bash
+
+# delsite - delete a new site to the local NginX configuration
+#
+# Copyright 2024+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This script is free software; you may redistribute it and/or modify it.
+#
+# Version history
+# 1.0 Initial version
+
+# Variables 
+# version
+VERSION=1.0
+# name of this
+MYNAME=$(basename ${0})
+# path where this script is located
+MYPATH=$(cd $(dirname ${0}); pwd -P)
+# nginx folder for website configurations
+NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
+# Websites root
+SITE_ROOT="/Users/$USER/Development/Sites"
+
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
+
+# display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by René Kreijveld."
+    echo ""
+    echo "Usage: ${MYNAME} -n <name> [-d] [-b] [-s] [-h]"
+    echo ""
+    echo " -n the name for the website (input without spaces, mandatory)."
+    echo " -d also drop the database (optional)."
+    echo " -b backup website and database before deleting (optional)."
+    echo " -s silent, no messages will be shown (optional)."
+    echo " -h display this help."
+    echo ""
+    exit 0
+}
+
+# Function to check if the site name contains spaces
+contains_spaces() {
+    if [[ "$1" =~ \  ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check if database exists
+database_exists() {
+    DATABASE_NAME=$1
+    if mysql -u root -proot -e "use ${DATABASE_NAME}" 2>/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Parse command line arguments
+SILENT="no"
+BACKUP="no"
+DBDELETE="no"
+while getopts ":n:dbsh" opt; do
+    case ${opt} in
+    n)
+        WEBSITE_NAME=$OPTARG
+        ;;
+    d)
+        DBDELETE="yes"
+        ;;
+    b)
+        BACKUP="yes"
+        ;;
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    :)
+        echo "Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
+    esac
+done
+
+showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+showmessage "Delete website ${WEBSITE_NAME} from the NginX configuration."
+
+# check if mandatory parameters are provided
+if [ -z "${WEBSITE_NAME}" ]; then
+    echo "Error: website name not provided."
+    usage
+fi
+
+# check if the site name contains spaces
+if contains_spaces "${WEBSITE_NAME}"; then
+    echo "Error: Site name '$name' contains spaces. Please provide a name without spaces."
+    exit 1
+fi
+
+# Check if the site folder already exists
+SITE_FOLDER="${SITE_ROOT}/${WEBSITE_NAME}"
+if [ ! -d "${SITE_FOLDER}" ]; then
+    echo "Error: The website folder '${SITE_FOLDER}' not found."
+    exit 1
+fi
+
+# Get website information
+cd ${SITE_FOLDER}
+# include general functions
+if [ ! -e ${MYPATH}/jfunctions ]
+then
+    echo ""
+    echo "Cannot continue: script jfunctions not found."
+    echo ""
+    exit 1
+else
+    # gather joomla information
+    . ${MYPATH}/jfunctions
+fi
+
+if [ "${BACKUP}" == "yes" ]; then
+    # Create database dump
+    showmessage "Create website database dump for backup."
+    if ! mysqldump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${database}.sql"; then
+        showmessage "Error creating database dump."
+        exit 1
+    fi
+    cd ${SITE_ROOT}
+    NOW=$(date +"%Y%m%d.%H%M%S")
+    showmessage "Create website backup."
+    tar czf ${SITE_ROOT}/${WEBSITE_NAME}.${NOW}.tgz ${WEBSITE_NAME}
+    showmessage "Website backup is ready at: ${SITE_ROOT}/${WEBSITE_NAME}.${NOW}.tgz."
+fi
+
+if [ "${DBDELETE}" == "yes" ]; then
+    # Drop the database
+    showmessage "Dropping database ${database}."
+    deldb -d ${database} -s
+fi
+
+# Delete website folder
+cd ${SITE_ROOT}
+showmessage "Delete website folder."
+rm -rf ${SITE_FOLDER}
+
+# Delete the NginX configuration
+NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
+rm -f ${NGINX_CONF_FILE}
+
+# Restart NginX
+showmessage "Restarting nginx, you may need to enter your password."
+sudo brew services restart nginx
