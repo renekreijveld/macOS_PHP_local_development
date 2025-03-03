@@ -437,6 +437,19 @@ Default action is .tgz backup.
                             </tr>
                             <tr>
                                 <td>
+                                    <pre><code><strong>jbackupall</strong></code></pre>
+                                </td>
+                                <td><strong>Create a backup of all local Joomla websites.</strong><br><br>
+                                    <pre><code>Usage: jbackupall [-s] [-h]
+-s Silent. Do not display any messages to standard output.
+-h Help. Display this info.</code></pre><br>
+                                    This scrips searches for all Joomla websites in the ~/Development/Sites folder and
+                                    creates a backup for each website found.<br>
+                                    The backups are stored in the ~/Development/Backup/sites folder.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <pre><code><strong>jdbdump</strong></code></pre>
                                 </td>
                                 <td><strong>Create a database dump of a Joomla website.</strong><br><br>
