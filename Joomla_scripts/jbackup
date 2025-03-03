@@ -188,4 +188,4 @@ fi
 # Cleanup database dump
 rm -f ${database}.sql
 
-echo "Your backup is ready in file ${BACKUPFILE}."
+showmessage "Your backup is ready in file ${BACKUPFILE}."
