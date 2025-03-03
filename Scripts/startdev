@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo "Starting NginX - MariaDB - PHP development environment services."
-echo "These services are running in the background and will automatically restart on system reboot."
+echo "These services will run in the background and will automatically restart on system reboot."
+echo "When the Password: prompt appears, enter your password to allow the services to run."
 echo " "
 echo "To permanently stop the services, run the stopdev script."
 

@@ -2,6 +2,7 @@
 
 echo "Stopping NginX - MariaDB - PHP development environment services."
 echo "The background services will now be stopped and will not automatically restart on system reboot."
+echo "When the Password: prompt appears, enter your password to allow the services to be stopped."
 
 # Stop Mailpit
 /usr/local/bin/stopmailpit
