@@ -14,44 +14,75 @@
 # 1.1 Code rewrite
 # 1.2 Modification of all echo -e statements
 # 1.3 Added test if jfunctions exists
-# 1.4 Modified for use with MAMP PRO (removed --host and added --socket)
+# 1.4 Code optimisations
 
 # general variables
 MYPATH=$(cd $(dirname ${0}); pwd -P)
 MYNAME=$(basename ${0})
 
-# include general functions
-if [ ! -e ${MYPATH}/jfunctions ]
-then
-	echo ""
-	echo "Cannot continue: script jfunctions not found."
-	echo ""
-	exit 1
-else
-	# gather joomla information
-	. ${MYPATH}/jfunctions
-fi
-
 # version
 VERSION=1.4
 
-echo ""
-echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-echo ""
-echo "This is a Joomla! ${jversion} site. Starting database import of ${database}.sql."
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
+    exit 1
+else
+    # Gather Joomla information
+    source "${MYPATH}/jfunctions"
+fi
+
+# Display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+    echo ""
+    echo "Usage: ${MYNAME} [-s] [-h]"
+    echo ""
+    echo "-s silent, no messages will be shown (optional)."
+    echo "-h Help. Display this info."
+    echo ""
+    exit 0
+}
+
+# Process the arguments
+SILENT="no"
+while getopts "sh" opt; do
+    case "${opt}" in
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2;
+        exit 1
+        ;;
+    esac
+done
+
+showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 
 # check if database dump exists.
-if [ ! -e ${database}.sql ]
-then
-	echo "Database dump file not found. The filemname should be ${database}.sql."
-	echo ""
+if [ ! -e ${database}.sql ]; then
+	echo "Database dump file not found. The filename should be ${database}.sql."
 	exit 1
 fi
+
+showmessage "This is a Joomla! ${jversion} site. Starting database import of ${database}.sql."
 
 # import the database from a .sql file
 if mariadb --user=${dbuser} --password=${password} ${database} < ${database}.sql
 then
-	echo "${database}.sql imported."
+	showmessage "${database}.sql imported."
 	exit 0
 else
 	echo "Error importing database dump."
