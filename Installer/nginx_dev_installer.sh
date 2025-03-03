@@ -22,6 +22,8 @@ LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmail
     "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" 
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
 
+PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailpit" "apache2" "php@7.4" "php@8.3" "php@8.4")
+
 # Joomla scripts to install
 JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" "jlistjoomlas" "joomlainfo"
     "latestjoomla")
@@ -34,6 +36,11 @@ USERNAME=$(whoami)
 
 trap "echo 'Installation interrupted. Exiting...'; exit 1" SIGINT
 
+# Function to check if a Homebrew formula is installed
+is_installed() {
+    brew list --formula | grep -q "^$1\$"
+}
+
 start() {
     clear
     echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
@@ -42,6 +49,36 @@ start() {
     echo " "
     read -p "Press Enter to start the installation."
     touch "${INSTALL_LOG}"
+}
+
+prechecks() {
+    PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
+    echo "The installer will first check if some required formulae are already installed."
+    
+    INSTALLED_FORMULAE=()
+
+    for formula in "${PRECHECK_FORMULAE[@]}"; do
+        if is_installed "${formula}"; then
+            INSTALLED_FORMULAE+=("${formula}")
+        fi
+    done
+
+    if [ ${#INSTALLED_FORMULAE[@]} -gt 0 ]; then
+        echo " "
+        echo "Cannot continue. The following formulae are already installed with Homebrew:"
+        for formula in "${INSTALLED_FORMULAE[@]}"; do
+            echo "  - ${formula}"
+        done
+        echo " "
+        echo "Installing this NginX, PHP, MariaDB development environment would give unpredictable results."
+        echo "Please uninstall these formulae and run the installer again."
+        echo " "
+        echo "If you already have a local development environment installed,"
+        echo "make sure to back up your websites and databases before uninstalling!"
+        exit 1
+    else
+        echo "None of the precheck formulae are already installed. Proceeding."
+    fi
 }
 
 install_formulae() {
@@ -199,6 +236,7 @@ the_end() {
 
 # Execute the script in order
 start
+prechecks
 install_formulae
 mariadb_config
 configure_php_fpm
