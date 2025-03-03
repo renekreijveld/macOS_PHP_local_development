@@ -8,20 +8,12 @@
 # This program is free software; you may redistribute it and/or modify it.
 #
 # Version history:
-# 1.0 Added use of config file
+# 1.0 Initial version
 
 # General Variables
 VERSION=1.0
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
-SILENT="no"
-
-# Function to show messages (honoring silent mode)
-showmessage() {
-    if [[ "${SILENT}" == "no" ]]; then
-        echo "$1"
-    fi
-}
 
 # Check if jfunctions script exists
 if [[ ! -f "${MYPATH}/jfunctions" ]]; then
@@ -32,34 +24,22 @@ else
     source "${MYPATH}/jfunctions"
 fi
 
-# Display usage information
-usage() {
-    echo ""
-    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-    echo ""
-    echo "Usage: ${MYNAME}"
-    echo ""
-    echo "-d Add a date-time-stamp to the database dump filename."
-    echo "-c Compress the database dump with gzip."
-    echo "-b Save the backup to the default backup folder."
-    echo "-h Help. Display this info."
-    echo ""
-    exit 0
-}
-
 # Process the arguments
-# Inform the user about the process
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-showmessage "This is a Joomla! ${jversion} site. Dropping all tables..."
+# Inform the user about the process and ask confirmation
+echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+echo "This is a Joomla! ${jversion} site."
+read -p "Press Enter to drop all database tables of this websitem or press Ctrl-C to abort."
 
 NOW=$(date +".%Y%m%d-%H%M%S")
 TMPFILE="./tmp_drop_all_${NOW}.sql"
+
+echo "Dropping all tables..."
 
 echo "SET FOREIGN_KEY_CHECKS = 0;" > "${TMPFILE}"
 mysqldump --add-drop-table --no-data --host="${host}" --user="${dbuser}" --password="${password}" "${database}" | grep 'DROP TABLE' >> "${TMPFILE}"
 echo "SET FOREIGN_KEY_CHECKS = 1;" >> "${TMPFILE}"
 
-mysql --host="${host}" --user="${dbuser}" --password="${password}" "${database}" < "${TMPFILE}"
+mariadb --host="${host}" --user="${dbuser}" --password="${password}" "${database}" < "${TMPFILE}"
 
 rm -f "${TMPFILE}"
 
