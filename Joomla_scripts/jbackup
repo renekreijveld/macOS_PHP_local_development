@@ -64,12 +64,13 @@ usage() {
     echo ""
     echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
     echo ""
-    echo "Usage: ${myname} [-z] [-t] [-o] [-s] [-h]"
+    echo "Usage: ${myname} [-z] [-t] [-o] [-m] [-s] [-h]"
     echo ""
     echo "Default action is .tgz backup."
     echo "-z Zip. Backup to a zipfile instead of a tgzfile."
     echo "-t Add a date/time-stamp to the backup file."
     echo "-o Overwrite existing backupfile and/or database dump."
+    echo "-m Move backup to Development/Backup/sites folder."
     echo "-s silent, no messages will be shown (optional)."
     echo "-h Help. Display this info."
     echo ""
@@ -82,7 +83,8 @@ ZIP="no"
 SILENT="no"
 OVERWRITE="no"
 TIMESTAMP="no"
-while getopts ztosh opt; do
+STOREDIR="."
+while getopts ztomsh opt; do
     case "${opt}" in
     z)
         ZIP="yes"
@@ -92,6 +94,9 @@ while getopts ztosh opt; do
         ;;
     o)
         OVERWRITE="yes"
+        ;;
+    m)
+        STOREDIR="/Users/${USER}/Development/Backup/sites"
         ;;
     s)
         SILENT="yes"
@@ -125,9 +130,9 @@ fi
 # Check if backupfile exists
 if [ "${ZIP}" == "no" ]
 then
-    BACKUPFILE="${sitename}${NOW}.tgz"
+    BACKUPFILE="${STOREDIR}/${sitename}${NOW}.tgz"
 else
-    BACKUPFILE="${sitename}${NOW}.zip"
+    BACKUPFILE="${STOREDIR}/${sitename}${NOW}.zip"
 fi
 if [ -e ${BACKUPFILE} ]; then
     if [ "${OVERWRITE}" == "no" ]; then
