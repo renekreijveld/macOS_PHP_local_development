@@ -41,7 +41,7 @@ usage() {
     echo "-d Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
     echo "-o Overwrite existing database dump."
-    echo "-m Move backup to ~/Development/Backup/mysql folder."
+    echo "-m Move database dump to ~/Development/Backup/mysql folder."
     echo "-h Help. Display this info."
     echo ""
     exit 0
