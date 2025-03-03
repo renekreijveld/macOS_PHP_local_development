@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Stopping NginX - MariaDB - PHP development environment services."
+echo "The background services will now be stopped and will not automatically restart on system reboot."
+
 # Stop Mailpit
 /usr/local/bin/stopmailpit
 
@@ -14,3 +17,6 @@
 
 # Stop Dnsmasq
 /usr/local/bin/stopdnsmasq
+
+echo " "
+echo "To start the services again, run the stopdev script."

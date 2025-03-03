@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "Starting NginX - MariaDB - PHP development environment services."
+echo "These services are running in the background and will automatically restart on system reboot."
+echo " "
+echo "To permanently stop the services, run the stopdev script."
+
 # Start Dnsmasq
 /usr/local/bin/startdnsmasq
 
