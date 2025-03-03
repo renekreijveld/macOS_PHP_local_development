@@ -37,6 +37,9 @@ trap "echo 'Installation interrupted. Exiting...'; exit 1" SIGINT
 start() {
     clear
     echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
+    echo "During installation, you may be prompted for your password."
+    echo "When the prompt 'Password:' appears or a popup window thaty asks your password, type your password and press enter."
+    echo " "
     read -p "Press Enter to start the installation."
     touch "${INSTALL_LOG}"
 }
