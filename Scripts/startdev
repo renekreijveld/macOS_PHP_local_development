@@ -14,3 +14,5 @@
 
 # Start Mailpit
 /usr/local/bin/startmailpit
+
+open "https://localhost"
