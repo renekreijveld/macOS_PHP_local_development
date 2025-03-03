@@ -144,7 +144,7 @@ configure_dnsmasq() {
 }
 
 create_local_folders() {
-    mkdir -p "$HOME/Development/Sites" "$HOME/Development/Backup"
+    mkdir -p "$HOME/Development/Sites" "$HOME/Development/Backup" "$HOME/Development/Backup/sites" "$HOME/Development/Backup/mysql"
     echo '<h1>My User Web Root</h1>' > "$HOME/Development/Sites/index.php"
 }
 
