@@ -7,7 +7,7 @@ You will get a setup with the following elements:
 - NginX webserver.
 - MariaDB database server.
 - PHP 7.4/8.3/8.4, you can have multiple local sites running at the same time with different PHP versions.
-- SSL certificate on all local websites installed automatically.
+- SSL certificates on all local websites installed automatically.
 - Mailpit for easy email testing.
 - Handy scripts to install and delete local websites and databases.
 - A comprehensive set of bash scripts tweaked for local Joomla CMS website development.
