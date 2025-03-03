@@ -129,8 +129,8 @@ nginx_configuration() {
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
-    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | sudo tee "${NGINX_TEMPLATES}/index.php" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Templates/template.conf" | sudo tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Templates/template.conf" | tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
 }
 
 configure_dnsmasq() {
@@ -175,10 +175,10 @@ install_joomla_scripts() {
 
 install_root_tools() {
     cd "${SITESROOT}"
-    echo "Installing landingpage:"
+    echo "Installing landingpage."
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php
-    echo "Installing adminer.php script:"
+    echo "Installing adminer.php script."
     curl -sL "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
