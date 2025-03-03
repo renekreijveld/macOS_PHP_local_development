@@ -15,4 +15,5 @@
 # Start Mailpit
 /usr/local/bin/startmailpit
 
+# Open landingpage in browser
 open "https://localhost"
