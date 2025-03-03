@@ -70,7 +70,7 @@ usage() {
     echo "-z Zip. Backup to a zipfile instead of a tgzfile."
     echo "-t Add a date/time-stamp to the backup file."
     echo "-o Overwrite existing backupfile and/or database dump."
-    echo "-m Move backup to Development/Backup/sites folder."
+    echo "-m Move backup to ~/Development/Backup/sites folder."
     echo "-s silent, no messages will be shown (optional)."
     echo "-h Help. Display this info."
     echo ""
