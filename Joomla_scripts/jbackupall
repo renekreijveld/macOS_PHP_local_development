@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# jbackupall - Backup all your local Joomla development websites
+#
+# Copyright 2025+ Rene Kreijveld - email@renekreijveld.nl
+#
+# This program is free software; you may redistribute it and/or modify it.
+#
+# Version history
+# 1.0 Initial version
+
+# define variables
+
+# version
+VERSION=1.0
+
+# start folder where we start searching
+STARTDIR="/Users/$USER/Development/Sites"
+
+# start folder where we start searching
+STOREPATH="/Users/$USER/Development/Backup/sites"
+
+# display messages
+SILENT="no"
+
+# determine path of script
+MYPATH=$(
+    cd $(dirname ${0})
+    pwd -P
+)
+MYNAME=$(basename ${0})
+
+# check if folder for backup storage exists
+if [ ! -d "${STOREPATH}" ]; then
+    echo "Backup directory does not exist!"
+    exit 1
+fi
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
+    exit 1
+fi
+
+# display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+    echo ""
+    echo "Usage: ${MYNAME} [-s] [-h]"
+    echo ""
+    echo "-s Silent. Do not display any messages to standard output."
+    echo "-h Help. Display this info."
+    echo ""
+    exit 0
+}
+
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
+
+# process the arguments
+while getopts sh opt; do
+    case "${opt}" in
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        exit 1
+        ;;
+    esac
+done
+
+showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+
+for DIR in $(find ${STARTDIR} -maxdepth 4 -type d); do
+    if [ -f ${DIR}/configuration.php ]; then
+        # possible joomla found
+        showmessage " "
+        showmessage "Possible Joomla found at ${DIR}."
+
+        # Go to website root folder
+        cd ${DIR}
+
+        # Get website information
+        source "${MYPATH}/jfunctions"
+
+        # Create backup
+        showmessage "Create backup for website ${sitenameclean}."
+        jbackup -t -m -s
+        showmessage "Backup for ${sitenameclean} finished."
+    fi
+done
+
+showmessage "Your website backups are ready in ${STOREPATH}."
