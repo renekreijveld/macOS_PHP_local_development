@@ -169,6 +169,9 @@ install_joomla_scripts() {
 
 install_root_tools() {
     cd "${SITESROOT}"
+    echo "Installing landingpage:"
+    curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
+    echo "<?php phpinfo();" > phpinfo.php
     echo "Installing adminer.php script:"
     curl -sL "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
@@ -181,7 +184,7 @@ the_end() {
     echo " "
     echo "The installation log is available at ${INSTALL_LOG}"
     echo " "
-    echo "Run 'startdev' to start your environment."
+    echo "Run 'startdev' to start your environment. Then open http://localhost in your browser."
     echo "Enjoy your development setup!"
 }
 
