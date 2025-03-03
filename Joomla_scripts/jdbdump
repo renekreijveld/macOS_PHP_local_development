@@ -36,11 +36,12 @@ usage() {
     echo ""
     echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
     echo ""
-    echo "Usage: ${MYNAME} [-d] [-c] [-b] [-h]"
+    echo "Usage: ${MYNAME} [-d] [-c] [-o] [-m] [-h]"
     echo ""
     echo "-d Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
-    echo "-b Save the backup to the default backup folder."
+    echo "-o Overwrite existing database dump."
+    echo "-m Move backup to ~/Development/Backup/mysql folder."
     echo "-h Help. Display this info."
     echo ""
     exit 0
@@ -49,15 +50,29 @@ usage() {
 # Process the arguments
 COMPRESS="no"
 SHOWDATE="no"
-USEFOLDER="no"
-while getopts "dcbh" opt; do
+OVERWRITE="no"
+STOREDIR="."
+while getopts "dcomh" opt; do
     case "${opt}" in
-        d) SHOWDATE="yes" ;;
-        c) COMPRESS="yes" ;;
-        b) USEFOLDER="yes" ;;
-        h) usage ;;
-        \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
-        :) echo "Option -$OPTARG requires an argument." >&2; exit 1 ;;
+    d)
+        SHOWDATE="yes"
+        ;;
+    c)
+        COMPRESS="yes"
+        ;;
+    o)
+        OVERWRITE="yes"
+        ;;
+    m)
+        STOREDIR="/Users/${USER}/Development/Backup/mysql"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2;
+        exit 1
+        ;;
     esac
 done
 
@@ -70,18 +85,34 @@ fi
 
 # Inform the user about the process
 showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-showmessage "This is a Joomla! ${jversion} site. Starting database dump..."
 
-DUMP_FILE="${database}${NOW}.sql"
+if [[ "${COMPRESS}" == "yes" ]]; then
+    EXTENSION=".gz"
+else
+    EXTENSION=""
+fi
+
+DUMP_FILE="${STOREDIR}/${database}${NOW}.sql"
+CHECK_FILE="${STOREDIR}/${database}${NOW}.sql${EXTENSION}"
+
+# Check if database dump exists
+if [ -e ${CHECK_FILE} ]; then
+    if [ "${OVERWRITE}" == "no" ]; then
+        echo "Error: Database dump ${CHECK_FILE} already exists. Use -o to overwrite."
+        exit 1
+    else
+        rm -f "${CHECK_FILE}"
+    fi
+fi
+
+showmessage "This is a Joomla! ${jversion} site. Starting database dump..."
 
 if mysqldump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
     if [[ "${COMPRESS}" == "yes" ]]; then
         gzip "${DUMP_FILE}"
-        showmessage "${DUMP_FILE}.gz created (compressed with gzip)."
-        ls -l "${DUMP_FILE}.gz"
+        showmessage "Database dump is ready in ${DUMP_FILE}.gz."
     else
-        showmessage "${DUMP_FILE} created."
-        ls -l "${DUMP_FILE}"
+        showmessage "Database dump is ready in ${DUMP_FILE}."
     fi
     exit 0
 else
