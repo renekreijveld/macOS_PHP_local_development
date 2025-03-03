@@ -17,10 +17,10 @@ PHP_REPO="shivammathur/php"
 FORMULAE=("wget" "mariadb" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
 # Local scripts to install
-LOCAL_SCRIPTS=("addsite" "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm"
-    "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm"
-    "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm"
-    "startdev" "stopdev" "restartdev" "setrights")
+LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
+    "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
+    "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" 
+    "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
 
 # Joomla scripts to install
 JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jdbdropall" "jdbdumpall" "jdbimp" "jlistjoomlas" "joomlainfo"
