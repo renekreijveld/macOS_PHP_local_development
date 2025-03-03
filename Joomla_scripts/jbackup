@@ -119,6 +119,7 @@ else
 fi
 
 showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+
 # Check if database dump exists
 if [ -e ${database}.sql ]; then
     if [ "${OVERWRITE}" == "no" ]; then
