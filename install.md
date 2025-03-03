@@ -7,6 +7,14 @@ This setup works fine on my macOS machines. I am no NginX, PHP and MariaDB exper
 - macOS Sequoia (tested on macOS Sequoia 15.3.1).
 - This installation assumes you are running Zsh in your terminal.
 
+## User resources
+
+This setup is based on the work of myself and others. The most importand resources I used:
+
+- <a href="https://getgrav.org/blog/macos-sequoia-apache-multiple-php-versions">macOS Development setup by Andy Miller</a>.
+- <a href="https://github.com/renekreijveld/macOS-Local-Development-Setup/tree/master">macOS Local Development setup by myself</a>.
+- <a href="https://kevdees.com/install-nginx-amp-multiple-php-versions-on-macos-15-sequoia/">NginX and Multiple PHP Versions on macOS by Kevin Dees</a>.
+
 ## Install XCode
 
 First you need to install XCode command line tools. Start a terminal and enter the following command:
