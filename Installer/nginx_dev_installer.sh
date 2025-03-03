@@ -122,9 +122,15 @@ nginx_configuration() {
     echo "Configuring NginX"
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
+    NGINX_TEMPLATES="/opt/homebrew/etc/nginx/templates"
+    NGINX_SERVERS="/opt/homebrew/etc/nginx/servers"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${NGINX_CONF}" > /dev/null
+
+    mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
+    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | sudo tee "${NGINX_TEMPLATES}/index.php" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Templates/template.conf" | sudo tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
 }
 
 configure_dnsmasq() {
