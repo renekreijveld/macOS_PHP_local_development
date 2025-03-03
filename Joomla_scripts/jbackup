@@ -2,7 +2,7 @@
 
 # jbackup -- backup a Joomla website to a tar.gz file
 #
-# This scripts supports Joomla versions 2.5 - 3.x
+# This scripts supports Joomla versions 1,0+
 #
 # Copyright 2014+ Rene Kreijveld - email@renekreijveld.nl
 # This program is free software; you may redistribute it and/or modify it.
@@ -11,60 +11,175 @@
 #
 # Version history
 # 1.0 Initial version
-# 1.1 Added check for .jch folder
+# 1.1 Added usage
+# 1.2 Code rewrite and remove -e option in echos
+# 1.3 Typo correction
+# 1.4 Added test if jfunctions exists
+# 1.5 Added improved tests if files already exist and added -t and -z options
 
 # general variables
-mypath=$(cd $(dirname ${0}); pwd -P)
-myname=$(basename ${0})
+MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+MYNAME=$(basename "$0")
 
-# include general functions
-if [ ! -e ${mypath}/jfunctions ]
-then
-    echo ""
-    echo "Cannot continue: script jfunctions not found."
-    echo ""
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
     exit 1
 else
-    # gather joomla information
-    . ${mypath}/jfunctions
+    # Gather Joomla information
+    source "${MYPATH}/jfunctions"
 fi
 
 # version
-version=1.0
+VERSION=1.0
 
-echo ""
-echo "${myname} version ${version}, written by Rene Kreijveld."
-echo ""
-echo "This is a Joomla! ${versr}.${versd} site. Starting backup ..."
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
 
-if [ -e .vscode ]
-then
-    vscode=".vscode/"
-else
-    vscode=""
-fi
+# Initialise BACKFUPFILE
+BACKUPFILE=""
 
-if [ -d .git ]
-then
-    git=".git"
-else
-    git=""
-fi
+# Function to check if the backupfile already exists
+backup_exists() {
+    if [ "${ZIP}" == "no" ]
+    then
+        BACKUPFILE="${sitename}${NOW}.tgz"
+    else
+        BACKUPFILE="${sitename}${NOW}.zip"
+    fi
+    if [ -e ${BACKUPFILE} ]; then
+        if [ "${OVERWRITE}" == "no" ]; then
+            echo "Error: backup file ${BACKUPFILE} already exists. Use -o to overwrite."
+            exit 1
+        fi
+    fi
+}
 
-if [ -e .gitignore ]
-then
-    gitignore=".gitignore"
-else
-    gitignore=""
-fi
+# display usage information
+usage() {
+    echo ""
+    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+    echo ""
+    echo "Usage: ${myname} [-z] [-t] [-o] [-s] [-h]"
+    echo ""
+    echo "Default action is .tgz backup."
+    echo "-z Zip. Backup to a zipfile instead of a tgzfile."
+    echo "-t Add a date/time-stamp to the backup file."
+    echo "-o Overwrite existing backupfile and/or database dump."
+    echo "-s silent, no messages will be shown (optional)."
+    echo "-h Help. Display this info."
+    echo ""
+    echo "Run ${myname} at the root of your website, where the configuration.php is."
+    echo ""
+    exit 0
+}
+
+ZIP="no"
+SILENT="no"
+OVERWRITE="no"
+TIMESTAMP="no"
+while getopts ztosh opt; do
+    case "${opt}" in
+    z)
+        ZIP="yes"
+        ;;
+    t)
+        TIMESTAMP="yes"
+        ;;
+    o)
+        OVERWRITE="yes"
+        ;;
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    esac
+done
 
 # create date/time stamp
-now=$(date +"%Y%m%d.%H%M%S")
+if [ "${TIMESTAMP}" == "yes" ]; then
+    NOW=$(date +".%Y%m%d.%H%M%S")
+else
+    NOW=""
+fi
 
-${mypath}/jdbdump > /dev/null
+showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+# Check if database dump exists
+if [ -e ${database}.sql ]; then
+    if [ "${OVERWRITE}" == "no" ]; then
+        echo "Error: Database dump ${database}.sql already exists. Use -o to overwrite."
+        exit 1
+    fi
+fi
 
-tar czf ${sitename}.${now}.tgz ${vscode} ${git} ${gitignore} *
-echo "Cleanup database dump"
+# Check if backupfile exists
+if [ "${ZIP}" == "no" ]
+then
+    BACKUPFILE="${sitename}${NOW}.tgz"
+else
+    BACKUPFILE="${sitename}${NOW}.zip"
+fi
+if [ -e ${BACKUPFILE} ]; then
+    if [ "${OVERWRITE}" == "no" ]; then
+        echo "Error: backup file ${BACKUPFILE} already exists. Use -o to overwrite."
+        exit 1
+    fi
+fi
+
+showmessage "This is a Joomla! ${jversion} site. Starting backup ..."
+
+# Check if a .vscode folder exists
+if [ -e .vscode ]; then
+    VSCODE=".vscode/"
+else
+    VSCODE=""
+fi
+
+# Check if a .git folder exists
+if [ -d .git ]; then
+    GIT=".git"
+else
+    GIT=""
+fi
+
+# Check if .gitignore exists
+if [ -e .gitignore ]; then
+    GITIGNORE=".gitignore"
+else
+    GITIGNORE=""
+fi
+
+# check if htaccess is present
+if [ -e .htaccess ]
+then
+    HTACCESS=".htaccess"
+else
+    HTACCESS=""
+fi
+
+showmessage "Create database dump."
+jdbdump > /dev/null
+
+showmessage "Create backup."
+# create the backup
+if [ "${ZIP}" == "no" ]
+then
+    tar czf ${BACKUPFILE} ${VSCODE} ${GIT} ${GITIGNORE} ${HTACCESS} *
+else
+    zip -q -r ${BACKUPFILE} ${VSCODE} ${GIT} ${GITIGNORE} ${HTACCESS} *
+fi
+
+# Cleanup database dump
 rm -f ${database}.sql
-echo "Backup is ready at:"
-ls -l ${sitename}.${now}.tgz
+
+echo "Your backup is ready in file ${BACKUPFILE}."
