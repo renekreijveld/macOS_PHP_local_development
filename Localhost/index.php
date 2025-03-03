@@ -97,6 +97,7 @@ foreach ( $phpVersions as $version) {
             <a href="https://localhost/adminer.php" target="_blank" class="btn btn-primary"><i class="fa-solid fa-database"></i> Adminer</a>
             <a href="https://localhost/phpinfo.php" target="_blank" class="btn btn-success"><i class="fa-brands fa-php"></i> PHP Info</a>
             <a href="http://localhost:8025" target="_blank" class="btn btn-danger"><i class="fa-solid fa-inbox"></i> Mailpit</a>
+            <a href="/" class="btn btn-dark"><i class="fa-solid fa-arrows-rotate"></i> Refresh</a>
         </div>
 
         <div class="accordion" id="toolsAccordion">
