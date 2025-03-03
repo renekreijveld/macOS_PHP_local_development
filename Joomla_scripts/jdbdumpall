@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# jdbdumpall - Create a backup of the MySQL databases and upload to Hetzner Storage Box
+# jdbdumpall - Create a backup of the MySQL databases
 #
 # Copyright 2018+ Rene Kreijveld - email@renekreijveld.nl
 #
@@ -8,12 +8,11 @@
 #
 # Version history
 # 1.0 Initial version
-# 2.0 Added upload to Hetzner Storage Box option
 
 # define variables
 
 # version
-VERSION=2.0
+VERSION=1.0
 
 # start folder where we start searching
 STARTDIR="/Users/$USER/Development/Sites"
@@ -42,7 +41,7 @@ usage() {
     echo ""
     echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
     echo ""
-    echo "Usage: ${MYNAME} [-s] [-u] [-h]"
+    echo "Usage: ${MYNAME} [-s] [-h]"
     echo ""
     echo "-s Silent. Do not display any messages to standard output."
     echo "-h Help. Display this info."
@@ -58,7 +57,7 @@ showmessage() {
 }
 
 # process the arguments
-while getopts suh opt; do
+while getopts sh opt; do
     case "${opt}" in
     s)
         SILENT="yes"
@@ -68,10 +67,6 @@ while getopts suh opt; do
         ;;
     \?)
         echo "Invalid option: -$OPTARG" >&2
-        exit 1
-        ;;
-    :)
-        echo "Option -$OPTARG requires an argument." >&2
         exit 1
         ;;
     esac
