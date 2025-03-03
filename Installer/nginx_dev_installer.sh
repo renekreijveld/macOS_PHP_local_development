@@ -23,7 +23,7 @@ LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmail
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
 
 # Joomla scripts to install
-JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jdbdropall" "jdbdumpall" "jdbimp" "jlistjoomlas" "joomlainfo"
+JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" "jlistjoomlas" "joomlainfo"
     "latestjoomla")
 
 # GitHub Repo Base URL
