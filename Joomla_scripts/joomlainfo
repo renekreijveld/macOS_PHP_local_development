@@ -3,9 +3,9 @@
 # joomlainfo -- Provide information about this Joomla! installation.
 # Supports Joomla 1.0 - 5.x
 #
-# Copyright 2012+ Rene Kreijveld - email@renekreijveld.nl
-#
-# This program is free software; you may redistribute it and/or modify it.
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
 #
 # Warning! This script needs the file jfunctions. This has to be installed in the same directory as this script.
 #
