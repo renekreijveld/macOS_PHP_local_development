@@ -1,8 +1,11 @@
 #!/bin/bash
 
 # PHP switcher for Homebrew based NginX, MariaDB, PHP development stack
-# Written by: René Kreijveld, july 2024
+#
+# Written by René Kreijveld - email@renekreijveld.nl
 # Based on the work of Phil Cook and Andy Miller.
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
 
 homebrew_path=$(brew --prefix)
 brew_array=("7.4","8.3","8.4")
@@ -46,7 +49,7 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
 
         echo "All done!"
     else
-        echo "Sorry, but $php_version is not installed via brew. Install by running: brew install $php_version"
+        echo "Sorry, but $php_version is not installed via brew."
     fi
 else
     echo "Unknown version of PHP. PHP Switcher can only handle arguments of:" ${brew_array[@]}

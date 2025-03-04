@@ -2,9 +2,9 @@
 
 # delsite - delete a new site to the local NginX configuration
 #
-# Copyright 2024+ Rene Kreijveld - email@renekreijveld.nl
-#
+# Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
 #
 # Version history
 # 1.0 Initial version

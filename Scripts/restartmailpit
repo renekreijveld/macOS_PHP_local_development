@@ -1,9 +1,10 @@
 #!/bin/bash
 
+# restartmailpit - restart the mailpit system service
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
+
 # Restart Mailpit
-
-# Stop Mailpit
-brew services stop mailpit
-
-# Start Mailpit
-brew services start mailpit
+brew services restart mailpit

@@ -238,6 +238,14 @@ foreach ( $phpVersions as $version )
                             </tr>
                             <tr>
                                 <td>
+                                    <pre><code><strong>xdebug</strong></code></pre>
+                                </td>
+                                <td><strong>Turn xdebug on or off in all installed PHP versions.</strong><br><br>
+                                    <pre><code>Usage: xdebug &lt;on|off&gt;</code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <pre><code><strong>startdev</strong></code></pre>
                                 </td>
                                 <td><strong>Start all services: NgniX, MariaDB, PHP FPM, DNSmasq,

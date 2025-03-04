@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# stopdev - stop all system services for the development environment
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
+
 echo "Stopping NginX - MariaDB - PHP development environment services."
 echo "The background services will now be stopped and will not automatically restart on system reboot."
 echo "When the Password: prompt appears, enter your password to allow the services to be stopped."

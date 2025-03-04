@@ -1,24 +1,33 @@
 #!/bin/bash
 
 # setrights - set the correct rights for files (644) and folders (755)
-# Copyright 2023+ Rene Kreijveld - email@renekreijveld.nl
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
 #
 # This program is free software; you may redistribute it and/or modify it.
 
 # version
-version=1.0
-version=1.1
+VERSION=1.1
 
-myname=$(basename ${0})
+MYNAME=$(basename ${0})
+
+# show message function
+showmessage() {
+    if [ "${SILENT}" == "no" ]; then
+        echo "$1"
+    fi
+}
 
 # display usage information
 usage() {
     echo ""
-    echo "${myname} version ${version}, written by Rene Kreijveld."
+    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
     echo ""
-    echo "Usage: ${myname} [-s] [-h]"
+    echo "Usage: ${MYNAME} [-s] [-h]"
     echo ""
-    echo "Set filerights in current directory and all subdirectories for files to 644 and for directory to 755."
+    echo "Set filerights in current directory and all subdirectories for files to 644 and for folders to 755."
     echo "-s Silent. No messages will be shown."
     echo "-h Help. Display this info."
     echo ""
@@ -26,11 +35,11 @@ usage() {
 }
 
 # process the arguments
-silent="no"
+SILENT="no"
 while getopts sh opt
 do
     case "${opt}" in
-        s)  silent="yes"
+        s)  SILENT="yes"
             ;;
         h)  usage
             ;;
@@ -40,25 +49,12 @@ do
     esac
 done
 
-if [ "${silent}" == "no" ]
-then
-    echo ""
-    echo "${myname} version ${version}, written by Rene Kreijveld."
-    echo ""
-fi
+showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 
 # Set file rights
-if [ "${silent}" == "no" ]
-then
-    echo "Setting file rights to 644 (-rw-r--r--)"
-fi
-# chmod -R 644 *
+showmessage "Setting file rights to 644 (-rw-r--r--)"
 find . -type f -exec chmod 644 {} +
 
 # Set folder rights
-if [ "${silent}" == "no" ]
-then
-    echo "Setting folder rights to 755 (-rwxr-xr-x)"
-fi
-# find . -type d -exec chmod 755 {} \;
+showmessage "Setting folder rights to 755 (-rwxr-xr-x)"
 find . -type d -exec chmod 755 {} +

@@ -4,7 +4,7 @@
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
-# This script comes without any warranty. Use at your own risk, always backup your data and software before running this script.
+# This script comes without any warranty. Use it at your own risk, always backup your data and software before running this script.
 #
 # Version history
 # 1.0 Initial version.
@@ -31,7 +31,7 @@ FORMULAE=("wget" "mariadb" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 # Local scripts to install
 LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
     "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
-    "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" 
+    "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
 
 PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailpit" "apache2" "php@7.4" "php@8.3" "php@8.4")
