@@ -95,17 +95,17 @@ prechecks() {
 
 install_formulae() {
     echo " "
-    echo "Installing Homebrew formulae:"
+    echo "Install Homebrew formulae:"
 
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
     for formula in "${FORMULAE[@]}"; do
-        echo "Installing ${formula}."
+        echo "Install ${formula}."
         brew install --quiet ${formula} >>${INSTALL_LOG} 2>&1
     done
 
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing php ${php_version}."
+        echo "Install php ${php_version}."
         brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
@@ -114,8 +114,8 @@ install_formulae() {
     brew link --overwrite --force php@8.3 >>${INSTALL_LOG} 2>&1
 }
 
-mariadb_config() {
-    echo "Configuring MariaDB."
+configure_mariadb() {
+    echo "Configure MariaDB."
     echo " "
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
@@ -145,8 +145,8 @@ install_php_switcher() {
     sudo chmod +x "${SCRIPTS_DEST}/sphp"
 }
 
-php_install_xdebug() {
-    echo "Installing XDebug."
+install_xdebug() {
+    echo "Install XDebug."
     for php_version in "${PHP_VERSIONS[@]}"; do
         echo "Installing XDebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
@@ -158,8 +158,8 @@ php_install_xdebug() {
     done
 }
 
-php_ini_configuration() {
-    echo "Installing php.ini files."
+configure_php_ini() {
+    echo "Install php.ini files."
     XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-debug.ini"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
@@ -173,8 +173,8 @@ php_ini_configuration() {
     done
 }
 
-nginx_configuration() {
-    echo "Configuring NginX."
+configure_nginx() {
+    echo "Configure NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
     NGINX_TEMPLATES="/opt/homebrew/etc/nginx/templates"
@@ -189,7 +189,7 @@ nginx_configuration() {
 }
 
 configure_dnsmasq() {
-    echo "Configuring Dnsmasq."
+    echo "Configure Dnsmasq."
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
     sudo mkdir -p /etc/resolver
     echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test > /dev/null
@@ -202,28 +202,30 @@ create_local_folders() {
 }
 
 install_ssl_certificates() {
-    echo "Creating local Certificate Authority."
+    echo "Install local Certificate Authority."
     echo " "
     mkcert -install
     mkdir -p /opt/homebrew/etc/nginx/certs
     cd /opt/homebrew/etc/nginx/certs
+    echo "Create localhost certificate."
     mkcert localhost >>${INSTALL_LOG} 2>&1
+    echo "Create *.dev.test wildcard certificate."
     mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
 }
 
 install_local_scripts() {
-    echo "Installing local scripts."
+    echo "Install local scripts."
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        echo "Installing ${script}."
+        echo "Install ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
-    echo "Installing Joomla scripts."
+    echo "Install Joomla scripts."
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "Installing ${script}."
+        echo "Install ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
@@ -231,10 +233,10 @@ install_joomla_scripts() {
 
 install_root_tools() {
     cd "${SITESROOT}"
-    echo "Installing landingpage."
+    echo "Install landingpage."
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php
-    echo "Installing adminer.php script."
+    echo "Install adminer.php script."
     curl -sL "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
 }
@@ -246,7 +248,7 @@ the_end() {
     echo " "
     echo "The installation log is available at ${INSTALL_LOG}"
     echo " "
-    echo "Run 'startdev' to start your environment. Then open http://localhost in your browser."
+    echo "Run 'startdev' to start your environment."
     echo "Enjoy your development setup!"
 }
 
@@ -254,12 +256,12 @@ the_end() {
 start
 prechecks
 install_formulae
-mariadb_config
+configure_mariadb
 configure_php_fpm
 install_php_switcher
-php_install_xdebug
-php_ini_configuration
-nginx_configuration
+install_xdebug
+configure_php_inition
+configure_nginx
 configure_dnsmasq
 create_local_folders
 install_ssl_certificates
