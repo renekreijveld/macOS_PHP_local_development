@@ -10,6 +10,7 @@
 
 $phpDir     = '/opt/homebrew/etc/php';
 $serversDir = '/opt/homebrew/etc/nginx/servers';
+$username = getenv('USER');
 
 function getPhpVersionFromConfig ( $configFile )
 {
@@ -92,6 +93,8 @@ foreach ( $phpVersions as $version )
             margin: 0;
             font-size: 1em;
         }
+
+
     </style>
 </head>
 
@@ -101,7 +104,7 @@ foreach ( $phpVersions as $version )
         <p class="text-center">Welcome to your local development environment. Here are your tools.</p>
 
         <div class="m-4 text-center">
-            <a href="https://localhost/adminer.php" target="_blank" class="btn btn-primary me-2"><i
+            <a href="https://localhost/adminer.php?username=root" target="_blank" class="btn btn-primary me-2"><i
                     class="fa-solid fa-database"></i> Adminer</a>
             <a href="https://localhost/phpinfo.php" target="_blank" class="btn btn-success me-2"><i
                     class="fa-brands fa-php"></i> PHP Info</a>
@@ -516,6 +519,204 @@ Default action is .tgz backup.
                                 </td>
                             </tr>
                         </table>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading_faq">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse_faq" aria-expanded="false" aria-controls="collapse_faq">
+                        Frequently Asked Questions
+                    </button>
+                </h2>
+                <div id="collapse_faq" class="accordion-collapse collapse" aria-labelledby="heading_faq"
+                    data-bs-parent="#toolsAccordion">
+                    <div class="accordion-body faqlist">
+                        <div class="accordion" id="faqNginX">
+                            <p class="mt-3"><strong>NginX</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_nx_1" aria-expanded="true" aria-controls="faq_nx_1">
+                                        Where is the NginX configuration file?
+                                    </button>
+                                </p>
+                                <div id="faq_nx_1" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
+                                    <div class="accordion-body">
+                                        The NginX configuration file is <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/nginx.conf</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_nx_2" aria-expanded="true" aria-controls="faq_nx_2">
+                                        Where are the NginX local website server configurations?
+                                    </button>
+                                </p>
+                                <div id="faq_nx_2" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
+                                    <div class="accordion-body">
+                                        The NginX local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/servers</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_nx_3" aria-expanded="true" aria-controls="faq_nx_3">
+                                        Where are the NginX templates?
+                                    </button>
+                                </p>
+                                <div id="faq_nx_3" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
+                                    <div class="accordion-body">
+                                        The NginX templates are at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/templates</span>.<br>
+                                        The file <span class="badge bg-secondary fw-light font-monospace">template.conf</span> is used to create a new local website server configuration.<br>
+                                        The file <span class="badge bg-secondary fw-light font-monospace">index.php</span> is placed in the root of a new local website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite script.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_nx_4" aria-expanded="true" aria-controls="faq_nx_4">
+                                        Where are the local websites located?
+                                    </button>
+                                </p>
+                                <div id="faq_nx_4" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
+                                    <div class="accordion-body">
+                                        Every website that you create with the a<span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt.</span>.<br>
+                                        So the command <span class="badge bg-secondary fw-light font-monospace">addsite -n joomla5</span> will create the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/joomla5</span>. That is the root of the website.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="faqMariaDB">
+                            <p class="mt-3"><strong>MariaDB</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_1" aria-expanded="true" aria-controls="faq_mdb_1">
+                                        How can I add a new database?
+                                    </button>
+                                </p>
+                                <div id="faq_mdb_1" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
+                                    <div class="accordion-body">
+                                        You can create a new database with the <span class="badge bg-secondary fw-light font-monospace">adddb</span> script. Type <span class="badge bg-secondary fw-light font-monospace">adddb -h</span> in a terminal for syntax and options.<br>
+                                        You can also click the blue Adminer button above to open Adminer. Login with password <span class="badge bg-secondary fw-light font-monospace">root</span> to manage databases and the tables inside the databases.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_2" aria-expanded="true" aria-controls="faq_mdb_2">
+                                        How do I update Adminer?
+                                    </button>
+                                </p>
+                                <div id="faq_mdb_2" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
+                                    <div class="accordion-body">
+                                        When Adminer has an update you will see the new version number in red at the top left of the Adminer screen.<br>
+                                        To update Adminer, download the latest version from <a href="https://www.adminer.org/latest.php" target="_blank">https://www.adminer.org/latest.php</a>.<br>
+                                        Save the file as adminer.php in the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites</span>. Overwrite the existing adminer.php file.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="faqPHP">
+                            <p class="mt-3"><strong>PHP</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_php_1" aria-expanded="true" aria-controls="faq_php_1">
+                                        Where are the php.ini files?
+                                    </button>
+                                </p>
+                                <div id="faq_php_1" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        The folder <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php</span> holds all installed PHP versions. Each PHP version has its own folder with a php.ini file.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_php_2" aria-expanded="true" aria-controls="faq_php_2">
+                                        Where are the configuration files for Xdebug?
+                                    </button>
+                                </p>
+                                <div id="faq_php_2" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        The folder <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php</span> holds all installed PHP versions. Each PHP version has its own folder.<br>
+                                        In that folder you will find a <span class="badge bg-secondary fw-light font-monospace">conf.d</span> folder that holds the <span class="badge bg-secondary fw-light font-monospace">ext-xdebug.ini</span> file.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_php_3" aria-expanded="true" aria-controls="faq_php_3">
+                                        At which port number is Xdebug running?
+                                    </button>
+                                </p>
+                                <div id="faq_php_3" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        For all PHP versions, Xdebug runs at port <strong>9003</strong>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_php_4" aria-expanded="true" aria-controls="faq_php_4">
+                                        I want to temporarily disable Xdebug. How do I do that?
+                                    </button>
+                                </p>
+                                <div id="faq_php_4" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        Open a terminal and type the command <span class="badge bg-secondary fw-light font-monospace">xdebug off</span>. That will restart all PHP versions and then Xdebug is disabled.<br>
+                                        To re-enable Xdebug type the command <span class="badge bg-secondary fw-light font-monospace">xdebug on</span> in a terminal.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="faqJoomla">
+                            <p class="mt-3"><strong>Joomla scripts</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_joomla_1" aria-expanded="true" aria-controls="faq_joomla_1">
+                                        I want to quickly make a database dump of a Joomla website. How do I do that?
+                                    </button>
+                                </p>
+                                <div id="faq_joomla_1" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        Open a terminal and go to the root of the Joomla website you want to make a database dump for.<br>
+                                        Type the command <span class="badge bg-secondary fw-light font-monospace">jdbdump</span>.<br>
+                                        This will create a database dump <span class="badge bg-secondary fw-light font-monospace">&lt;database_name&gt;.sql</span>. The database name is automatically detected from the configuration.php file.<br>
+                                        To see al options for jdbdump, type <span class="badge bg-secondary fw-light font-monospace">jdbdump -h</span>.<br><br>
+                                        If you want to import the database dump back into the database, type the command <span class="badge bg-secondary fw-light font-monospace">jdbimp</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_joomla_2" aria-expanded="true" aria-controls="faq_joomla_2">
+                                        I want to quickly make a full backup of a Joomla website. How do I do that?
+                                    </button>
+                                </p>
+                                <div id="faq_joomla_2" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        Open a terminal and go to the root of the Joomla website you want to backup.<br>
+                                        Type the command <span class="badge bg-secondary fw-light font-monospace">jbackup</span>.<br>
+                                        This will create a complete backup including a database dump of the website.<br>
+                                        To see al options for jbackup, type <span class="badge bg-secondary fw-light font-monospace">jbackup -h</span>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading_about">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse_about" aria-expanded="false" aria-controls="collapse_nginx">
+                        About
+                    </button>
+                </h2>
+                <div id="collapse_about" class="accordion-collapse collapse" aria-labelledby="heading_about"
+                    data-bs-parent="#toolsAccordion">
+                    <div class="accordion-body">
+                        <p>The NginX MariaDB PHP Xdebug installer and all scripts written by René Kreijveld.</p>
                     </div>
                 </div>
             </div>
