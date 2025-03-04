@@ -10,7 +10,7 @@
 # 1.0 Initial version.
 # 1.1 Added installation landingpage.
 # 1.2 Added checks for existing formulae.
-# 1.3 Added separate ini files for XDebug.
+# 1.3 Added separate ini files for Xdebug.
 
 VERSION="1.3"
 SCRIPTS_DEST="/usr/local/bin"
@@ -55,7 +55,7 @@ is_installed() {
 
 start() {
     clear
-    echo "Welcome to the NginX, PHP, MariaDB local macOS development, installer version ${VERSION}."
+    echo "Welcome to the NginX, PHP, MariaDB, Xdebug local macOS development, installer version ${VERSION}."
     echo "During installation, you may be prompted for your password."
     echo "When the prompt 'Password:' appears or a popup window that asks your password, type your password and press enter."
     echo " "
@@ -82,7 +82,7 @@ prechecks() {
             echo "  - ${formula}"
         done
         echo " "
-        echo "Installing this NginX, PHP, MariaDB development environment would give unpredictable results."
+        echo "Installing this NginX, PHP, MariaDB, Xdebug development environment would give unpredictable results."
         echo "Please uninstall these formulae and run the installer again."
         echo " "
         echo "If you already have a local development environment installed,"
@@ -146,9 +146,9 @@ install_php_switcher() {
 }
 
 install_xdebug() {
-    echo "Install XDebug."
+    echo "Install Xdebug."
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing XDebug for php ${php_version}."
+        echo "Installing Xdebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
         if [ "${php_version}" == "7.4" ]; then
             pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
