@@ -88,12 +88,12 @@ install_formulae() {
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
     for formula in "${FORMULAE[@]}"; do
-        echo "Installing ${formula}"
+        echo "Installing ${formula}."
         brew install --quiet ${formula} >>${INSTALL_LOG} 2>&1
     done
 
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing php ${php_version}"
+        echo "Installing php ${php_version}."
         brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
@@ -103,7 +103,7 @@ install_formulae() {
 }
 
 mariadb_config() {
-    echo "Configuring MariaDB"
+    echo "Configuring MariaDB."
     echo " "
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
@@ -134,9 +134,9 @@ install_php_switcher() {
 }
 
 php_install_xdebug() {
-    echo "Installing XDebug:"
+    echo "Installing XDebug."
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing XDebug for php ${php_version}"
+        echo "Installing XDebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
         if [ "${php_version}" == "7.4" ]; then
             pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
@@ -147,14 +147,17 @@ php_install_xdebug() {
 }
 
 php_ini_configuration() {
-    echo "Installing php.ini files"
+    echo "Installing php.ini files."
+    XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-debug.ini"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
+        XDEBUG_INI="/opt/homebrew/etc/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
+        curl -fsSL "${XDEBUG_NEW}" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
@@ -174,19 +177,20 @@ nginx_configuration() {
 }
 
 configure_dnsmasq() {
-    echo "Configuring Dnsmasq, when the prompt 'Password:' appears, type your password and press enter:"
+    echo "Configuring Dnsmasq."
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
     sudo mkdir -p /etc/resolver
     echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test > /dev/null
 }
 
 create_local_folders() {
-    mkdir -p "$HOME/Development/Sites" "$HOME/Development/Backup" "$HOME/Development/Backup/sites" "$HOME/Development/Backup/mysql"
-    echo '<h1>My User Web Root</h1>' > "$HOME/Development/Sites/index.php"
+    mkdir -p "$HOME/Development/Sites"
+    mkdir -p "$HOME/Development/Backup/sites"
+    mkdir -p "$HOME/Development/Backup/mysql"
 }
 
 install_ssl_certificates() {
-    echo "Creating local Certificate Authority, when the prompt 'Password:' appears, type your password and press enter:"
+    echo "Creating local Certificate Authority."
     echo " "
     mkcert -install
     mkdir -p /opt/homebrew/etc/nginx/certs
@@ -196,18 +200,18 @@ install_ssl_certificates() {
 }
 
 install_local_scripts() {
-    echo "Installing local scripts:"
+    echo "Installing local scripts."
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        echo "Installing ${script}"
+        echo "Installing ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
-    echo "Installing Joomla scripts:"
+    echo "Installing Joomla scripts."
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "Installing ${script}"
+        echo "Installing ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         sudo chmod +x "${SCRIPTS_DEST}/${script}"
     done
