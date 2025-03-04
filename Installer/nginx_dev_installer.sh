@@ -1,6 +1,18 @@
 #!/bin/bash
 
-VERSION="1.1"
+# nginx_dev_installer - Install a local NginX, PHP, MariaDB development environment on macOS
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use at your own risk, always backup your data and software before running this script.
+#
+# Version history
+# 1.0 Initial version.
+# 1.1 Added installation landingpage.
+# 1.2 Added checks for existing formulae.
+# 1.3 Added separate ini files for XDebug.
+
+VERSION="1.3"
 SCRIPTS_DEST="/usr/local/bin"
 SITESROOT="${HOME}/Development/Sites"
 INSTALL_LOG="${HOME}/nginx_dev_install.log"
@@ -43,7 +55,7 @@ is_installed() {
 
 start() {
     clear
-    echo "Welcome to the NginX, PHP, MariaDB local macOS development installer version ${VERSION}."
+    echo "Welcome to the NginX, PHP, MariaDB local macOS development, installer version ${VERSION}."
     echo "During installation, you may be prompted for your password."
     echo "When the prompt 'Password:' appears or a popup window that asks your password, type your password and press enter."
     echo " "
@@ -162,7 +174,7 @@ php_ini_configuration() {
 }
 
 nginx_configuration() {
-    echo "Configuring NginX"
+    echo "Configuring NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
     NGINX_TEMPLATES="/opt/homebrew/etc/nginx/templates"
