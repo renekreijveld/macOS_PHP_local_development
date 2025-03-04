@@ -97,7 +97,7 @@ foreach ( $phpVersions as $version )
 
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="text-center mb-4">NginX MariaDB PHP development environment</h1>
+        <h1 class="text-center mb-4">NginX MariaDB PHP Xdebug development environment</h1>
         <p class="text-center">Welcome to your local development environment. Here are your tools.</p>
 
         <div class="m-4 text-center">
