@@ -22,7 +22,7 @@ MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
 MY_CNF_ADDITION="https://raw.githubusercontent.com/renekreijveld/macOS_NginX_local_development/refs/heads/main/MariaDB/my.cnf.addition"
 
 # PHP Versions to Install
-PHP_VERSIONS=("7.4" "8.3" "8.4")
+PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
 PHP_REPO="shivammathur/php"
 
 # Homebrew Formulae to Install
@@ -33,8 +33,6 @@ LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmail
     "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
     "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
-
-PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailpit" "apache2" "php@7.4" "php@8.3" "php@8.4")
 
 # Joomla scripts to install
 JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" 

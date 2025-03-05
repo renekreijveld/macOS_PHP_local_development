@@ -8,9 +8,9 @@
 # This script comes without any warranty. Use it at your own risk.
 
 homebrew_path=$(brew --prefix)
-brew_array=("7.4","8.3","8.4")
-php_array=("php@7.4" "php@8.3" "php@8.4")
-php_unlink_array=("php@7.4" "php@8.3" "php")
+brew_array=("7.4","8.1","8.2","8.3","8.4")
+php_array=("php@7.4" "php@8.1" "php@8.2 "php@8.3" "php@8.4")
+php_unlink_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php")
 php_version="php@$1"
 
 # What versions of php are installed via brew
