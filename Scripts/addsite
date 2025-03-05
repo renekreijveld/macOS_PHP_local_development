@@ -121,7 +121,7 @@ showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
     echo "Error: -n, and -p are mandatory parameters."
-    usage
+    exit 1
 fi
 
 # check if the site name contains spaces
