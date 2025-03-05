@@ -114,8 +114,8 @@ install_formulae() {
 }
 
 configure_mariadb() {
-    echo "Configure MariaDB."
     echo " "
+    echo "Configure MariaDB."
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
@@ -145,6 +145,7 @@ install_php_switcher() {
 }
 
 install_xdebug() {
+    echo " "
     echo "Install Xdebug."
     for php_version in "${PHP_VERSIONS[@]}"; do
         echo "Installing Xdebug for php ${php_version}."
@@ -159,6 +160,7 @@ install_xdebug() {
 }
 
 configure_php_ini() {
+    echo " "
     echo "Install php.ini files."
     XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug.ini"
     for php_version in "${PHP_VERSIONS[@]}"; do
@@ -174,6 +176,7 @@ configure_php_ini() {
 }
 
 configure_nginx() {
+    echo " "
     echo "Configure NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
@@ -189,6 +192,7 @@ configure_nginx() {
 }
 
 configure_apache() {
+    echo " "
     echo "Configure Apache."
     APACHE_ETC="/opt/homebrew/etc/httpd"
     APACHE_CONF="/opt/homebrew/etc/httpd/httpd.conf"
@@ -206,6 +210,7 @@ configure_apache() {
 }
 
 configure_dnsmasq() {
+    echo " "
     echo "Configure Dnsmasq."
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
     sudo mkdir -p /etc/resolver
@@ -219,8 +224,8 @@ create_local_folders() {
 }
 
 install_ssl_certificates() {
-    echo "Install local Certificate Authority."
     echo " "
+    echo "Install local Certificate Authority."
     mkcert -install
     mkdir -p /opt/homebrew/etc/certs
     cd /opt/homebrew/etc/certs
@@ -279,6 +284,7 @@ install_php_switcher
 install_xdebug
 configure_php_ini
 configure_nginx
+configure_apache
 configure_dnsmasq
 create_local_folders
 install_ssl_certificates
