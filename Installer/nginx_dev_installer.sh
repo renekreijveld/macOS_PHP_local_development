@@ -174,7 +174,7 @@ configure_php_ini() {
     done
 }
 
-0configure_nginx() {
+configure_nginx() {
     echo "Configure NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
@@ -186,7 +186,24 @@ configure_php_ini() {
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Templates/template.conf" | tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Templates/nginx_vhost_template.conf" | tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
+}
+
+configure_apache() {
+    echo "Configure Apache."
+    APACHE_ETC="/opt/homebrew/etc/httpd"
+    APACHE_CONF="/opt/homebrew/etc/httpd/httpd.conf"
+    APACHE_CONF_NEW="${GITHUB_BASE}/Apache/httpd.conf"
+    APACHE_TEMPLATES="${APACHE_ETC}/templates"
+    APACHE_VHOSTS="${APACHE_ETC}/vhosts"
+
+    cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
+    curl -fsSL "${APACHE_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_CONF}" > /dev/null
+
+    mkdir -p "${APACHE_ETC}/templates" "${APACHE_ETC}/vhosts"
+    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
