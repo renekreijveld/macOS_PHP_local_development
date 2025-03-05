@@ -11,8 +11,9 @@
 # 1.1 Added installation landingpage.
 # 1.2 Added checks for existing formulae.
 # 1.3 Added separate ini files for Xdebug.
+# 1.4 Added installation of PHP 8.1 and 8.2.
 
-VERSION="1.3"
+VERSION="1.4"
 SCRIPTS_DEST="/usr/local/bin"
 SITESROOT="${HOME}/Development/Sites"
 INSTALL_LOG="${HOME}/nginx_dev_install.log"
@@ -258,7 +259,7 @@ configure_mariadb
 configure_php_fpm
 install_php_switcher
 install_xdebug
-configure_php_inition
+configure_php_ini
 configure_nginx
 configure_dnsmasq
 create_local_folders
