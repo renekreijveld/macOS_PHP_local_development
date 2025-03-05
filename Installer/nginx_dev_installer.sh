@@ -149,6 +149,7 @@ install_xdebug() {
     for php_version in "${PHP_VERSIONS[@]}"; do
         echo "Installing Xdebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
+
         if [ "${php_version}" == "7.4" ]; then
             pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
         else    
@@ -167,14 +168,12 @@ configure_php_ini() {
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
-        echo "Executing curl -fsSL ${INI_NEW} | tee ${INI_FILE}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        echo "Executing curl -fsSL ${XDEBUG_NEW} | tee ${XDEBUG_INI}"
         curl -fsSL "${XDEBUG_NEW}" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
-0configure_nginx() {
+configure_nginx() {
     echo "Configure NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
