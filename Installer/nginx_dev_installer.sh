@@ -26,7 +26,7 @@ PHP_VERSIONS=("7.4" "8.3" "8.4")
 PHP_REPO="shivammathur/php"
 
 # Homebrew Formulae to Install
-FORMULAE=("wget" "mariadb" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
+FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
 # Local scripts to install
 LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
