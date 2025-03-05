@@ -159,7 +159,7 @@ install_xdebug() {
 
 configure_php_ini() {
     echo "Install php.ini files."
-    XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-debug.ini"
+    XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug.ini"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
         XDEBUG_INI="/opt/homebrew/etc/php/${php_version}/conf.d/ext-xdebug.ini"
@@ -167,12 +167,14 @@ configure_php_ini() {
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
+        echo "Executing curl -fsSL ${INI_NEW} | tee ${INI_FILE}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
+        echo "Executing curl -fsSL ${XDEBUG_NEW} | tee ${XDEBUG_INI}"
         curl -fsSL "${XDEBUG_NEW}" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
-configure_nginx() {
+0configure_nginx() {
     echo "Configure NginX."
     NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
