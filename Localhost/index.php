@@ -222,6 +222,18 @@ foreach ( $phpVersions as $version )
                             </tr>
                             <tr>
                                 <td>
+                                    <pre><code><strong>setsitephp</strong></code></pre>
+                                </td>
+                                <td><strong>Set a local website to a php version.</strong><br><br>
+                                    <pre><code>Usage: setsitephp -n &lt;website_name&gt; -p &lt;php_version&gt; [-s] [-h]
+ -n the name for the new website (mandatory).
+ -p the PHP version for the website (mandatory).
+ -s silent, no messages will be shown (optional).
+ -h display this help.</code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <pre><code><strong>setrights</strong></code></pre>
                                 </td>
                                 <td><strong>Set filerights of the current folder and all subfolders.</strong><br>

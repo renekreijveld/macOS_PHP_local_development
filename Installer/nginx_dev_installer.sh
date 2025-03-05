@@ -33,7 +33,7 @@ FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
     "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
     "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
-    "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights")
+    "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights" "setsitephp")
 
 # Joomla scripts to install
 JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" 
@@ -149,6 +149,7 @@ install_xdebug() {
     for php_version in "${PHP_VERSIONS[@]}"; do
         echo "Installing Xdebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
+
         if [ "${php_version}" == "7.4" ]; then
             pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
         else    
@@ -167,9 +168,7 @@ configure_php_ini() {
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
-        echo "Executing curl -fsSL ${INI_NEW} | tee ${INI_FILE}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        echo "Executing curl -fsSL ${XDEBUG_NEW} | tee ${XDEBUG_INI}"
         curl -fsSL "${XDEBUG_NEW}" | tee "${XDEBUG_INI}" > /dev/null
     done
 }

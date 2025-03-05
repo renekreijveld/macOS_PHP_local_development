@@ -35,9 +35,9 @@ usage() {
     echo ""
     echo "${MYNAME} version ${VERSION}, written by René Kreijveld."
     echo ""
-    echo "Usage: ${MYNAME} -n <name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]"
+    echo "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]"
     echo ""
-    echo " -n the name for the new website (input without spaces, mandatory)."
+    echo " -n the website name for the new website (input without spaces, mandatory)."
     echo " -p the PHP version for the new website (mandatory)."
     echo " -d the database name for the new website (optional)."
     echo " -j download and install the latest Joomla version (optional)."
@@ -121,7 +121,7 @@ showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
     echo "Error: -n, and -p are mandatory parameters."
-    usage
+    exit 1
 fi
 
 # check if the site name contains spaces
