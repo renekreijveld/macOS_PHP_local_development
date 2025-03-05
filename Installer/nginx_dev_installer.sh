@@ -205,8 +205,8 @@ install_ssl_certificates() {
     echo "Install local Certificate Authority."
     echo " "
     mkcert -install
-    mkdir -p /opt/homebrew/etc/nginx/certs
-    cd /opt/homebrew/etc/nginx/certs
+    mkdir -p /opt/homebrew/etc/certs
+    cd /opt/homebrew/etc/certs
     echo "Create localhost certificate."
     mkcert localhost >>${INSTALL_LOG} 2>&1
     echo "Create *.dev.test wildcard certificate."
