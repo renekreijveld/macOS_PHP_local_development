@@ -8,5 +8,7 @@
 
 # Stop PHP-FPM
 brew services stop php@7.4
+brew services stop php@8.1
+brew services stop php@8.2
 brew services stop php@8.3
 brew services stop php

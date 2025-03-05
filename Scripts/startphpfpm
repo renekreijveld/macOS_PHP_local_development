@@ -11,5 +11,7 @@
 
 # Start PHP-FPM
 brew services start php@7.4
+brew services start php@8.1
+brew services start php@8.2
 brew services start php@8.3
 brew services start php
