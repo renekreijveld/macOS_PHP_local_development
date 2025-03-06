@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>#website_name#.dev.test</title>
+    <title><website_name>.dev.test</title>
     <!-- Favicon-->
 
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -17,7 +17,7 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">#website_name#.dev.test</a>
+            <a class="navbar-brand" href="#"><website_name>.dev.test</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -29,9 +29,9 @@
             <div class="col-12">
                 <div class="text-center mt-5">
                     <p class="lead">Welcome to the landing page of</p>
-                    <h1>https://#website_name#.dev.test</h1>
+                    <h1>https://<website_name>.dev.test</h1>
                     <p class="lead">This website is now up-and-running.</p>
-                    <p>Replace this file (/Users/#username#/Development/Sites/#website_name#/index.php) with your own one.</p>
+                    <p>Replace this file (<document_root>/index.php) with your own one.</p>
                 </div>
             </div>
         </div>
@@ -42,15 +42,15 @@
                     <tbody>
                         <tr>
                             <th scope="col" style="width: 25%;">URL</th>
-                            <td scope="col">https://#website_name#.dev.test</td>
+                            <td scope="col">https://<website_name>.dev.test</td>
                         </tr>
                         <tr>
                             <th scope="col">Path</th>
-                            <td scope="col">/Users/#username#/Development/Sites/#website_name#</td>
+                            <td scope="col"><document_root></td>
                         </tr>
                         <tr>
                             <th scope="col">PHP version</th>
-                            <td scope="col"><a href="https://localhost/info.php" target="_blank">#php_version#</a></td>
+                            <td scope="col"><a href="https://localhost/phpinfo.php" target="_blank"><php_version></a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,7 +59,7 @@
                     <tbody>
                         <tr>
                             <th scope="col" style="width: 25%;">Database name</th>
-                            <td scope="col"><a href="https://localhost/adminer.php?username=root&refresh=1" target="_blank">#database_name#</a></td>
+                            <td scope="col"><a href="https://localhost/adminer.php?username=root&refresh=1" target="_blank"><database_name></a></td>
                         </tr>
                         <tr>
                             <th scope="col">Database username</th>
@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <th scope="col">Database password</th>
-                            <td scope="col">root</td>
+                            <td scope="col"><db_password></td>
                         </tr>
                         <tr>
                             <th scope="col">Database hostname</th>
