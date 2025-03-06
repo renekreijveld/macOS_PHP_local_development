@@ -22,10 +22,12 @@ INDEX_TEMPLATE=/opt/homebrew/etc/nginx/templates/index.php
 NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
 # nginx configuration template
 NGINX_CONFIG_TEMPLATE=/opt/homebrew/etc/nginx/templates/template.conf
+# apache etc dir
+APACHE_DIR=/opt/homebrew/etc/httpd
 # apache folder for website configurations
-APACHE_CONF_DIR=/opt/homebrew/etc/httpd/vhosts
+APACHE_CONF_DIR=${APACHE_DIR}/vhosts
 # apache configuration template
-APACHE_CONFIG_TEMPLATE=/opt/homebrew/etc/httpd/templates/template.conf
+APACHE_CONFIG_TEMPLATE=${APACHE_DIR}/templates/template.conf
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
@@ -133,11 +135,10 @@ else
     exit 1
 fi   
 
-showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
-
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
     echo "Error: -n, and -p are mandatory parameters."
+    echo "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]"
     exit 1
 fi
 
@@ -176,6 +177,8 @@ if [ ! -z "${DATABASE_NAME}" ]; then
     fi
 fi
 
+showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
+
 # Create the website directory
 SITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
 showmessage "Create website root folder ${SITE_FOLDER}."
@@ -185,10 +188,11 @@ mkdir -p ${SITE_FOLDER}
 INDEX_PHP_FILE=${SITE_FOLDER}/index.php
 showmessage "Installing index.php in root folder ${WEBSITE_NAME}."
 cp ${INDEX_TEMPLATE} ${INDEX_PHP_FILE}
-sed -i '' "s/#website_name#/${WEBSITE_NAME}/g" ${INDEX_PHP_FILE}
-sed -i '' "s/#username#/${USER}/g" ${INDEX_PHP_FILE}
-sed -i '' "s/#database_name#/${DATABASE_NAME}/g" ${INDEX_PHP_FILE}
-sed -i '' "s/#php_version#/${PHP_VERSION}/g" ${INDEX_PHP_FILE}
+sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" ${INDEX_PHP_FILE}
+sed -i '' "s|<document_root>|${SITE_FOLDER}|g" ${INDEX_PHP_FILE}
+sed -i '' "s|<database_name>|${DATABASE_NAME}|g" ${INDEX_PHP_FILE}
+sed -i '' "s|<db_password>|${MARIADBPW}|g" ${INDEX_PHP_FILE}
+sed -i '' "s|<php_version>|${PHP_VERSION}|g" ${INDEX_PHP_FILE}
 
 # Set the php-fpm URL based on the PHP version
 case ${PHP_VERSION} in
@@ -213,17 +217,19 @@ esac
 NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
 cp ${NGINX_CONFIG_TEMPLATE} ${NGINX_CONF_FILE}
 chmod 700 ${NGINX_CONF_FILE}
-sed -i '' "s/<document_root>/${SITE_FOLDER}/g" ${NGINX_CONF_FILE}
-sed -i '' "s/<website_name>/${WEBSITE_NAME}/g" ${NGINX_CONF_FILE}
-sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${NGINX_CONF_FILE}
+sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${NGINX_CONF_FILE}"
+sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${NGINX_CONF_FILE}"
+sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${NGINX_CONF_FILE}"
 
 # Copy and modify the apache configuration template
+APACHE_VHOSTS_FILE=${APACHE_DIR}/extra/httpd-vhosts.conf
 APACHE_CONF_FILE=${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf
 cp ${APACHE_CONFIG_TEMPLATE} ${APACHE_CONF_FILE}
 chmod 700 ${APACHE_CONF_FILE}
-sed -i '' "s/<document_root>/${SITE_FOLDER}/g" ${APACHE_CONF_FILE}
-sed -i '' "s/<website_name>/${WEBSITE_NAME}/g" ${APACHE_CONF_FILE}
-sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${APACHE_CONF_FILE}
+sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${APACHE_CONF_FILE}"
+sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${APACHE_CONF_FILE}"
+sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${APACHE_CONF_FILE}"
+echo "IncludeOptional ${APACHE_CONF_FILE}" >> ${APACHE_VHOSTS_FILE}
 
 if [ ! -z "${DATABASE_NAME}" ]; then
     adddb -d ${DATABASE_NAME} -s
