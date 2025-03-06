@@ -33,7 +33,7 @@ LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmail
     "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
     "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights" 
-    "setsitephp" "startapache" "stopapache" "restartapache")
+    "setsitephp" "startapache" "stopapache" "restartapache" "setserver")
 
 # Joomla scripts to install
 JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" 
@@ -139,6 +139,7 @@ ask_defaults() {
     echo "SITESBACKUP=${sitesbackup}" >> "${CONFIG_FILE}"
     echo "MARIADBBACKUP=${mariadbbackup}" >> "${CONFIG_FILE}"
     echo "MARIADBPW=${mariadbpw}" >> "${CONFIG_FILE}"
+    echo "WEBSERVER=nginx" >> "${CONFIG_FILE}"
     check_configfile
 }
 
@@ -196,7 +197,7 @@ configure_php_fpm() {
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
         cp "${CONF_FILE}" "${BACKUP}"
-        curl -fsSL "${CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${CONF_FILE}" > /dev/null
+        curl -fsSL "${CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
     done
 }
 
@@ -247,7 +248,7 @@ configure_nginx() {
     NGINX_SERVERS="/opt/homebrew/etc/nginx/servers"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${NGINX_CONF}" > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
@@ -268,16 +269,16 @@ configure_apache() {
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
     cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_SSL_CONF_NEW}" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_CONF}" > /dev/null
+    curl -fsSL "${APACHE_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
@@ -341,7 +342,8 @@ the_end() {
     echo " "
     echo "The installation log is available at ${INSTALL_LOG}"
     echo " "
-    echo "Run 'startdev' to start your environment."
+    echo "Run 'startdev' to start your environment. The current webserver is set to NginX."
+    echo "You can switch between NginX and Apache with the 'setserver' script."
     echo "Enjoy your development setup!"
 }
 
