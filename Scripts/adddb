@@ -117,13 +117,11 @@ if [ ! -z "${DATABASE_NAME}" ]; then
     fi
 fi
 
-if [ ! -z "${DATABASE_NAME}" ]; then
-    # Create the database
-    if mariadb -u root -p${MARIADBPW} -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"; then
-        showmessage "Database ${DATABASE_NAME} created."
-    else
-        echo "Error creating database ${DATABASE_NAME}."
-        echo "The command was: mariadb -u root -p${MARIADBPW} -e \"CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;\""
-        exit 1
-    fi
+# Create the database
+if mariadb -u root -p${MARIADBPW} -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"; then
+    showmessage "Database ${DATABASE_NAME} created."
+else
+    echo "Error creating database ${DATABASE_NAME}."
+    echo "The command was: mariadb -u root -p${MARIADBPW} -e \"CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;\""
+    exit 1
 fi
