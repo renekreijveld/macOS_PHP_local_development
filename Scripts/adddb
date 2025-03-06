@@ -15,6 +15,10 @@ VERSION=1.0
 # name of this
 MYNAME=$(basename ${0})
 # default index.php template
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
 
 # show message function
 showmessage() {
@@ -81,6 +85,13 @@ while getopts "d:sh" opt; do
 done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+
+# Check if the configuration file exists
+if [[ ! -f "${CONFIG_FILE}" ]]; then
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
 showmessage "Add new MariaDB database ${DATABASE_NAME}."
 
 # check if mandatory parameters are provided
@@ -105,6 +116,11 @@ fi
 
 if [ ! -z "${DATABASE_NAME}" ]; then
     # Create the database
-    mariadb -u root -proot -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
-    showmessage "Database ${DATABASE_NAME} created."
+    if mariadb -u root -p${MARIADBPW} -e "CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"; then
+        showmessage "Database ${DATABASE_NAME} created."
+    else
+        echo "Error creating database ${DATABASE_NAME}."
+        echo "The command was: mariadb -u root -p${MARIADBPW} -e \"CREATE DATABASE ${DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;\""
+        exit 1
+    fi
 fi
