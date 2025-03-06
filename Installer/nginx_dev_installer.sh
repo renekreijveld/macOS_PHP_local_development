@@ -12,11 +12,16 @@
 # 1.2 Added checks for existing formulae.
 # 1.3 Added separate ini files for Xdebug.
 # 1.4 Added installation of PHP 8.1 and 8.2.
+# 1.5 Put default settings in a config file
 
-VERSION="1.4"
+VERSION="1.5"
+
+# Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
 SITESROOT="${HOME}/Development/Sites"
 INSTALL_LOG="${HOME}/nginx_dev_install.log"
+CONFIG_DIR="${HOME}/.config/phpdev"
+CONFIG_FILE="${CONFIG_DIR}/config"
 
 # MariaDB Config
 MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
@@ -52,13 +57,32 @@ is_installed() {
     brew list --formula | grep -q "^$1\$"
 }
 
+# Function to prompt for a value, with the option to keep the current one
+prompt_for_input() {
+    local current_value="$1"
+    local prompt_message="$2"
+    local new_value
+
+    if [[ -n "$current_value" ]]; then
+        read -p "$prompt_message [$current_value]: " new_value
+        # If the user input is empty, keep the current value
+        if [[ -z "$new_value" ]]; then
+            new_value="$current_value"
+        fi
+    else
+        read -p "$prompt_message: " new_value
+    fi
+
+    echo "$new_value"
+}
+
 start() {
     clear
     echo "Welcome to the NginX, PHP, MariaDB, Xdebug local macOS development, installer version ${VERSION}."
     echo "During installation, you may be prompted for your password."
     echo "When the prompt 'Password:' appears or a popup window that asks your password, type your password and press enter."
     echo " "
-    read -p "Press Enter to start the installation."
+    read -p "Press Enter to start the installation, press Ctrl-C to abort."
     touch "${INSTALL_LOG}"
 }
 
@@ -92,6 +116,38 @@ prechecks() {
     fi
 }
 
+# Check if the configuration file exists
+check_configfile() {
+    if [[ ! -f "${CONFIG_FILE}" ]]; then
+        echo "Error checking configuration file: ${CONFIG_FILE}, exiting."
+        exit 1
+    fi   
+}
+
+ask_defaults() {
+    # Create config directory if it doesn't exist
+    mkdir -p "${CONFIG_DIR}"
+    echo " "
+    echo "Before the installarion starts, you can set some default values."
+    echo "These values will be used during the installation process and will be used by the various scripts."
+    echo "If the default proposed is correct, just press Enter."
+    echo " "
+    rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
+    sitesbackup=$(prompt_for_input "$HOME/Development/Backup/mysql" "Folder path for website backups:")
+    mariadbbackup=$(prompt_for_input "$HOME/Development/Backup/sites" "Folder path for MariaDB backups:")
+    mariadbpw=$(prompt_for_input "root" "Root password for MariaDB:")
+
+    # Write the values to the config file
+    NOW=$(date +"%Y-%m-%d %H:%M:%S")
+    echo "# Configuration file for php development environment" > "${CONFIG_FILE}"
+    echo "# Generated at ${NOW}" >> "${CONFIG_FILE}"
+    echo "ROOTFOLDER=${rootfolder}" >> "${CONFIG_FILE}"
+    echo "SITESBACKUP=${sitesbackup}" >> "${CONFIG_FILE}"
+    echo "MARIADBBACKUP=${mariadbbackup}" >> "${CONFIG_FILE}"
+    echo "MARIADBPW=${mariadbpw}" >> "${CONFIG_FILE}"
+    check_configfile
+}
+
 install_formulae() {
     echo " "
     echo "Install Homebrew formulae:"
@@ -118,7 +174,8 @@ configure_mariadb() {
     echo "Configure MariaDB."
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
-    mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('root');"
+    source "${CONFIG_FILE}"
+    mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
     echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
@@ -281,6 +338,7 @@ the_end() {
 # Execute the script in order
 start
 prechecks
+ask_defaults
 install_formulae
 configure_mariadb
 configure_php_fpm
