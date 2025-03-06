@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# nginx_dev_installer - Install a local NginX, PHP, MariaDB development environment on macOS
+# nginx_dev_installer - Install a local Apache, NginX, PHP, MariaDB, Xdebug, Mailpit development environment on macOS
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
@@ -18,7 +18,6 @@ VERSION="1.5"
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
-SITESROOT="${HOME}/Development/Sites"
 INSTALL_LOG="${HOME}/nginx_dev_install.log"
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
@@ -73,7 +72,7 @@ prompt_for_input() {
 
 start() {
     clear
-    echo "Welcome to the NginX, PHP, MariaDB, Xdebug local macOS development, installer version ${VERSION}."
+    echo "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer ${VERSION}."
     echo "During installation, you may be prompted for your password."
     echo "When the prompt 'Password:' appears or a popup window that asks your password, type your password and press enter."
     echo " "
@@ -100,14 +99,13 @@ prechecks() {
             echo "  - ${formula}"
         done
         echo " "
-        echo "Installing this NginX, PHP, MariaDB, Xdebug development environment would give unpredictable results."
+        echo "Installing this Apache NginX, PHP, MariaDB, Xdebug, Mailpit environment would give unpredictable results."
         echo "Please uninstall these formulae and run the installer again."
         echo " "
-        echo "If you already have a local development environment installed,"
-        echo "make sure to back up your websites and databases before uninstalling!"
+        echo "Make sure to back up your websites and databases before uninstalling!"
         exit 1
     else
-        echo "None of the precheck formulae are already installed. Proceeding."
+        echo "None of the precheck formulae were already installed. Proceeding."
     fi
 }
 
@@ -197,6 +195,7 @@ configure_php_fpm() {
 }
 
 install_php_switcher() {
+    echo " "
     echo "Installing PHP switcher script, when the prompt 'Password:' appears, type your password and press enter:"
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
     sudo chmod +x "${SCRIPTS_DEST}/sphp"
@@ -280,9 +279,9 @@ configure_dnsmasq() {
 }
 
 create_local_folders() {
-    mkdir -p "$HOME/Development/Sites"
-    mkdir -p "$HOME/Development/Backup/sites"
-    mkdir -p "$HOME/Development/Backup/mysql"
+    mkdir -p "${ROOTFOLDER}"
+    mkdir -p "${SITESBACKUP}"
+    mkdir -p "${MARIADBBACKUP}"
 }
 
 install_ssl_certificates() {
@@ -316,7 +315,7 @@ install_joomla_scripts() {
 }
 
 install_root_tools() {
-    cd "${SITESROOT}"
+    cd "${ROOTFOLDER}"
     echo "Install landingpage."
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php

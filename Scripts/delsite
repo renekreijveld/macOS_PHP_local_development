@@ -20,6 +20,10 @@ MYPATH=$(cd $(dirname ${0}); pwd -P)
 NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
 # Websites root
 SITE_ROOT="/Users/$USER/Development/Sites"
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
 
 # show message function
 showmessage() {
@@ -96,6 +100,15 @@ while getopts ":n:dbsh" opt; do
 done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
 showmessage "Delete website ${WEBSITE_NAME} from the NginX configuration."
 
 # check if mandatory parameters are provided
@@ -111,7 +124,7 @@ if contains_spaces "${WEBSITE_NAME}"; then
 fi
 
 # Check if the site folder already exists
-SITE_FOLDER="${SITE_ROOT}/${WEBSITE_NAME}"
+SITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
 if [ ! -d "${SITE_FOLDER}" ]; then
     echo "Error: The website folder '${SITE_FOLDER}' not found."
     exit 1
@@ -138,11 +151,11 @@ if [ "${BACKUP}" == "yes" ]; then
         showmessage "Error creating database dump."
         exit 1
     fi
-    cd ${SITE_ROOT}
+    cd ${ROOTFOLDER}
     NOW=$(date +"%Y%m%d.%H%M%S")
     showmessage "Create website backup."
-    tar czf ${SITE_ROOT}/${WEBSITE_NAME}.${NOW}.tgz ${WEBSITE_NAME}
-    showmessage "Website backup is ready at: ${SITE_ROOT}/${WEBSITE_NAME}.${NOW}.tgz."
+    tar czf ${WEBSITE_NAME}.${NOW}.tgz ${WEBSITE_NAME}
+    showmessage "Website backup is ready at: ${ROOTFOLDER}/${WEBSITE_NAME}.${NOW}.tgz."
 fi
 
 if [ "${DBDELETE}" == "yes" ]; then
@@ -152,7 +165,7 @@ if [ "${DBDELETE}" == "yes" ]; then
 fi
 
 # Delete website folder
-cd ${SITE_ROOT}
+cd ${ROOTFOLDER}
 showmessage "Delete website folder."
 rm -rf ${SITE_FOLDER}
 
