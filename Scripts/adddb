@@ -53,7 +53,7 @@ contains_spaces() {
 # Function to check if database exists
 database_exists() {
     DATABASE_NAME=$1
-    if mysql -u root -proot -e "use ${DATABASE_NAME}" 2>/dev/null; then
+    if mysql -u root -p${MARIADBPW} -e "use ${DATABASE_NAME}" 2>/dev/null; then
         return 0
     else
         return 1
@@ -86,11 +86,15 @@ done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
 
-# Check if the configuration file exists
-if [[ ! -f "${CONFIG_FILE}" ]]; then
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
     echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
     exit 1
 fi   
+
+source "${CONFIG_FILE}"
 
 showmessage "Add new MariaDB database ${DATABASE_NAME}."
 
