@@ -23,13 +23,8 @@ INSTALL_LOG="${HOME}/nginx_dev_install.log"
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-# MariaDB Config
-MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
-MY_CNF_ADDITION="https://raw.githubusercontent.com/renekreijveld/macOS_NginX_local_development/refs/heads/main/MariaDB/my.cnf.addition"
-
 # PHP Versions to Install
 PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
-PHP_REPO="shivammathur/php"
 
 # Homebrew Formulae to Install
 FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
@@ -152,6 +147,7 @@ install_formulae() {
     echo " "
     echo "Install Homebrew formulae:"
 
+    PHP_REPO="shivammathur/php"
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
     for formula in "${FORMULAE[@]}"; do
@@ -177,6 +173,9 @@ configure_mariadb() {
     source "${CONFIG_FILE}"
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
     echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
+
+    MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
+    MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
