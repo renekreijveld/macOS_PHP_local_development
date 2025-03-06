@@ -83,34 +83,30 @@ foreach ( $phpVersions as $version )
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NginX MariaDB PHP development environment</title>
+    <title>Apache NginX MariaDB PHP development environment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        @import "https://www.nerdfonts.com/assets/css/webfont.css";
         pre {
             margin: 0;
             font-size: 1em;
         }
-
-
     </style>
 </head>
 
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="text-center mb-4">NginX MariaDB PHP Xdebug development environment</h1>
+        <h1 class="text-center mb-4">Apache | NginX | MariaDB | PHP | Xdebug | Mailpit<br>development environment</h1>
         <p class="text-center">Welcome to your local development environment. Here are your tools.</p>
 
         <div class="m-4 text-center">
             <a href="https://localhost/adminer.php?username=root" target="_blank" class="btn btn-primary me-2"><i
-                    class="fa-solid fa-database"></i> Adminer</a>
+                    class="nf nf-dev-mariadb"></i> Adminer</a>
             <a href="https://localhost/phpinfo.php" target="_blank" class="btn btn-success me-2"><i
-                    class="fa-brands fa-php"></i> PHP Info</a>
+                    class="nf nf-seti-php"></i> PHP Info</a>
             <a href="http://localhost:8025" target="_blank" class="btn btn-danger me-2"><i
-                    class="fa-solid fa-inbox"></i> Mailpit</a>
-            <a href="/" class="btn btn-dark"><i class="fa-solid fa-arrows-rotate"></i> Refresh</a>
+                    class="nf nf-oct-mail"></i> Mailpit</a>
+            <a href="/" class="btn btn-dark"><i class="nf nf-md-refresh"></i> Refresh</a>
         </div>
 
         <div class="accordion mb-3" id="toolsAccordion">
@@ -733,14 +729,11 @@ Default action is .tgz backup.
                 </div>
             </div>
         </div>
-        <p><i class="fa-brands fa-github"></i> <a href="https://github.com/renekreijveld/macOS_NginX_local_development"
+        <p><i class="nf nf-fa-github"></i> <a href="https://github.com/renekreijveld/macOS_NginX_local_development"
                 target="_blank">Created by René Kreijveld</a>.</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
-        integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>
