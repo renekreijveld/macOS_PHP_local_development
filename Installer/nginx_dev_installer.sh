@@ -13,8 +13,9 @@
 # 1.3 Added separate ini files for Xdebug.
 # 1.4 Added installation of PHP 8.1 and 8.2.
 # 1.5 Put default settings in a config file
+# 1.6 Added new scripts for apache
 
-VERSION="1.5"
+VERSION="1.6"
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
