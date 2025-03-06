@@ -95,8 +95,6 @@ else
     exit 1
 fi   
 
-source "${CONFIG_FILE}"
-
 showmessage "Add new MariaDB database ${DATABASE_NAME}."
 
 # check if mandatory parameters are provided
