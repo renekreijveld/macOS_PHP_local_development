@@ -145,14 +145,14 @@ ask_defaults() {
 }
 
 disable_old_apache() {
-    echo " "
+    clear
     echo "Disable the old Apache installation."
     sudo apachectl -k stop
     sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
 }
 
 install_formulae() {
-    clear
+    echo " "
     echo "Install Homebrew formulae:"
 
     PHP_REPO="shivammathur/php"
@@ -309,6 +309,7 @@ install_ssl_certificates() {
 }
 
 install_local_scripts() {
+    echo " "
     echo "Install local scripts."
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "Install ${script}."
@@ -318,6 +319,7 @@ install_local_scripts() {
 }
 
 install_joomla_scripts() {
+    echo " "
     echo "Install Joomla scripts."
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "Install ${script}."
