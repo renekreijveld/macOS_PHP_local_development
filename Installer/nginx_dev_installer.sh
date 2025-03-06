@@ -142,6 +142,13 @@ ask_defaults() {
     check_configfile
 }
 
+disable_old_apache() {
+    echo " "
+    echo "Disable the old Apache installation."
+    sudo apachectl -k stop
+    sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
+}
+
 install_formulae() {
     clear
     echo "Install Homebrew formulae:"
@@ -343,6 +350,7 @@ start
 prechecks
 ask_defaults
 source "${CONFIG_FILE}"
+disable_old_apache
 install_formulae
 configure_mariadb
 configure_php_fpm
