@@ -145,8 +145,6 @@ ask_defaults() {
 
 install_formulae() {
     clear
-
-
     echo "Install Homebrew formulae:"
 
     PHP_REPO="shivammathur/php"
