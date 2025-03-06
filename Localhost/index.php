@@ -724,7 +724,7 @@ Default action is .tgz backup.
                 <div id="collapse_about" class="accordion-collapse collapse" aria-labelledby="heading_about"
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body">
-                        <p>The NginX MariaDB PHP Xdebug installer and all scripts written by René Kreijveld.</p>
+                        <p>The Apache NginX MariaDB PHP Xdebug Mailpit installer and all scripts written by René Kreijveld.</p>
                     </div>
                 </div>
             </div>
