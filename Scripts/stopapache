@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# stopapache - stop the apache system service for the development environment
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
+
+# Stop Apache
+brew services stop httpd
