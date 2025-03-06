@@ -144,7 +144,7 @@ ask_defaults() {
 }
 
 install_formulae() {
-    echo " "
+    clear
     echo "Install Homebrew formulae:"
 
     PHP_REPO="shivammathur/php"
@@ -170,7 +170,11 @@ configure_mariadb() {
     echo "Configure MariaDB."
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
+
     source "${CONFIG_FILE}"
+
+    echo "MariaDB root password: ${MARIADBPW}"
+
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
     echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
