@@ -257,9 +257,13 @@ configure_apache() {
     APACHE_VHOSTS="${APACHE_ETC}/vhosts"
     APACHE_VHOSTS_CONF="${APACHE_ETC}/extra/httpd-vhosts.conf"
     APACHE_VHOSTS_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-vhosts.conf"
+    APACHE_SSL_CONF="${APACHE_ETC}/extra/httpd-ssl.conf"
+    APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
+    curl -fsSL "${APACHE_SSL_CONF_NEW}" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_CONF}" > /dev/null
 
