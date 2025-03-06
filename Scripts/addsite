@@ -22,6 +22,10 @@ INDEX_TEMPLATE=/opt/homebrew/etc/nginx/templates/index.php
 NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
 # nginx configuration template
 NGINX_CONFIG_TEMPLATE=/opt/homebrew/etc/nginx/templates/template.conf
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
 
 # show message function
 showmessage() {
@@ -116,6 +120,13 @@ while getopts ":n:p:d:josh" opt; do
 done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+
+# Check if the configuration file exists
+if [[ ! -f "${CONFIG_FILE}" ]]; then
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
 showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 
 # check if mandatory parameters are provided
