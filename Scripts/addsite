@@ -121,8 +121,10 @@ done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
 
-# Check if the configuration file exists
-if [[ ! -f "${CONFIG_FILE}" ]]; then
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
     echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
     exit 1
 fi   
@@ -171,12 +173,12 @@ if [ ! -z "${DATABASE_NAME}" ]; then
 fi
 
 # Create the website directory
-WEBSITE_DIR=~/Development/Sites/${WEBSITE_NAME}
-showmessage "Create website root folder ${WEBSITE_DIR}."
-mkdir -p ${WEBSITE_DIR}
+SITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
+showmessage "Create website root folder ${SITE_FOLDER}."
+mkdir -p ${SITE_FOLDER}
 
 # Copy and modify the index.php website template
-INDEX_PHP_FILE=${WEBSITE_DIR}/index.php
+INDEX_PHP_FILE=${SITE_FOLDER}/index.php
 showmessage "Installing index.php in root folder ${WEBSITE_NAME}."
 cp ${INDEX_TEMPLATE} ${INDEX_PHP_FILE}
 sed -i '' "s/#website_name#/${WEBSITE_NAME}/g" ${INDEX_PHP_FILE}
