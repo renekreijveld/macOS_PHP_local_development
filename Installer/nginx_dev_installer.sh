@@ -145,6 +145,8 @@ ask_defaults() {
 
 install_formulae() {
     clear
+
+
     echo "Install Homebrew formulae:"
 
     PHP_REPO="shivammathur/php"
@@ -173,10 +175,8 @@ configure_mariadb() {
 
     source "${CONFIG_FILE}"
 
-    echo "MariaDB root password: ${MARIADBPW}"
-
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
-    echo -e "root\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
+    echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
