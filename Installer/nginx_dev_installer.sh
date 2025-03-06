@@ -262,7 +262,7 @@ configure_apache() {
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_CONF}" > /dev/null
 
-    mkdir -p "${APACHE_ETC}/templates" "${APACHE_ETC}/vhosts"
+    mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s/your_username/${USERNAME}/g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
