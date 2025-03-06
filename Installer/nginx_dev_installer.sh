@@ -169,8 +169,6 @@ configure_mariadb() {
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 
-    source "${CONFIG_FILE}"
-
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
     echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
@@ -339,6 +337,7 @@ the_end() {
 start
 prechecks
 ask_defaults
+source "${CONFIG_FILE}"
 install_formulae
 configure_mariadb
 configure_php_fpm
