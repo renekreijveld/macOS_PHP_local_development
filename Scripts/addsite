@@ -91,7 +91,7 @@ database_exists() {
 SILENT="no"
 OPEN="no"
 JOOMLA="no"
-while getopts ":n:p:d:josh" opt; do
+while getopts "n:p:d:josh" opt; do
     case ${opt} in
     n)
         WEBSITE_NAME=$OPTARG
