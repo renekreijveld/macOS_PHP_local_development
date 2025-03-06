@@ -15,7 +15,6 @@
 VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
-# default index.php template
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
