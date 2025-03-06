@@ -22,6 +22,10 @@ INDEX_TEMPLATE=/opt/homebrew/etc/nginx/templates/index.php
 NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
 # nginx configuration template
 NGINX_CONFIG_TEMPLATE=/opt/homebrew/etc/nginx/templates/template.conf
+# apache folder for website configurations
+APACHE_CONF_DIR=/opt/homebrew/etc/httpd/vhosts
+# apache configuration template
+APACHE_CONFIG_TEMPLATE=/opt/homebrew/etc/httpd/templates/template.conf
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
@@ -209,9 +213,17 @@ esac
 NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
 cp ${NGINX_CONFIG_TEMPLATE} ${NGINX_CONF_FILE}
 chmod 700 ${NGINX_CONF_FILE}
+sed -i '' "s/<document_root>/${SITE_FOLDER}/g" ${NGINX_CONF_FILE}
 sed -i '' "s/<website_name>/${WEBSITE_NAME}/g" ${NGINX_CONF_FILE}
-sed -i '' "s/<your_username>/${USER}/g" ${NGINX_CONF_FILE}
 sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${NGINX_CONF_FILE}
+
+# Copy and modify the apache configuration template
+APACHE_CONF_FILE=${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf
+cp ${APACHE_CONFIG_TEMPLATE} ${APACHE_CONF_FILE}
+chmod 700 ${APACHE_CONF_FILE}
+sed -i '' "s/<document_root>/${SITE_FOLDER}/g" ${APACHE_CONF_FILE}
+sed -i '' "s/<website_name>/${WEBSITE_NAME}/g" ${APACHE_CONF_FILE}
+sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${APACHE_CONF_FILE}
 
 if [ ! -z "${DATABASE_NAME}" ]; then
     adddb -d ${DATABASE_NAME} -s
