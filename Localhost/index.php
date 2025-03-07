@@ -9,7 +9,8 @@
  */
 
 $phpDir     = '/opt/homebrew/etc/php';
-$serversDir = '/opt/homebrew/etc/nginx/servers';
+$apacheServersDir = '/opt/homebrew/etc/httpd/vhosts';
+$nginxServersDir = '/opt/homebrew/etc/nginx/servers';
 $username = getenv('USER');
 
 function getPhpVersionFromConfig ( $configFile )
@@ -53,16 +54,24 @@ $phpVersions = array_filter( $entries, function ($entry) use ($phpDir)
 $phpVersions = array_values( $phpVersions );
 
 // Get all .conf files in the directory
-$nginxconfigs = glob( $serversDir . '/*.conf' );
+$apacheconfigs = glob( $apacheServersDir . '/*.conf' );
+$nginxconfigs = glob( $nginxServersDir . '/*.conf' );
 
-// Extract website names by removing the directory path and ".conf" extension
-$websites = array_map( function ($file)
+// Extract Apache website names by removing the directory path and ".conf" extension
+$apacheWebsites = array_map( function ($file)
+{
+    return pathinfo( $file, PATHINFO_FILENAME );
+}, $apacheconfigs );
+
+// Extract NginX website names by removing the directory path and ".conf" extension
+$nginxWebsites = array_map( function ($file)
 {
     return pathinfo( $file, PATHINFO_FILENAME );
 }, $nginxconfigs );
 
 $status = [ 
     'nginx'   => strpos( shell_exec( 'pgrep nginx' ), "\n" ) !== false ? '<span class="badge bg-success">Running</span>' : '<span class="badge bg-danger">Not running</span>',
+    'httpd'   => strpos( shell_exec( 'pgrep httpd' ), "\n" ) !== false ? '<span class="badge bg-success">Running</span>' : '<span class="badge bg-danger">Not running</span>',
     'mariadb' => strpos( shell_exec( 'pgrep mariadbd' ), "\n" ) !== false ? '<span class="badge bg-success">Running</span>' : '<span class="badge bg-danger">Not running</span>',
     'dnsmasq' => strpos( shell_exec( 'pgrep dnsmasq' ), "\n" ) !== false ? '<span class="badge bg-success">Running</span>' : '<span class="badge bg-danger">Not running</span>',
     'mailpit' => strpos( shell_exec( 'pgrep mailpit' ), "\n" ) !== false ? '<span class="badge bg-success">Running</span>' : '<span class="badge bg-danger">Not running</span>'
@@ -121,6 +130,7 @@ foreach ( $phpVersions as $version )
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body">
                         <p>Status of the system services:</p>
+                        <p><strong>Apache</strong>: <?php echo $status[ 'httpd' ]; ?></p>
                         <p><strong>NginX</strong>: <?php echo $status[ 'nginx' ]; ?></p>
                         <p><strong>MariaDB</strong>: <?php echo $status[ 'mariadb' ]; ?></p>
                         <?php
@@ -135,6 +145,30 @@ foreach ( $phpVersions as $version )
                 </div>
             </div>
             <div class="accordion-item">
+                <h2 class="accordion-header" id="heading_apache">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse_apache" aria-expanded="false" aria-controls="collapse_apache">
+                        Apache
+                    </button>
+                </h2>
+                <div id="collapse_apache" class="accordion-collapse collapse" aria-labelledby="heading_apache"
+                    data-bs-parent="#toolsAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Apache</strong>: <?php echo $status[ 'httpd' ]; ?></p>
+                        <p>The following websites are configured in your Apache setup:</p>
+                        <ul>
+                            <?php foreach ( $apacheWebsites as $website ) : ?>
+                                <?php if ($website !== 'localhost') : ?>
+                                <?php $phpVersion = getPhpVersionFromConfig( $apacheServersDir . "/$website.conf" ); ?>
+                                <li><a href="https://<?php echo $website; ?>.dev.test" target="_blank"><?php echo $website; ?></a> (php
+                                    <?php echo $phpVersion; ?>)</li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="heading_nginx">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapse_nginx" aria-expanded="false" aria-controls="collapse_nginx">
@@ -144,10 +178,11 @@ foreach ( $phpVersions as $version )
                 <div id="collapse_nginx" class="accordion-collapse collapse" aria-labelledby="heading_nginx"
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body">
+                        <p><strong>NginX</strong>: <?php echo $status[ 'nginx' ]; ?></p>
                         <p>The following websites are configured in your NginX setup:</p>
                         <ul>
-                            <?php foreach ( $websites as $website ) : ?>
-                                <?php $phpVersion = getPhpVersionFromConfig( $serversDir . "/$website.conf" ); ?>
+                            <?php foreach ( $nginxWebsites as $website ) : ?>
+                                <?php $phpVersion = getPhpVersionFromConfig( $nginxServersDir . "/$website.conf" ); ?>
                                 <li><a href="https://<?php echo $website; ?>.dev.test"
                                         target="_blank"><?php echo $website; ?></a> (php <?php echo $phpVersion; ?>)</li>
                             <?php endforeach; ?>
