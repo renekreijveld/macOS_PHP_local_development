@@ -142,7 +142,7 @@ ask_defaults() {
 
 disable_old_apache() {
     clear
-    echo "Disable the old Apache installation."
+    echo "Disable default macOS Apache installation."
     echo "${PASSWORD}" | sudo -S apachectl -k stop > /dev/null 2>&1
     echo "${PASSWORD}" | sudo -S launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist >/dev/null 2>&1
 }
@@ -197,16 +197,16 @@ configure_php_fpm() {
 }
 
 install_php_switcher() {
-    echo -e "\nInstalling PHP switcher script."
+    echo -e "\nInstall PHP switcher script."
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | tee "sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f sphp "${SCRIPTS_DEST}/sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/sphp" > /dev/null
 }
 
 install_xdebug() {
-    echo -e "\nInstall Xdebug."
+    echo -e "\n\nInstall Xdebug:"
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "- installing Xdebug for php ${php_version}."
+        echo "- install Xdebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
 
         if [ "${php_version}" == "7.4" ]; then
@@ -305,7 +305,7 @@ install_ssl_certificates() {
 }
 
 install_local_scripts() {
-    echo -e"\nInstall local scripts."
+    echo -e "\nInstall local scripts."
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
@@ -333,6 +333,13 @@ install_root_tools() {
     echo "Install adminer.php script."
     curl -sL "https://www.adminer.org/latest.php" > adminer.php
     echo "<?php phpinfo();" > phpinfo.php
+}
+
+fix_sudoers() {
+    echo -e "Modify /etc/sudoers so you don't have to enter your password to start and stop services."
+    echo "${PASSWORD}" | sudo -S chmod 640 /etc/sudoers
+    echo "${USERNAME} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+    echo "${PASSWORD}" | sudo -S chmod 440 /etc/sudoers
 }
 
 the_end() {
@@ -364,4 +371,5 @@ install_ssl_certificates
 install_local_scripts
 install_joomla_scripts
 install_root_tools
+fix_sudoers
 the_end
