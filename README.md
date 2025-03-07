@@ -4,7 +4,7 @@ This setup installs a Apache/NginX/MariaDB/PHP-based development stack on your A
 
 You will get a setup with the following elements:
 
-- Easy switch between Apache or Nginx webserver.
+- Easy switch between Apache or NginX webserver.
 - MariaDB database server.
 - PHP 7.4/8.1/8.2/8.3/8.4, you can have multiple local sites running concurrently with different PHP versions.
 - Xdebug installed and enabled in all PHP versions.
