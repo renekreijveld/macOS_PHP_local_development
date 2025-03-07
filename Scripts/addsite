@@ -241,7 +241,7 @@ sudo brew services restart nginx
 
 if [ "${JOOMLA}" == "yes" ]; then
     showmessage "Downloading and extracting the latest Joomla version."
-    cd ${WEBSITE_DIR}
+    cd ${SITE_FOLDER}
     latestjoomla
 fi
 
