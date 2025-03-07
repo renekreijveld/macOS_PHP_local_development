@@ -14,8 +14,9 @@
 # 1.4 Added installation of PHP 8.1 and 8.2.
 # 1.5 Put default settings in a config file
 # 1.6 Added new scripts for apache
+# 1.7 Added password processing
 
-VERSION="1.6"
+VERSION="1.7"
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
@@ -74,17 +75,16 @@ prompt_for_input() {
 
 start() {
     clear
-    echo "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer ${VERSION}."
-    echo "During installation, you may be prompted for your password."
-    echo "When the prompt 'Password:' appears or a popup window that asks your password, type your password and press enter."
-    echo " "
+    echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer ${VERSION}.\n"
+    echo "Installation output will be logged in the file ${INSTALL_LOG}."
+    echo -e "Check this file if you encounter any issues during the installation.\n"
     read -p "Press Enter to start the installation, press Ctrl-C to abort."
     touch "${INSTALL_LOG}"
 }
 
 prechecks() {
     PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
-    echo "The installer will first check if some required formulae are already installed."
+    echo -e "\nThe installer will first check if some required formulae are already installed."
     
     INSTALLED_FORMULAE=()
 
@@ -95,15 +95,12 @@ prechecks() {
     done
 
     if [ ${#INSTALLED_FORMULAE[@]} -gt 0 ]; then
-        echo " "
-        echo "Cannot continue. The following formulae are already installed with Homebrew:"
+        echo -e "\nCannot continue. The following formulae are already installed with Homebrew:"
         for formula in "${INSTALLED_FORMULAE[@]}"; do
             echo "  - ${formula}"
         done
-        echo " "
-        echo "Installing this Apache NginX, PHP, MariaDB, Xdebug, Mailpit environment would give unpredictable results."
-        echo "Please uninstall these formulae and run the installer again."
-        echo " "
+        echo -e "\nInstalling this Apache NginX, PHP, MariaDB, Xdebug, Mailpit environment would give unpredictable results."
+        echo -e "Please uninstall these formulae first and run the installer again.\n"
         echo "Make sure to back up your websites and databases before uninstalling!"
         exit 1
     else
@@ -122,15 +119,14 @@ check_configfile() {
 ask_defaults() {
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
-    echo " "
-    echo "Before the installarion starts, you can set some default values."
+    echo -e "\nBefore the installarion starts, you can set some default values."
     echo "These values will be used during the installation process and will be used by the various scripts."
-    echo "If the default proposed is correct, just press Enter."
-    echo " "
+    echo -e "If the default proposed value is correct, just press Enter.\n"
     rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
     sitesbackup=$(prompt_for_input "$HOME/Development/Backup/mysql" "Folder path for website backups:")
     mariadbbackup=$(prompt_for_input "$HOME/Development/Backup/sites" "Folder path for MariaDB backups:")
     mariadbpw=$(prompt_for_input "root" "Root password for MariaDB:")
+    read -s -p "Input your password, this is needed for updating system files: " PASSWORD
 
     # Write the values to the config file
     NOW=$(date +"%Y-%m-%d %H:%M:%S")
@@ -147,24 +143,23 @@ ask_defaults() {
 disable_old_apache() {
     clear
     echo "Disable the old Apache installation."
-    sudo apachectl -k stop
-    sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
+    echo "${PASSWORD}" | sudo -S apachectl -k stop > /dev/null 2>&1
+    echo "${PASSWORD}" | sudo -S launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist >/dev/null 2>&1
 }
 
 install_formulae() {
-    echo " "
-    echo "Install Homebrew formulae:"
+    echo -e "\nInstall Homebrew formulae:"
 
     PHP_REPO="shivammathur/php"
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
     for formula in "${FORMULAE[@]}"; do
-        echo "Install ${formula}."
+        echo "- install ${formula}."
         brew install --quiet ${formula} >>${INSTALL_LOG} 2>&1
     done
 
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Install php ${php_version}."
+        echo "- install php ${php_version}."
         brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
@@ -174,8 +169,7 @@ install_formulae() {
 }
 
 configure_mariadb() {
-    echo " "
-    echo "Configure MariaDB."
+    echo -e "\nConfigure MariaDB."
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 
@@ -203,17 +197,16 @@ configure_php_fpm() {
 }
 
 install_php_switcher() {
-    echo " "
-    echo "Installing PHP switcher script, when the prompt 'Password:' appears, type your password and press enter:"
-    curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | sudo tee "${SCRIPTS_DEST}/sphp" > /dev/null
-    sudo chmod +x "${SCRIPTS_DEST}/sphp"
+    echo -e "\nInstalling PHP switcher script."
+    curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | tee "sphp" > /dev/null
+    echo "${PASSWORD}" | sudo -S mv -f sphp "${SCRIPTS_DEST}/sphp" > /dev/null
+    echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/sphp" > /dev/null
 }
 
 install_xdebug() {
-    echo " "
-    echo "Install Xdebug."
+    echo -e "\nInstall Xdebug."
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "Installing Xdebug for php ${php_version}."
+        echo "- installing Xdebug for php ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
 
         if [ "${php_version}" == "7.4" ]; then
@@ -286,8 +279,9 @@ configure_dnsmasq() {
     echo " "
     echo "Configure Dnsmasq."
     echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
-    sudo mkdir -p /etc/resolver
-    echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test > /dev/null
+    echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
+    echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
+    echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
 }
 
 create_local_folders() {
@@ -298,7 +292,9 @@ create_local_folders() {
 
 install_ssl_certificates() {
     echo " "
-    echo "Install local Certificate Authority."
+    echo "Local SSL certificates will now be installed, two pop-up windows will appear."
+    read -p "Input your password in these window to install the certificates. Press Enter to continue."
+    echo -e "\nInstall local Certificate Authority."
     mkcert -install
     mkdir -p /opt/homebrew/etc/certs
     cd /opt/homebrew/etc/certs
@@ -309,28 +305,29 @@ install_ssl_certificates() {
 }
 
 install_local_scripts() {
-    echo " "
-    echo "Install local scripts."
+    echo -e"\nInstall local scripts."
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        echo "Install ${script}."
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
-        sudo chmod +x "${SCRIPTS_DEST}/${script}"
+        echo "- install ${script}."
+        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+        echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
+        echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
-    echo " "
-    echo "Install Joomla scripts."
+    echo -e "\nInstall Joomla scripts."
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "Install ${script}."
+        echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
-        sudo chmod +x "${SCRIPTS_DEST}/${script}"
+        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+        echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
+        echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_root_tools() {
     cd "${ROOTFOLDER}"
-    echo "Install landingpage."
+    echo -e "\nInstall landingpage."
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php
     echo "Install adminer.php script."
@@ -340,11 +337,8 @@ install_root_tools() {
 
 the_end() {
     /usr/local/bin/stopphpfpm > /dev/null 2>&1
-    echo " "
-    echo "Installation completed!"
-    echo " "
-    echo "The installation log is available at ${INSTALL_LOG}"
-    echo " "
+    echo -e "\nInstallation completed!\n"
+    echo -e "The installation log is available at ${INSTALL_LOG}.\n"
     echo "Run 'startdev' to start your environment. The current webserver is set to NginX."
     echo "You can switch between NginX and Apache with the 'setserver' script."
     echo "Enjoy your development setup!"
