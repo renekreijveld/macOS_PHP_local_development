@@ -39,8 +39,8 @@ LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmail
     "setsitephp" "startapache" "stopapache" "restartapache" "setserver")
 
 # Joomla scripts to install
-JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" "jdbimp" 
-    "jlistjoomlas" "joomlainfo" "latestjoomla")
+JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
+    "jdbimp" "jlistjoomlas" "joomlainfo" "latestjoomla")
 
 # GitHub Repo Base URL
 GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
