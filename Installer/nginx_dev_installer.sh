@@ -120,7 +120,7 @@ check_configfile() {
 ask_defaults() {
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
-    echo -e "\nBefore the installarion starts, you can set some default values."
+    echo -e "\nBefore the installarion starts, some default values need to be set."
     echo "These values will be used during the installation process and will be used by the various scripts."
     echo -e "If the default proposed value is correct, just press Enter.\n"
     rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
@@ -221,12 +221,12 @@ install_xdebug() {
 configure_php_ini() {
     echo " "
     echo "Install php.ini files."
-    XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug.ini"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
         XDEBUG_INI="/opt/homebrew/etc/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
+        XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
 
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
