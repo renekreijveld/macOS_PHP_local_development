@@ -9,11 +9,21 @@
 # Version history
 # 1.0 Initial version
 
-echo "Starting NginX - MariaDB - PHP development environment services."
+CONFIG_DIR="${HOME}/.config/phpdev"
+CONFIG_FILE="${CONFIG_DIR}/config"
+
+echo "Starting Apache/NginX - MariaDB - PHP development environment services."
 echo "These services will run in the background and will automatically restart on system reboot."
-echo "When the Password: prompt appears, enter your password to allow the services to run."
-echo " "
+echo -e "When the Password: prompt appears, enter your password to allow the services to run.\n"
 echo "To permanently stop the services, run the stopdev script."
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
 
 # Start Dnsmasq
 /usr/local/bin/startdnsmasq
@@ -21,8 +31,15 @@ echo "To permanently stop the services, run the stopdev script."
 # Start PHP-FPM
 /usr/local/bin/startphpfpm
 
-# Start NginX
-/usr/local/bin/startnginx
+if [ "${WEBSERVER}" == "apache" ]; then
+    # Start Apache
+    /usr/local/bin/startapache
+fi
+
+if [ "${WEBSERVER}" == "nginx" ]; then
+    # Start NginX
+    /usr/local/bin/startnginx
+fi
 
 # Start MariaDB
 /usr/local/bin/startmariadb

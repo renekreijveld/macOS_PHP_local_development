@@ -9,14 +9,32 @@
 # Version history
 # 1.0 Initial version
 
+CONFIG_DIR="${HOME}/.config/phpdev"
+CONFIG_FILE="${CONFIG_DIR}/config"
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
 # Restart Dnsmasq
 /usr/local/bin/restartdnsmasq
 
 # Restart PHP-FPM
 /usr/local/bin/restartphpfpm
 
-# Restart NginX
-/usr/local/bin/restartnginx
+if [ "${WEBSERVER}" == "apache" ]; then
+    # Restart Apache
+    /usr/local/bin/restartapache
+fi
+
+if [ "${WEBSERVER}" == "nginx" ]; then
+    # Restart NginX
+    /usr/local/bin/restartnginx
+fi
 
 # Restart MariaDB
 /usr/local/bin/restartmariadb

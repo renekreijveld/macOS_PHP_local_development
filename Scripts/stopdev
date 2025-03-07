@@ -6,9 +6,20 @@
 # This script is free software; you may redistribute it and/or modify it.
 # This script comes without any warranty. Use it at your own risk.
 
-echo "Stopping NginX - MariaDB - PHP development environment services."
+CONFIG_DIR="${HOME}/.config/phpdev"
+CONFIG_FILE="${CONFIG_DIR}/config"
+
+echo "Stopping Apache/NginX - MariaDB - PHP development environment services."
 echo "The background services will now be stopped and will not automatically restart on system reboot."
 echo "When the Password: prompt appears, enter your password to allow the services to be stopped."
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
 
 # Stop Mailpit
 /usr/local/bin/stopmailpit
@@ -16,8 +27,15 @@ echo "When the Password: prompt appears, enter your password to allow the servic
 # Stop MariaDB
 /usr/local/bin/stopmariadb
 
-# Stop NginX
-/usr/local/bin/stopnginx
+if [ "${WEBSERVER}" == "apache" ]; then
+    # Stop Apache
+    /usr/local/bin/stopapache
+fi
+
+if [ "${WEBSERVER}" == "nginx" ]; then
+    # Stop NginX
+    /usr/local/bin/stopnginx
+fi
 
 # Stop PHP-FPM
 /usr/local/bin/stopphpfpm
@@ -25,5 +43,4 @@ echo "When the Password: prompt appears, enter your password to allow the servic
 # Stop Dnsmasq
 /usr/local/bin/stopdnsmasq
 
-echo " "
-echo "To start the services again, run the stopdev script."
+echo -e "\nTo start the services again, run the startdev script."
