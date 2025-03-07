@@ -45,14 +45,14 @@ usage() {
 
 # Parse command line arguments
 SILENT="no"
-SERVER=""
+NEWSERVER=""
 while getopts "ansh" opt; do
     case ${opt} in
     a)
-        SERVER=apache
+        NEWSERVER=apache
         ;;
     n)
-        SERVER=nginx
+        NEWSERVER=nginx
         ;;
     s)
         SILENT="yes"
@@ -82,28 +82,36 @@ else
 fi  
 
 # check if mandatory parameters are provided
-if [ -z "${SERVER}" ]; then
+if [ -z "${NEWSERVER}" ]; then
     echo "Error: no -a or -n specified."
     echo "Usage: ${MYNAME} -n | -a [-s] [-h]"
     exit 1
 fi
 
-if [ "${SERVER}" == "${WEBSERVER}" ]; then
-    showmessage "Webserver is already ${SERVER}, no need to switch."
+if [ "${NEWSERVER}" == "${WEBSERVER}" ]; then
+    showmessage "Webserver is already ${NEWSERVER}, no need to switch."
     exit 0
 fi
 
-if [ "${SERVER}" == "apache" ]; then
-    showmessage "Switching to Apache webserver."
+showmessage "Current server is ${WEBSERVER}, switching to ${NEWSERVER}."
+
+if [ "${NEWSERVER}" == "apache" ]; then
+    showmessage "Wait 5 seconds for NginX to stop."
     /usr/local/bin/stopnginx
+    sleep 5
+    showmessage "Wait 5 seconds for Apache to start."
     /usr/local/bin/startapache
+    sleep 5
 fi
 
-if [ "${SERVER}" == "nginx" ]; then
-    showmessage "Switching to NginX webserver."
+if [ "${NEWSERVER}" == "nginx" ]; then
+    showmessage "Wait 5 seconds for Apache to stop."
     /usr/local/bin/stopapache
+    sleep 5
+    showmessage "Wait 5 seconds for NginX to start."
     /usr/local/bin/startnginx
+    sleep 5
 fi
 
 # Update config file
-sed -i '' "s|^WEBSERVER=.*|WEBSERVER=${SERVER}|" "$CONFIG_FILE"
+sed -i '' "s|^WEBSERVER=.*|WEBSERVER=${NEWSERVER}|" "$CONFIG_FILE"
