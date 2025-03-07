@@ -15,8 +15,9 @@
 # 1.5 Put default settings in a config file
 # 1.6 Added new scripts for apache
 # 1.7 Added password processing
+# 1.8 Added modification of sudoers for easy starting and stopping of services
 
-VERSION="1.7"
+VERSION="1.8"
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
