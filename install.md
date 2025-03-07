@@ -1,11 +1,13 @@
 ## Disclaimer
 
-This setup works fine on my macOS machines. I am no NginX, PHP and MariaDB expert so should something go wrong in your setup, check the sources I used.
+This setup works fine on my macOS machines. Should something go wrong in your setup, check the sources I used.
+
+A logfile is created during installation.
 
 ## Requirements
 
-- macOS Sequoia (tested on macOS Sequoia 15.3.1).
-- This installation assumes you are running Zsh in your terminal.
+- M1/M2/M3/M4 Mac running macOS Sequoia (tested on macOS Sequoia 15.3.1).
+- This installation assumes you are running the Zsh shell in your terminal.
 
 ## User resources
 
