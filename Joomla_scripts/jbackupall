@@ -27,28 +27,19 @@ else
     exit 1
 fi   
 
-# Check if jfunctions script exists
-if [[ ! -f "${MYPATH}/jfunctions" ]]; then
-    echo "Error: Required script 'jfunctions' not found in ${MYPATH}, Exiting."
-    exit 1
-else
-    # Gather Joomla information
-    source "${MYPATH}/jfunctions"
-fi
-
-# display messages
-SILENT="no"
-
 # determine path of script
-MYPATH=$(
-    cd $(dirname ${0})
-    pwd -P
-)
-MYNAME=$(basename ${0})
+MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+MYNAME=$(basename "$0")
 
 # check if folder for backup storage exists
 if [ ! -d "${SITESBACKUP}" ]; then
     echo "Backup directory ${SITESBACKUP} does not exist, exiting."
+    exit 1
+fi
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}, Exiting."
     exit 1
 fi
 
@@ -72,6 +63,8 @@ showmessage() {
     fi
 }
 
+# display messages
+SILENT="no"
 # process the arguments
 while getopts sh opt; do
     case "${opt}" in
@@ -88,7 +81,7 @@ while getopts sh opt; do
     esac
 done
 
-`showmessage` "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 
 for DIR in $(find ${ROOTFOLDER} -maxdepth 4 -type d); do
     if [ -f ${DIR}/configuration.php ]; then
