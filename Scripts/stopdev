@@ -9,9 +9,8 @@
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-echo "Stopping Apache/NginX - MariaDB - PHP development environment services."
+echo -e "Stopping Apache/NginX - MariaDB - PHP development environment services.\n"
 echo "The background services will now be stopped and will not automatically restart on system reboot."
-echo "When the Password: prompt appears, enter your password to allow the services to be stopped."
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
