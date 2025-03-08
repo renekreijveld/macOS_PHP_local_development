@@ -26,7 +26,7 @@ VERSION=1.4
 # show message function
 showmessage() {
     if [ "${SILENT}" == "no" ]; then
-        echo "$1"
+        echo -e "$1"
     fi
 }
 
