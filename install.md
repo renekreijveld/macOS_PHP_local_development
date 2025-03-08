@@ -42,7 +42,7 @@ Type your password to continue the installation.
 After installation enter this command in the terminal to add Homebrew to your PATH:
 
 ```
-echo >> /Users/$USER/.zprofile; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/$USER/.zprofile; eval "$(/opt/homebrew/bin/brew shellenv)"
+echo >> $HOME/.zprofile; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile; eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 ### Check Homebrew installation
