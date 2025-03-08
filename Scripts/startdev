@@ -14,7 +14,7 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 
 echo -e "Starting Apache/NginX - MariaDB - PHP development environment services.\n"
 echo -e "These services will run in the background and will automatically restart on system reboot.\n"
-echo "To permanently stop the services, run the stopdev script."
+echo -e "To permanently stop the services, run the stopdev script.\n"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
