@@ -104,70 +104,57 @@ fi
 showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 
 # Check if database dump exists
+WEBSITE_FOLDER=$(basename "$PWD")
+START_FOLDER=$(dirname "$PWD")
+
+# Check if database dump exists
 if [ -e ${database}.sql ]; then
     if [ "${OVERWRITE}" == "no" ]; then
-        echo "Error: Database dump ${database}.sql already exists. Use -o to overwrite."
-        exit 1
+        read -p "Database dump ${database}.sql already exists. Press Enter to overwrite, or Ctrl-C to abort."
     fi
 fi
 
+# Check if backup file exists
 if [ "${ZIP}" == "no" ]; then
-    BACKUPFILE="${SITESBACKUP}/${sitename}${NOW}.tgz"
+    BACKUPFILE="${SITESBACKUP}/${WEBSITE_FOLDER}${NOW}.tgz"
 else
-    BACKUPFILE="${SITESBACKUP}/${sitename}${NOW}.zip"
+    BACKUPFILE="${SITESBACKUP}/${WEBSITE_FOLDER}${NOW}.zip"
 fi
 if [ -e ${BACKUPFILE} ]; then
     if [ "${OVERWRITE}" == "no" ]; then
-        echo "Error: backup file ${BACKUPFILE} already exists."
-        echo "Use the option -o to overwrite."
-        exit 1
+        read -p "Backup ${BACKUPFILE} already exists. Press Enter to overwrite, or Ctrl-C to abort."
     fi
 fi
 
-showmessage "This is a Joomla! ${jversion} site. Starting backup ..."
-
-# Check if a .vscode folder exists
-if [ -e .vscode ]; then
-    VSCODE=".vscode/"
-else
-    VSCODE=""
-fi
-
-# Check if a .git folder exists
-if [ -d .git ]; then
-    GIT=".git"
-else
-    GIT=""
-fi
-
-# Check if .gitignore exists
-if [ -e .gitignore ]; then
-    GITIGNORE=".gitignore"
-else
-    GITIGNORE=""
-fi
-
-# check if htaccess is present
-if [ -e .htaccess ]
-then
-    HTACCESS=".htaccess"
-else
-    HTACCESS=""
-fi
+showmessage "This is a Joomla! ${jversion} site. Starting backup."
 
 showmessage "Create database dump."
 jdbdump > /dev/null
 
 showmessage "Create backup."
+
+# Check if database dump exists
+WEBSITE_FOLDER=$(basename "$PWD")
+# Move one folder up
+cd ${START_FOLDER}
+
 # create the backup
 if [ "${ZIP}" == "no" ]
 then
-    tar czf ${BACKUPFILE} ${VSCODE} ${GIT} ${GITIGNORE} ${HTACCESS} *
+    tar czf ${BACKUPFILE} ${WEBSITE_FOLDER}
 else
-    zip -q -r ${BACKUPFILE} ${VSCODE} ${GIT} ${GITIGNORE} ${HTACCESS} *
+    zip -q -r ${BACKUPFILE}  ${WEBSITE_FOLDER}
 fi
 
+cd ${WEBSITE_FOLDER}
 # Cleanup database dump
 rm -f ${database}.sql
 
 showmessage "Your backup is ready at ${BACKUPFILE}."
+# create the backup
+if [ "${ZIP}" == "no" ]
+then
+    showmessage "To restore the backup, use 'tar xzf ${BACKUPFILE}'.\nRun this command in folder ${START_FOLDER}."
+else
+    showmessage "To restore the backup, use 'unzip -q -o ${BACKUPFILE}'.\nRun this command in folder ${START_FOLDER}."
+fi
