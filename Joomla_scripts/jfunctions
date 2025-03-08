@@ -83,41 +83,34 @@ if [ ! -e ${joomlaconf} ]; then
 fi
 
 # Test for Joomla 1.0 or 1.7
-if [ -e ${versionf1017} ]
-then
+if [ -e ${versionf1017} ]; then
 	# Joomla 1.0 and 1.7 use the same version file, so need to check for 1.0 or 1.7
 	release=`grep '$RELEASE' ${versionf1017} | cut -d \' -f 2`
-	if echo "${release}" | grep -q "1.0"
-	then
+	if echo "${release}" | grep -q "1.0"; then
 		versionfile=${versionf1017}
 		get_joomla10_info
 	fi
-	if echo "${release}" | grep -q "1.7"
-	then
+	if echo "${release}" | grep -q "1.7"; then
 		versionfile=${versionf1017}
 		get_joomla1517_info
 	fi
 fi
 
 # Test for Joomla 1.5 or 1.6
-if [ -e ${versionf1516} ]
-then
+if [ -e ${versionf1516} ]; then
 	versionfile=${versionf1516}
 	get_joomla1517_info
 fi
 
 # Test for Joomla 2.5 - 3.7
-if [ -f ${versionf2537} ]
-then
+if [ -f ${versionf2537} ]; then
 	versionfile=${versionf2537}
 	get_joomla25up_info
 fi
 
 # Test for Joomla 3.8 and up
-if [ -f ${versionf38plus} ]
-then
-	if [ -e ${version4} ]
-	then
+if [ -f ${versionf38plus} ]; then
+	if [ -e ${version4} ]; then
 		versionfile=${versionf38plus}
 		get_joomla4up_info
 	else
@@ -126,8 +119,7 @@ then
 	fi
 fi
 # Set jversion
-if [ -e ${version4} ]
-then
+if [ -e ${version4} ]; then
 	jversion=$versr.$versd.$verss
 else
 	jversion=$versr.$versd
