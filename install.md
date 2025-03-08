@@ -42,7 +42,7 @@ Type your password to continue the installation.
 After installation enter this command in the terminal to add Homebrew to your PATH:
 
 ```
-echo >> /Users/renekreijveld/.zprofile; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/renekreijveld/.zprofile; eval "$(/opt/homebrew/bin/brew shellenv)"
+echo >> /Users/$USER/.zprofile; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/$USER/.zprofile; eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 ### Check Homebrew installation
@@ -57,11 +57,11 @@ The Homebrew version is then displayed. The Homebrew version at the time of this
 
 ## Optional: install Visual Studio Code through Homebrew
 
-To install Visual Studio Code <a href="../Casks/install_vscode.md" target="_blank">follow these installation instructions</a> to get that up and running.
+To install Visual Studio Code <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/Casks/install_vscode.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Optional: Install and configure iTerm2 through Homebrew
 
-To install iTerm2 <a href="../Casks/install_iterm2.md" target="_blank">follow these installation instructions</a> to get that up and running.
+To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/Casks/install_iterm2.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Install the development environment
 
