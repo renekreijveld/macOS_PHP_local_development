@@ -14,11 +14,12 @@
 VERSION=1.6
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
+
 SILENT="no"
 # Function to show messages (honoring silent mode)
 showmessage() {
     if [[ "${SILENT}" == "no" ]]; then
-        echo "$1"
+        echo -e "$1"
     fi
 }
 
@@ -33,17 +34,13 @@ fi
 
 # Display usage information
 usage() {
-    echo ""
     echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-    echo ""
-    echo "Usage: ${MYNAME} [-d] [-c] [-o] [-m] [-h]"
-    echo ""
-    echo "-d Add a date-time-stamp to the database dump filename."
+    echo -e "\nUsage: ${MYNAME} [-t] [-c] [-o] [-h]\n"
+    echo "-t Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
     echo "-o Overwrite existing database dump."
-    echo "-m Move database dump to ~/Development/Backup/mysql folder."
     echo "-h Help. Display this info."
-    echo ""
+    echo -e "\nRun ${MYNAME} at the root of your website, where the configuration.php is.\n"
     exit 0
 }
 
@@ -51,10 +48,9 @@ usage() {
 COMPRESS="no"
 SHOWDATE="no"
 OVERWRITE="no"
-STOREDIR="."
-while getopts "dcomh" opt; do
+while getopts "tcoh" opt; do
     case "${opt}" in
-    d)
+    t)
         SHOWDATE="yes"
         ;;
     c)
@@ -62,9 +58,6 @@ while getopts "dcomh" opt; do
         ;;
     o)
         OVERWRITE="yes"
-        ;;
-    m)
-        STOREDIR="/Users/${USER}/Development/Backup/mysql"
         ;;
     h)
         usage
@@ -92,20 +85,18 @@ else
     EXTENSION=""
 fi
 
-DUMP_FILE="${STOREDIR}/${database}${NOW}.sql"
-CHECK_FILE="${STOREDIR}/${database}${NOW}.sql${EXTENSION}"
+DUMP_FILE="${database}${NOW}.sql"
 
 # Check if database dump exists
-if [ -e ${CHECK_FILE} ]; then
+if [ -e ${DUMP_FILE} ]; then
     if [ "${OVERWRITE}" == "no" ]; then
-        echo "Error: Database dump ${CHECK_FILE} already exists. Use -o to overwrite."
-        exit 1
+        read -p "Database dump ${DUMP_FILE} already exists. Press Enter to overwrite, or Ctrl-C to abort."
     else
-        rm -f "${CHECK_FILE}"
+        rm -f "${DUMP_FILE}"
     fi
 fi
 
-showmessage "This is a Joomla! ${jversion} site. Starting database dump..."
+showmessage "This is a Joomla! ${jversion} site. Starting database dump."
 
 if mysqldump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
     if [[ "${COMPRESS}" == "yes" ]]; then
