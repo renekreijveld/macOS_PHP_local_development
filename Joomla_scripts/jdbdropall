@@ -28,7 +28,7 @@ fi
 # Inform the user about the process and ask confirmation
 echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
 echo "This is a Joomla! ${jversion} site."
-read -p "Press Enter to drop all database tables of this websitem or press Ctrl-C to abort."
+read -p "Press Enter to drop all database tables of this website or press Ctrl-C to abort."
 
 NOW=$(date +".%Y%m%d-%H%M%S")
 TMPFILE="./tmp_drop_all_${NOW}.sql"
