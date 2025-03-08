@@ -13,7 +13,7 @@ $apacheServersDir = '/opt/homebrew/etc/httpd/vhosts';
 $nginxServersDir = '/opt/homebrew/etc/nginx/servers';
 $username = getenv('USER');
 
-function getPhpVersionFromConfig ( $configFile )
+function getPhpVersionFromNginXConfig ( $configFile )
 {
     // Mapping of PHP FPM ports to PHP versions
     $phpVersions = [ 
@@ -32,7 +32,7 @@ function getPhpVersionFromConfig ( $configFile )
     }
 
     // Search for the PHP-FPM port pattern
-    if ( preg_match( '/127\.0\.0\.1:(90\d{2});/', $content, $matches ) )
+    if ( preg_match( '/127\.0\.0\.1:(90\d{2})/', $content, $matches ) )
     {
         $port = $matches[ 1 ]; // Extract the port number
         return $phpVersions[ $port ] ?? "Unknown PHP version for port $port";
@@ -159,7 +159,7 @@ foreach ( $phpVersions as $version )
                         <ul>
                             <?php foreach ( $apacheWebsites as $website ) : ?>
                                 <?php if ($website !== 'localhost') : ?>
-                                <?php $phpVersion = getPhpVersionFromConfig( $apacheServersDir . "/$website.conf" ); ?>
+                                <?php $phpVersion = getPhpVersionFromNginXConfig( $apacheServersDir . "/$website.conf" ); ?>
                                 <li><a href="https://<?php echo $website; ?>.dev.test" target="_blank"><?php echo $website; ?></a> (php
                                     <?php echo $phpVersion; ?>)</li>
                                 <?php endif; ?>
@@ -182,7 +182,7 @@ foreach ( $phpVersions as $version )
                         <p>The following websites are configured in your NginX setup:</p>
                         <ul>
                             <?php foreach ( $nginxWebsites as $website ) : ?>
-                                <?php $phpVersion = getPhpVersionFromConfig( $nginxServersDir . "/$website.conf" ); ?>
+                                <?php $phpVersion = getPhpVersionFromNginXConfig( $nginxServersDir . "/$website.conf" ); ?>
                                 <li><a href="https://<?php echo $website; ?>.dev.test"
                                         target="_blank"><?php echo $website; ?></a> (php <?php echo $phpVersion; ?>)</li>
                             <?php endforeach; ?>
