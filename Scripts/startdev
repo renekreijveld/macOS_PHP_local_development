@@ -12,9 +12,8 @@
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-echo "Starting Apache/NginX - MariaDB - PHP development environment services."
-echo "These services will run in the background and will automatically restart on system reboot."
-echo -e "When the Password: prompt appears, enter your password to allow the services to run.\n"
+echo -e "Starting Apache/NginX - MariaDB - PHP development environment services.\n"
+echo -e "These services will run in the background and will automatically restart on system reboot.\n"
 echo "To permanently stop the services, run the stopdev script."
 
 # Load configuration file defaults
