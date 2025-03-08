@@ -1,6 +1,6 @@
-# Local Apache/NginX/MariaDB/PHP development stack for macOS
+# Apache/NginX/MariaDB/PHP development stack for macOS
 
-This setup installs a Apache/NginX/MariaDB/PHP-based development stack on your Apple Silicon M1/M2/M3/M4 based macOS computer.
+This setup installs an Apache/NginX, MariaDB, PHP development stack on your Apple Silicon M1/M2/M3/M4 based macOS computer.
 
 You will get a setup with the following elements:
 
@@ -14,4 +14,4 @@ You will get a setup with the following elements:
 - Scripts to add and delete local websites and databases and to start, stop and restart the development stack.
 - A comprehensive set of bash scripts tweaked for local Joomla! CMS website development.
 
-Follow these <a href="https://github.com/renekreijveld/macOS_NginX_local_development/blob/main/install.md">installation instructions</a> to get everything up and running.
+Follow these <a href="../../blob/main/install.md">installation instructions</a> to get everything up and running.
