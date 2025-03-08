@@ -16,7 +16,18 @@ VERSION=1.8
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
 
-STARTDIR="/Users/$USER/Development/Sites"
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
 
 # Variables
 SHORT="no"
@@ -25,16 +36,12 @@ RELEASEVERSION=""
 
 # Display usage information
 usage() {
-    echo ""
-    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-    echo ""
-    echo "Usage: ${MYNAME} [-s] [-c] [-h] [-r release]"
-    echo ""
+    echo -e "${MYNAME} version ${VERSION}, written by Rene Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-s] [-c] [-h] [-r release]\n"
     echo "-s Short. Only display path and Joomla version."
     echo "-r Release version. Only display information about Joomla sites with given release version (e.g., 1.5, 2.5, 3.4)."
     echo "-c CSV. Output values in CSV format."
-    echo "-h Help. Display this info."
-    echo ""
+    echo -e "-h Help. Display this info.\n"
     exit 0
 }
 
@@ -52,9 +59,7 @@ done
 # Start output if not in CSV mode
 if [[ "${CSV}" == "no" ]]; then
     if [[ "${SHORT}" == "no" ]]; then
-        echo ""
-        echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-        echo ""
+        echo -e "${MYNAME} version ${VERSION}, written by Rene Kreijveld.\n"
     fi
 fi
 
@@ -70,7 +75,7 @@ if [[ ! -f "${MYPATH}/jfunctions" ]]; then
 fi
 
 # Scan directories for Joomla instances
-find "${STARTDIR}" -maxdepth 2 -type d | while read -r DIR; do
+find "${ROOTFOLDER}" -maxdepth 2 -type d | while read -r DIR; do
     if [[ -f "${DIR}/configuration.php" ]]; then
         # Possible Joomla found, get information
         if [[ "${CSV}" == "no" ]]; then
@@ -109,8 +114,7 @@ find "${STARTDIR}" -maxdepth 2 -type d | while read -r DIR; do
                 echo ""
             else
                 echo "Joomla found in ${DIR}"
-                echo "Version: ${jversion}"
-                echo ""
+                echo -e "Version: ${jversion}\n"
             fi
         fi
     fi
