@@ -8,7 +8,7 @@
 #
 # Version history
 # 1.0 Initial version
-# 1.1 Use config file
+# 1.1 Request confirmation before dropping the database
 
 # Variables 
 # version
@@ -23,28 +23,24 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 # show message function
 showmessage() {
     if [ "${SILENT}" == "no" ]; then
-        echo "$1"
+        echo -e "$1"
     fi
 }
 
 # display usage information
 usage() {
-    echo ""
-    echo "${MYNAME} version ${VERSION}, written by René Kreijveld."
-    echo ""
-    echo "Usage: ${MYNAME} -d <database_name> [-s] [-h]"
-    echo ""
+    echo -e "${MYNAME} version ${VERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} -d <database_name> [-s] [-h]\n"
     echo " -d the name of the database to drop (mandatory)."
     echo " -s silent, no messages will be shown (optional)."
-    echo " -h display this help."
-    echo ""
+    echo -e " -h display this help.\n"
     exit 0
 }
 
 # Function to check if database exists
 database_exists() {
     DATABASE_NAME=$1
-    if mysql -u root -p${MARIADBPW} -e "use ${DATABASE_NAME}" 2>/dev/null; then
+    if mariadb -u root -p${MARIADBPW} -e "use ${DATABASE_NAME}" 2>/dev/null; then
         return 0
     else
         return 1
@@ -53,7 +49,7 @@ database_exists() {
 
 # Parse command line arguments
 SILENT="no"
-while getopts ":d:sh" opt; do
+while getopts "d:sh" opt; do
     case ${opt} in
     d)
         DATABASE_NAME=$OPTARG
@@ -85,8 +81,6 @@ else
     exit 1
 fi   
 
-showmessage "Dropping database ${DATABASE_NAME}."
-
 # check if mandatory parameters are provided
 if [ -z "${DATABASE_NAME}" ]; then
     echo "Error: database name not provided."
@@ -97,6 +91,11 @@ if ! database_exists "${DATABASE_NAME}"; then
     echo "Error: The database '${DATABASE_NAME}' does not exist."
     exit 1
 fi
+
+# Request confirmation
+read -p "You are about to drop database ${DATABASE_NAME}. Press Enter to continue, press Ctrl-C to abort."
+
+showmessage "Dropping database ${DATABASE_NAME}."
 
 # Drop the database
 if mariadb -u root -p${MARIADBPW} -e "DROP DATABASE IF EXISTS \`${DATABASE_NAME}\`;"; then
