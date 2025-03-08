@@ -92,7 +92,7 @@ for DIR in $(find ${ROOTFOLDER} -maxdepth 4 -type d); do
         NOW=$(date +"%Y%m%d-%H%M%S")
 
         # dump the database to a .sql file
-        if mysqldump --skip-opt --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host=${host} --user=${dbuser} --password=${password} ${database} > ${MARIADBBACKUP}/${database}.${NOW}.sql; then
+        if mariadb-dump --skip-opt --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host=${host} --user=${dbuser} --password=${password} ${database} > ${MARIADBBACKUP}/${database}.${NOW}.sql; then
             showmessage "Database dump created for ${sitenameclean}"
         else
             showmessage "Error creating database dump."

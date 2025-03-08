@@ -98,7 +98,7 @@ fi
 
 showmessage "This is a Joomla! ${jversion} site. Starting database dump."
 
-if mysqldump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
+if mariadb-dump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
     if [[ "${COMPRESS}" == "yes" ]]; then
         gzip "${DUMP_FILE}"
         showmessage "Database dump is ready in ${DUMP_FILE}.gz."

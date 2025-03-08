@@ -36,7 +36,7 @@ TMPFILE="./tmp_drop_all_${NOW}.sql"
 echo "Dropping all tables..."
 
 echo "SET FOREIGN_KEY_CHECKS = 0;" > "${TMPFILE}"
-mysqldump --add-drop-table --no-data --host="${host}" --user="${dbuser}" --password="${password}" "${database}" | grep 'DROP TABLE' >> "${TMPFILE}"
+mariadb-dump --add-drop-table --no-data --host="${host}" --user="${dbuser}" --password="${password}" "${database}" | grep 'DROP TABLE' >> "${TMPFILE}"
 echo "SET FOREIGN_KEY_CHECKS = 1;" >> "${TMPFILE}"
 
 mariadb --host="${host}" --user="${dbuser}" --password="${password}" "${database}" < "${TMPFILE}"
