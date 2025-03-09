@@ -11,8 +11,8 @@
 # 1.7 Updated for Joomla 5
 # 1.8 Code improvements and use of CONFIG_FILE
 
-# Constants
 VERSION=1.8
+
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
 

@@ -16,12 +16,12 @@
 # 1.3 Added test if jfunctions exists
 # 1.4 Code optimisations
 
+# version
+VERSION=1.4
+
 # general variables
 MYPATH=$(cd $(dirname ${0}); pwd -P)
 MYNAME=$(basename ${0})
-
-# version
-VERSION=1.4
 
 # show message function
 showmessage() {

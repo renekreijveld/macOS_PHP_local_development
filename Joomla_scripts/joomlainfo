@@ -17,10 +17,10 @@
 # 1.4 Updated display of version number for joomla 4 and up
 # 1.5 Code optimisations
 
-# General variables
+VERSION=1.5
+
 MYPATH=$(cd "$(dirname "${0}")" && pwd -P)
 MYNAME=$(basename "${0}")
-VERSION=1.5
 
 # Include general functions
 if [[ ! -e "${MYPATH}/jfunctions" ]]; then

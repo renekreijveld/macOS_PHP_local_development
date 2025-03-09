@@ -10,8 +10,8 @@
 # Version history:
 # 1.6 Added use of config file
 
-# General Variables
 VERSION=1.6
+
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
 

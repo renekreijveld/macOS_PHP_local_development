@@ -17,6 +17,9 @@
 # 1.4 Added test if jfunctions exists
 # 1.5 Added improved tests if files already exist and added -t and -z options
 
+# version
+VERSION=1.5
+
 # general variables
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
@@ -42,8 +45,6 @@ else
     SITESBACKUP="${PWD}"
 fi   
 
-# version
-VERSION=1.5
 
 # show message function
 showmessage() {
