@@ -17,7 +17,7 @@
 # 1.7 Added password processing
 # 1.8 Added modification of sudoers for easy starting and stopping of services
 
-VERSION="1.8"
+VERSION=1.8
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
@@ -138,6 +138,7 @@ ask_defaults() {
     echo "MARIADBBACKUP=${mariadbbackup}" >> "${CONFIG_FILE}"
     echo "MARIADBPW=${mariadbpw}" >> "${CONFIG_FILE}"
     echo "WEBSERVER=nginx" >> "${CONFIG_FILE}"
+    echo "INSTALLER_VERSION=${VERSION}" >> "${CONFIG_FILE}"
     check_configfile
 }
 
@@ -310,6 +311,8 @@ install_local_scripts() {
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+        SCRIPT_VERSION=$(sed -n 's/VERSION=//p' script.${script})
+        echo "${script}_VERSION=${SCRIPT_VERSION}" >> "${CONFIG_FILE}"
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
@@ -321,6 +324,8 @@ install_joomla_scripts() {
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+        SCRIPT_VERSION=$(sed -n 's/VERSION=//p' script.${script})
+        echo "${script}_VERSION=${SCRIPT_VERSION}" >> "${CONFIG_FILE}"
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
