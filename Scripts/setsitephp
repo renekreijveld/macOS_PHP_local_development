@@ -8,15 +8,20 @@
 #
 # Version history
 # 1.0 Initial version
-
-# Variables 
+# 1.1 Added use of configuration file and support nginx and apache
 
 # version
-VERSION=1.0
+VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 # nginx folder for website configurations
 NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
+# apache folder for website configurations
+APACHE_CONF_DIR=/opt/homebrew/etc/httpd/vhosts
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
 
 # show message function
 showmessage() {
@@ -75,6 +80,14 @@ done
 
 showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
 
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
     echo "Error: -n, and -p are mandatory parameters."
@@ -89,22 +102,23 @@ if ! is_valid_php_version "${PHP_VERSION}"; then
     exit 1
 fi
 
-# Check if the site folder already exists
-SITE_FOLDER="/Users/$USER/Development/Sites/${WEBSITE_NAME}"
-if [ ! -d "${SITE_FOLDER}" ]; then
-    echo "Error: The website ${WEBSITE_NAME} not found on your system."
-    exit 1
-fi
-
 showmessage "Set website ${WEBSITE_NAME} PHP version to ${PHP_VERSION}."
 
+# nginx and apache configuration files for website
 NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
+APACHE_CONF_FILE=${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf
+
 # Reset all php versions in the nginx configuration file
 sed -i '' "s/127.0.0.1:9074/<php_fpm_url>/g" ${NGINX_CONF_FILE}
+sed -i '' "s/127.0.0.1:9074/<php_fpm_url>/g" ${APACHE_CONF_FILE}
 sed -i '' "s/127.0.0.1:9081/<php_fpm_url>/g" ${NGINX_CONF_FILE}
+sed -i '' "s/127.0.0.1:9081/<php_fpm_url>/g" ${APACHE_CONF_FILE}
 sed -i '' "s/127.0.0.1:9082/<php_fpm_url>/g" ${NGINX_CONF_FILE}
+sed -i '' "s/127.0.0.1:9082/<php_fpm_url>/g" ${APACHE_CONF_FILE}
 sed -i '' "s/127.0.0.1:9083/<php_fpm_url>/g" ${NGINX_CONF_FILE}
+sed -i '' "s/127.0.0.1:9083/<php_fpm_url>/g" ${APACHE_CONF_FILE}
 sed -i '' "s/127.0.0.1:9084/<php_fpm_url>/g" ${NGINX_CONF_FILE}
+sed -i '' "s/127.0.0.1:9084/<php_fpm_url>/g" ${APACHE_CONF_FILE}
 
 # Set PHP FPM url based on PHP version
 case ${PHP_VERSION} in
@@ -127,6 +141,17 @@ esac
 
 # Set PHP FPM url in the nginx configuration file
 sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${NGINX_CONF_FILE}
+# Set PHP FPM url in the apache configuration file
+sed -i '' "s/<php_fpm_url>/${PHP_FPM_URL}/g" ${APACHE_CONF_FILE}
 
-showmessage "Restarting nginx, you may need to enter your password."
-sudo brew services restart nginx
+if [ "${WEBSERVER}" == "apache" ]; then
+    # Restart Apache
+    showmessage "Restarting apache."
+    /usr/local/bin/restartapache
+fi
+
+if [ "${WEBSERVER}" == "nginx" ]; then
+    # Restart NginX
+    showmessage "Restarting nginx."
+    /usr/local/bin/restartnginx
+fi
