@@ -7,11 +7,25 @@
 # This script is free software; you may redistribute it and/or modify it.
 # This script comes without any warranty. Use it at your own risk.
 
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
+
 homebrew_path=$(brew --prefix)
 brew_array=("7.4" "8.1" "8.2" "8.3" "8.4")
 php_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php@8.4")
 php_unlink_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php")
+php_version_nr="$1"
 php_version="php@$1"
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
 
 # What versions of php are installed via brew
 for i in ${php_array[*]}; do
@@ -35,13 +49,16 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
 
         brew link --overwrite --force "$php_version" >/dev/null 2>&1
 
-        # Stop running versions
-        for i in ${php_array[@]}; do
-            brew services stop $i >/dev/null 2>&1
-        done
+        # Update config file
+        sed -i '' "s|^PHP_CLI=.*|PHP_CLI=${php_version_nr}|" "$CONFIG_FILE"
 
-        # Start requested version
-        brew services start $php_version >/dev/null 2>&1
+        # # Stop running versions
+        # for i in ${php_array[@]}; do
+        #     brew services stop $i >/dev/null 2>&1
+        # done
+
+        # # Start requested version
+        # brew services start $php_version >/dev/null 2>&1
 
     	echo ""
         php -v
