@@ -8,6 +8,9 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Use config file and choose between Apache and NginX
+
+VERSION=1.1
 
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"

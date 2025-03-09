@@ -9,6 +9,8 @@
 # Version history
 # 1.0 Initial version
 
+VERSION=1.0
+
 # Syntax: xdebug [on|off]
 # This script will enable or disable xdebug by renaming the ext-xdebug.ini file to ext-xdebug.ini.disabled for all installed PHP versions.
 
