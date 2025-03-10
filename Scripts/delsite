@@ -46,7 +46,7 @@ usage() {
     echo "-d also drop the database (optional)."
     echo "-f force, do not ask confirmation before deleting website and database."
     echo "-s silent, no messages will be shown (optional)."
-    echo -e " -h display this help.\n"
+    echo -e "-h display this help.\n"
     exit 0
 }
 
