@@ -32,7 +32,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} version ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-s] [-h]\n"
     echo " -n the name for the new website (input without spaces, mandatory)."
     echo " -p the PHP version for the website (mandatory)."
@@ -78,7 +78,7 @@ while getopts "n:p:sh" opt; do
     esac
 done
 
-showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

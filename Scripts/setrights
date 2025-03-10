@@ -25,7 +25,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} version ${VERSION}, written by Rene Kreijveld.\n"
+    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-s] [-h]\n"
     echo "Set filerights in current directory and all subdirectories for files to 644 and for folders to 755."
     echo "-s Silent. No messages will be shown."
@@ -48,7 +48,7 @@ do
     esac
 done
 
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 # Set file rights
 showmessage "Setting file rights to 644 (-rw-r--r--)"

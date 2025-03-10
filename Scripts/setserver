@@ -26,7 +26,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} version ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n | -a [-s] [-h]\n"
     echo " -n set webserver to NginX."
     echo -e " -a set webserver to Apache.\n"
@@ -65,7 +65,7 @@ while getopts "ansh" opt; do
     esac
 done
 
-showmessage "${MYNAME} version ${VERSION}, written by René Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
