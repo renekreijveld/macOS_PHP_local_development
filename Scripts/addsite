@@ -132,8 +132,15 @@ else
 fi   
 
 # check if mandatory parameters are provided
-if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
-    echo "Error: -n or -p parameter missing."
+if [ -z "${WEBSITE_NAME}" ]; then
+    echo "Error: website name missing."
+    echo "Use ${MYNAME} -h to display help."
+    exit 1
+fi
+
+# check if mandatory parameters are provided
+if [ -z "${PHP_VERSION}" ]; then
+    echo "Error: PHP version missing."
     echo "Use ${MYNAME} -h to display help."
     exit 1
 fi
