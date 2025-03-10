@@ -32,7 +32,7 @@ usage() {
     echo -e "-a set webserver to Apache.\n"
     echo -e "You must specify either -n or -a.\n"
     echo "The other options are:"
-    echo "-s silent, no messages will be shown (optional)."
+    echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
     exit 0
 }

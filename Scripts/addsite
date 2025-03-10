@@ -49,7 +49,7 @@ usage() {
     echo "-d the database name for the new website (optional)."
     echo "-j download and install the latest Joomla version (optional)."
     echo "-o open the new website in the browser after creation (optional)."
-    echo "-s silent, no messages will be shown (optional)."
+    echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
     exit 0
 }
