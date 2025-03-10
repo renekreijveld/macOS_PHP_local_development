@@ -133,14 +133,15 @@ fi
 
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ] || [ -z "${PHP_VERSION}" ]; then
-    echo "Error: -n, and -p are mandatory parameters."
-    echo "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]"
+    echo "Error: -n or -p parameter missing."
+    echo "Use ${MYNAME} -h to display help."
     exit 1
 fi
 
 # check if the site name contains spaces
 if contains_spaces "${WEBSITE_NAME}"; then
-    echo "Error: Site name '$name' contains spaces. Please provide a name without spaces."
+    echo "Error: Site name '$name' contains spaces."
+    echo "Use ${MYNAME} -h to display help."
     exit 1
 fi
 
@@ -153,7 +154,7 @@ if ! is_valid_php_version "${PHP_VERSION}"; then
 fi
 
 # Check if the site folder already exists
-SITE_FOLDER="/Users/$USER/Development/Sites/${WEBSITE_NAME}"
+SITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
 if [ -d "${SITE_FOLDER}" ]; then
     echo "Error: The website folder '$site_folder' already exists."
     exit 1
@@ -176,7 +177,6 @@ fi
 showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 
 # Create the website directory
-SITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
 showmessage "Create website root folder ${SITE_FOLDER}."
 mkdir -p ${SITE_FOLDER}
 
