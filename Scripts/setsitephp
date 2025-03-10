@@ -34,10 +34,10 @@ showmessage() {
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-s] [-h]\n"
-    echo "-n the name for the new website (input without spaces, mandatory)."
-    echo "-p the PHP version for the website (mandatory)."
-    echo "-s silent, no messages will be shown (optional)."
-    echo -e " -h display this help.\n"
+    echo "-n the name for the new website (without spaces)."
+    echo "-p the PHP version for the website."
+    echo "-s silent, no messages will be shown."
+    echo -e "-h display this help.\n"
     exit 0
 }
 
