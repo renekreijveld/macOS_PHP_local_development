@@ -44,12 +44,12 @@ showmessage() {
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]\n"
-    echo " -n the website name for the new website (input without spaces, mandatory)."
-    echo " -p the PHP version for the new website (mandatory)."
-    echo " -d the database name for the new website (optional)."
-    echo " -j download and install the latest Joomla version (optional)."
-    echo " -o open the new website in the browser after creation (optional)."
-    echo " -s silent, no messages will be shown (optional)."
+    echo "-n the website name for the new website (input without spaces, mandatory)."
+    echo "-p the PHP version for the new website (mandatory)."
+    echo "-d the database name for the new website (optional)."
+    echo "-j download and install the latest Joomla version (optional)."
+    echo "-o open the new website in the browser after creation (optional)."
+    echo "-s silent, no messages will be shown (optional)."
     echo -e " -h display this help.\n"
     exit 0
 }

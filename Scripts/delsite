@@ -42,9 +42,9 @@ showmessage() {
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n <name> [-d] [-s] [-h]\n"
-    echo " -n the name for the website (input without spaces, mandatory)."
-    echo " -d also drop the database (optional)."
-    echo " -s silent, no messages will be shown (optional)."
+    echo "-n the name for the website (input without spaces, mandatory)."
+    echo "-d also drop the database (optional)."
+    echo "-s silent, no messages will be shown (optional)."
     echo -e " -h display this help.\n"
     exit 0
 }

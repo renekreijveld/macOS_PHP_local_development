@@ -28,12 +28,12 @@ showmessage() {
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n | -a [-s] [-h]\n"
-    echo " -n set webserver to NginX."
-    echo -e " -a set webserver to Apache.\n"
-    echo -e " You must specify either -n or -a.\n"
+    echo "-n set webserver to NginX."
+    echo -e "-a set webserver to Apache.\n"
+    echo -e "You must specify either -n or -a.\n"
     echo "The other options are:"
-    echo " -s silent, no messages will be shown (optional)."
-    echo -e " -h display this help.\n"
+    echo "-s silent, no messages will be shown (optional)."
+    echo -e "-h display this help.\n"
     exit 0
 }
 
