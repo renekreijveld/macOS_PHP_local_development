@@ -41,9 +41,10 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} -n <name> [-d] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} -n <name> [-d] [-f] [-s] [-h]\n"
     echo "-n the name for the website (input without spaces, mandatory)."
     echo "-d also drop the database (optional)."
+    echo "-f force, do not ask confirmation before deleting website and database."
     echo "-s silent, no messages will be shown (optional)."
     echo -e " -h display this help.\n"
     exit 0
@@ -62,13 +63,17 @@ database_exists() {
 # Parse command line arguments
 SILENT="no"
 DBDELETE="no"
-while getopts ":n:dbsh" opt; do
+FORCE="no"
+while getopts ":n:dfsh" opt; do
     case ${opt} in
     n)
         WEBSITE_NAME=$OPTARG
         ;;
     d)
         DBDELETE="yes"
+        ;;
+    f)
+        FORCE="yes"
         ;;
     s)
         SILENT="yes"
@@ -97,8 +102,6 @@ else
     exit 1
 fi   
 
-showmessage "Delete website ${WEBSITE_NAME} from the NginX configuration."
-
 # check if mandatory parameters are provided
 if [ -z "${WEBSITE_NAME}" ]; then
     echo "Error: website name not provided."
@@ -108,16 +111,21 @@ fi
 # Check if the site folder already exists
 SITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
 if [ ! -d "${SITE_FOLDER}" ]; then
-    echo "Error: website folder '${SITE_FOLDER}' not found, exiting"
+    echo "Error: website folder '${SITE_FOLDER}' not found, exiting."
     exit 1
 fi
 
+
 # Request confirmation
-if [ "${DBDELETE}" == "yes" ]; then
-    read -p "You are about to delete a website and database. Press Enter to continue, press Ctrl-C to abort."
-else
-    read -p "You are about to delete a website. Press Enter to continue, press Ctrl-C to abort."
+# Request confirmation
+if [ "${FORCE}" == "no" ]; then
+    if [ "${DBDELETE}" == "yes" ]; then
+        read -p "Press Enter to delete website '${WEBSITE_NAME}' and its database or press Ctrl-C to abort."
+    else
+        read -p "Press Enter to delete the website '${WEBSITE_NAME}' or press Ctrl-C to abort."
+    fi
 fi
+
 
 # Get website information
 cd ${SITE_FOLDER}
@@ -131,7 +139,7 @@ if [ "${DBDELETE}" == "yes" ]; then
         . ${MYPATH}/jfunctions
         # Drop the database
         showmessage "Dropping database ${database}."
-        deldb -d ${database} -s
+        deldb -d ${database} -f -s
     fi
 fi
 

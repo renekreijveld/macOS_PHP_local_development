@@ -30,10 +30,11 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} -d <database_name> [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} -d <database_name> [-f] [-s] [-h]\n"
     echo "-d the name of the database to drop (mandatory)."
+    echo "-f force, do not ask confirmation before deleting the database."
     echo "-s silent, no messages will be shown (optional)."
-    echo -e " -h display this help.\n"
+    echo -e "-h display this help.\n"
     exit 0
 }
 
@@ -49,10 +50,14 @@ database_exists() {
 
 # Parse command line arguments
 SILENT="no"
-while getopts "d:sh" opt; do
+FORCE="no"
+while getopts "d:fsh" opt; do
     case ${opt} in
     d)
         DATABASE_NAME=$OPTARG
+        ;;
+    f)
+        FORCE="yes"
         ;;
     s)
         SILENT="yes"
@@ -93,7 +98,9 @@ if ! database_exists "${DATABASE_NAME}"; then
 fi
 
 # Request confirmation
-read -p "You are about to drop database ${DATABASE_NAME}. Press Enter to continue, press Ctrl-C to abort."
+if [ "${FORCE}" == "no" ]; then
+    read -p "Press Enter to delete database ${DATABASE_NAME} or press Ctrl-C to abort."
+fi
 
 showmessage "Dropping database ${DATABASE_NAME}."
 
