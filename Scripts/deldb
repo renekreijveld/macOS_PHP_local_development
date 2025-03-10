@@ -31,9 +31,9 @@ showmessage() {
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -d <database_name> [-f] [-s] [-h]\n"
-    echo "-d the name of the database to drop (mandatory)."
+    echo "-d the name of the database to delete."
     echo "-f force, do not ask confirmation before deleting the database."
-    echo "-s silent, no messages will be shown (optional)."
+    echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
     exit 0
 }
