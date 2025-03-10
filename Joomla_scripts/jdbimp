@@ -41,7 +41,7 @@ fi
 
 # Display usage information
 usage() {
-    echo -e "${MYNAME} version ${VERSION}, written by Rene Kreijveld.\n"
+    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-s] [-h]\n"
     echo "-s silent, no messages will be shown (optional)."
     echo -e "-h Help. Display this info.\n"
@@ -66,7 +66,7 @@ while getopts "sh" opt; do
     esac
 done
 
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 # check if database dump exists.
 if [ ! -e ${database}.sql ]; then

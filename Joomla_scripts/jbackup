@@ -55,8 +55,8 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "\n${MYNAME} version ${VERSION}, written by Rene Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} [-z] [-t] [-o] [-m] [-s] [-h]\n"
+    echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-z] [-t] [-o] [-s] [-h]\n"
     echo "Default action is .tgz backup."
     echo "-z Zip. Backup to a zipfile instead of a tgzfile."
     echo "-t Add a date/time-stamp to the backup file."
@@ -102,7 +102,7 @@ else
     NOW=""
 fi
 
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 # Check if database dump exists
 WEBSITE_FOLDER=$(basename "$PWD")

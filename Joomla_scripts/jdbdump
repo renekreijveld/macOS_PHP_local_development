@@ -34,7 +34,7 @@ fi
 
 # Display usage information
 usage() {
-    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+    echo "${MYNAME} ${VERSION}, written by René Kreijveld."
     echo -e "\nUsage: ${MYNAME} [-t] [-c] [-o] [-h]\n"
     echo "-t Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
@@ -77,7 +77,7 @@ else
 fi
 
 # Inform the user about the process
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 if [[ "${COMPRESS}" == "yes" ]]; then
     EXTENSION=".gz"

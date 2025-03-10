@@ -43,14 +43,10 @@ fi
 
 # display usage information
 usage() {
-    echo ""
-    echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-    echo ""
-    echo "Usage: ${MYNAME} [-s] [-h]"
-    echo ""
+    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-s] [-h]\n"
     echo "-s Silent. Do not display any messages to standard output."
-    echo "-h Help. Display this info."
-    echo ""
+    echo -e "-h Help. Display this info.\n"
     exit 0
 }
 
@@ -79,7 +75,7 @@ while getopts sh opt; do
     esac
 done
 
-showmessage "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
+showmessage "${MYNAME} ${VERSION}"
 
 for DIR in $(find ${ROOTFOLDER} -maxdepth 4 -type d); do
     if [ -f ${DIR}/configuration.php ]; then

@@ -24,9 +24,7 @@ MYNAME=$(basename "${0}")
 
 # Include general functions
 if [[ ! -e "${MYPATH}/jfunctions" ]]; then
-    echo ""
     echo "Error: Cannot continue. Script 'jfunctions' not found in ${MYPATH}."
-    echo ""
     exit 1
 else
     # shellcheck source=/dev/null
@@ -34,9 +32,7 @@ else
 fi
 
 # Output information
-echo ""
-echo "${MYNAME} version ${VERSION}, written by Rene Kreijveld."
-echo ""
+echo -e "${MYNAME} ${VERSION}\n"
 echo "This Joomla! website:"
 printf "Sitename    : %s\n" "${sitenameclean}"
 printf "Version     : %s\n" "${jversion}"
