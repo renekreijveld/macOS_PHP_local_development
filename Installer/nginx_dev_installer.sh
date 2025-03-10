@@ -125,7 +125,7 @@ ask_defaults() {
     echo -e "If the default proposed value is correct, just press Enter.\n"
     rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
     sitesbackup=$(prompt_for_input "$HOME/Development/Backup/mysql" "Folder path for website backups:")
-    mariadbbackup=$(prompt_for_input "$HOME/Development/Backup/sites" "Folder path for MariaDB backups:")
+    mariadbbackup=$(prompt_for_input "$HOME/Development/Backup/databases" "Folder path for database backups:")
     mariadbpw=$(prompt_for_input "root" "Root password for MariaDB:")
     read -s -p "Input your password, this is needed for updating system files: " PASSWORD
 
