@@ -106,7 +106,6 @@ foreach ( $phpVersions as $version )
 <body class="bg-light">
     <div class="container py-5">
         <h1 class="text-center mb-4">Apache | NginX | MariaDB | PHP | Xdebug | Mailpit<br>development environment</h1>
-        <p class="text-center">Welcome to your local development environment. Here are your tools.</p>
 
         <div class="m-4 text-center">
             <a href="https://localhost/adminer.php?username=root" target="_blank" class="btn btn-primary me-2"><i
@@ -202,239 +201,143 @@ foreach ( $phpVersions as $version )
                     <div class="accordion-body">
                         <table class="table">
                             <tr>
+                                <td colspan="2">
+                                    <h4>Creating and deleting sites and databases</h4>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>
                                     <pre><code><strong>addsite</strong></code></pre>
                                 </td>
-                                <td><strong>Add a new local website to the NginX configuration.</strong><br><br>
-                                    <pre><code>Usage: addsite -n &lt;name&gt; -p &lt;php version&gt; [-d &lt;database name&gt;] [-j] [-o] [-s] [-h]
--n the name for the new website (input without spaces, mandatory).
--p the PHP version for the new website (mandatory).
--d the database name for the new website (optional).
--j download and install the latest Joomla version (optional).
--o open the new website in the browser after creation (optional).
--s silent, no messages will be shown (optional).
--h display this help.</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addsite_modal">Add a new local website</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>delsite</strong></code></pre>
                                 </td>
-                                <td><strong>Delete a local website from the NginX configuration.</strong><br><br>
-                                    <pre><code>Usage: delsite -n &lt;name&gt; [-d] [-b] [-s] [-h]
--n the name for the website (input without spaces, mandatory).
--d also drop the database (optional).
--b backup website and database before deleting (optional).
--s silent, no messages will be shown (optional).
--h display this help.</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#delsite_modal">Delete a local website</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>adddb</strong></code></pre>
                                 </td>
-                                <td><strong>Add a new database.</strong><br><br>
-                                    <pre><code>Usage: adddb -d &lt;database name&gt; [-s] [-h]
--d the database name for the new website (input without spaces, mandatory).
--s silent, no messages will be shown (optional).
--h display this help.</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#adddb_modal">Add a new database.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>deldb</strong></code></pre>
                                 </td>
-                                <td><strong>Delete a database.</strong><br><br>
-                                    <pre><code>Usage: deldb -d &lt;database name&gt; [-s] [-h]
--d the name of the database to drop (mandatory).
--s silent, no messages will be shown (optional).
--h display this help.</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#deldb_modal">Delete a database.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>PHP</h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>setsitephp</strong></code></pre>
                                 </td>
-                                <td><strong>Set a local website to a php version.</strong><br><br>
-                                    <pre><code>Usage: setsitephp -n &lt;website_name&gt; -p &lt;php_version&gt; [-s] [-h]
- -n the name for the new website (mandatory).
- -p the PHP version for the website (mandatory).
- -s silent, no messages will be shown (optional).
- -h display this help.</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <pre><code><strong>setrights</strong></code></pre>
-                                </td>
-                                <td><strong>Set filerights of the current folder and all subfolders.</strong><br>
-                                    Folder rights will be set to 755 (rwx-r-xr-x), file rights will be site to 644
-                                    (rw-r--r--).<br><br>
-                                    <pre><code>Usage: setrights</code></pre>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setsitephp_modal">Set the PHP version of a local website.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>sphp</strong></code></pre>
                                 </td>
-                                <td><strong>Switch command line PHP version</strong><br><br>
-                                    <pre><code>Usage: sphp &lt;php version&gt;</code></pre><br>
-                                    Possible PHP versions: <?php echo implode( ', ', $phpVersions ); ?>.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#sphp_modal">Set the PHP CLI version.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>xdebug</strong></code></pre>
                                 </td>
-                                <td><strong>Turn xdebug on or off in all installed PHP versions.</strong><br><br>
-                                    <pre><code>Usage: xdebug &lt;on|off&gt;</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#xdebug_modal">Turn xdebug on or off in the installed PHP versions.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Starting and stopping services</h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>startdev</strong></code></pre>
+                                    <pre><code><strong>startdev | stopdev | restartdev</strong></code></pre>
                                 </td>
-                                <td><strong>Start all services: NgniX, MariaDB, PHP FPM, DNSmasq,
-                                        Mailpit.</strong><br><br>
-                                    <pre><code>Usage: startdev</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdev_modal">Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>stopdev</strong></code></pre>
+                                    <pre><code><strong>startnginx | stopnginx | restartnginx</strong></code></pre>
                                 </td>
-                                <td><strong>Stop all services: NgniX, MariaDB, PHP FPM, DNSmasq,
-                                        Mailpit.</strong><br><br>
-                                    <pre><code>Usage: stopdev</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startnginx_modal">Start | Stop | Restart NginX service</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>restartdev</strong></code></pre>
+                                    <pre><code><strong>startmariadb | stopmariadb | restartmariadb</strong></code></pre>
                                 </td>
-                                <td><strong>Restart all services: NgniX, MariaDB, PHP FPM, DNSmasq,
-                                        Mailpit.</strong><br><br>
-                                    <pre><code>Usage: restartdev</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmariadb_modal">Start | Stop | Restart MariaDB service.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>startnginx</strong></code></pre>
+                                    <pre><code><strong>startphpfpm | stopphpfpm | restartphpfpm</strong></code></pre>
                                 </td>
-                                <td><strong>Start the Nginx webserver.</strong><br><br>
-                                    <pre><code>Usage: startnginx</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startphpfpm_modal">Start | Stop | Restart PHP-FPM services.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>stopnginx</strong></code></pre>
+                                    <pre><code><strong>startdnsmasq | stopdnsmasq | restartdnsmasq</strong></code></pre>
                                 </td>
-                                <td><strong>Stop the Nginx webserver.</strong><br><br>
-                                    <pre><code>Usage: stopnginx</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdnsmasq_modal">Start | Stop | Restart DNSMasq service.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>restartnginx</strong></code></pre>
+                                    <pre><code><strong>startmailpit | stopmailpit | restartmailpit</strong></code></pre>
                                 </td>
-                                <td><strong>Restart the Nginx webserver.</strong><br><br>
-                                    <pre><code>Usage: restartnginx</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmailpit_modal">Start | Stop | Restart Mailpit service.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Miscellaneous</h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>startmariadb</strong></code></pre>
+                                    <pre><code><strong>setserver</strong></code></pre>
                                 </td>
-                                <td><strong>Start MariaDB.</strong><br><br>
-                                    <pre><code>Usage: startmariadb</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setserver_modal">Switch between Apache and NginX webserver.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <pre><code><strong>stopmariadb</strong></code></pre>
+                                    <pre><code><strong>setrights</strong></code></pre>
                                 </td>
-                                <td><strong>Stop MariaDB.</strong><br><br>
-                                    <pre><code>Usage: stopmariadb</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <pre><code><strong>restartmariadb</strong></code></pre>
-                                </td>
-                                <td><strong>Restart MariaDB.</strong><br><br>
-                                    <pre><code>Usage: restartmariadb</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>startphpfpm</strong></code></pre>
-                                </td>
-                                <td><strong>Start PHP FPM.</strong><br><br>
-                                    <pre><code>Usage: startphpfpm</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>stopphpfpm</strong></code></pre>
-                                </td>
-                                <td><strong>Stop PHP FPM.</strong><br><br>
-                                    <pre><code>Usage: stopphpfpm</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>restartphpfpm</strong></code></pre>
-                                </td>
-                                <td><strong>Restart PHP FPM.</strong><br><br>
-                                    <pre><code>Usage: restartphpfpm</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>startdnsmasq</strong></code></pre>
-                                </td>
-                                <td><strong>Start Dnsmasq.</strong><br><br>
-                                    <pre><code>Usage: startdnsmasq</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>stopdnsmasq</strong></code></pre>
-                                </td>
-                                <td><strong>Stop Dnsmasq.</strong><br><br>
-                                    <pre><code>Usage: stopdnsmasq</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>restartdnsmasq</strong></code></pre>
-                                </td>
-                                <td><strong>Restart Dnsmasq.</strong><br><br>
-                                    <pre><code>Usage: restartdnsmasq</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>startmailpit</strong></code></pre>
-                                </td>
-                                <td><strong>Start Mailpit.</strong><br><br>
-                                    <pre><code>Usage: startmailpit</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>stopmailpit</strong></code></pre>
-                                </td>
-                                <td><strong>Stop Mailpit.</strong><br><br>
-                                    <pre><code>Usage: stopmailpit</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>restartmailpit</strong></code></pre>
-                                </td>
-                                <td><strong>Restart Mailpit.</strong><br><br>
-                                    <pre><code>Usage: restartmailpit</code></pre>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setrights_modal">Set filerights of the current folder and all subfolders.</a>
                                 </td>
                             </tr>
                         </table>
@@ -453,112 +356,90 @@ foreach ( $phpVersions as $version )
                     <div class="accordion-body">
                         <table class="table">
                             <tr>
-                                <td>
-                                    <pre><code><strong>jlistjoomlas</strong></code></pre>
-                                </td>
-                                <td><strong>List all Joomla websites in your environment.</strong><br><br>
-                                    <pre><code>Usage: jlistjoomlas [-s] [-c] [-h] [-r release]
--s Short. Only display path and Joomla version.
--r Release version. Only display information about Joomla sites with given release version.
--c CSV. Output values in CSV format.
--h Help. Display this info.</code></pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code><strong>joomlainfo</strong></code></pre>
-                                </td>
-                                <td><strong>Display information about a Joomla website.</strong><br><br>
-                                    <pre><code>Usage: joomlainfo</code></pre><br>
-                                    Run this command in the root of a Joomla website.
+                                <td colspan="2">
+                                    <h4>Backup & Restore</h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jbackup</strong></code></pre>
                                 </td>
-                                <td><strong>Backup a Joomla website.</strong><br><br>
-                                    <pre><code>Usage: jbackup [-z] [-t] [-o] [-m] [-s] [-h]
-Default action is .tgz backup.
--z Zip. Backup to a zipfile instead of a tgzfile.
--t Add a date/time-stamp to the backup file.
--o Overwrite existing backupfile and/or database dump.
--m Move backup to ~/Development/Backup/sites folder.
--s silent, no messages will be shown (optional).
--h Help. Display this info.</code></pre><br>
-                                    Run this command in the root of a Joomla website.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackup_modal">Create a tar gzip or zip backup a Joomla website.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jbackupall</strong></code></pre>
                                 </td>
-                                <td><strong>Create a backup of all local Joomla websites.</strong><br><br>
-                                    <pre><code>Usage: jbackupall [-s] [-h]
--s Silent. Do not display any messages to standard output.
--h Help. Display this info.</code></pre><br>
-                                    This scrips searches for all Joomla websites in the ~/Development/Sites folder and
-                                    creates a backup for each website found.<br>
-                                    The backups are stored in the ~/Development/Backup/sites folder.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackupall_modal">Create a backup of all local Joomla websites.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jdbdump</strong></code></pre>
                                 </td>
-                                <td><strong>Create a database dump of a Joomla website.</strong><br><br>
-                                    <pre><code>Usage: jdbdump [-d] [-c] [-o] [-m] [-h]
--d Add a date-time-stamp to the database dump filename.
--c Compress the database dump with gzip.
--o Overwrite existing database dump.
--m Move database dump to ~/Development/Backup/mysql folder.
--h Help. Display this info.</code></pre><br>
-                                    Run this command in the root of a Joomla website.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdump_modal">Create a database dump of a Joomla website.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jdbdumpall</strong></code></pre>
                                 </td>
-                                <td><strong>Create a database dump of all Joomla website databases.</strong><br><br>
-                                    <pre><code>Usage: jdbdumpall [-s] [-h]
--s Silent. Do not display any messages to standard output.
--h Help. Display this info.</code></pre><br>
-                                    This scrips searches for all Joomla websites in the ~/Development/Sites folder and
-                                    creates a database dump for each website found.<br>
-                                    The database dumps are stored in the ~/Development/Backup/mysql folder.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdumpall_modal">Create a database dump of all Joomla website databases.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jdbimp</strong></code></pre>
                                 </td>
-                                <td><strong>Import a database dump into the database of a Joomla
-                                        website.</strong><br><br>
-                                    <pre><code>Usage: jdbimp [-s] [-h]
--s silent, no messages will be shown (optional).
--h Help. Display this info.</code></pre><br>
-                                    Run this command in the root of a Joomla website.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbimp_modal">Import a database dump into the database of a Joomla website.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Joomla site(s) information</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre><code><strong>jlistjoomlas</strong></code></pre>
+                                </td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jlistjoomlas_modal">List all Joomla websites in your development environment.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre><code><strong>joomlainfo</strong></code></pre>
+                                </td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#joomlainfo_modal">Display information about a Joomla website.</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Miscellaneous</h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>jdbdropall</strong></code></pre>
                                 </td>
-                                <td><strong>Drop all database tables of a Joomla website.</strong><br><br>
-                                    <pre><code>Usage: jdbdropall
-</code></pre><br>
-                                    Run this command in the root of a Joomla website. The script asks your confirmation
-                                    before dropping all tables.
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdropall_modal">Drop all database tables of a Joomla website.</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <pre><code><strong>latestjoomla</strong></code></pre>
                                 </td>
-                                <td><strong>Download a zipfile of the latest Joomla! version and unzip it in the current
-                                        folder.</strong><br><br>
-                                    <pre><code>Usage: latestjoomla</code></pre>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdropall_modal">Download a zipfile of the latest Joomla! version and unzip it in the current folder.</a>
                                 </td>
                             </tr>
                         </table>
@@ -767,6 +648,518 @@ Default action is .tgz backup.
         <p><i class="nf nf-fa-github"></i> <a href="https://github.com/renekreijveld/macOS_NginX_local_development"
                 target="_blank">Created by René Kreijveld</a>.</p>
     </div>
+
+    <div class="modal fade" id="jbackup_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jbackup</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Create a tar gzip or zip backup a Joomla website.</strong><br><br>
+                    <pre><code>Usage: jbackup [-z] [-t] [-o] [-s] [-h]
+
+Default action is .tgz backup.
+-z Zip. Backup to a zipfile instead of a tgzfile.
+-t Add a date/time-stamp to the backup file.
+-o Overwrite existing backupfile and/or database dump.
+-s silent, no messages will be shown (optional).
+-h Help. Display this info.</code></pre><br>
+                    Run this command in the root of a Joomla website.<br>
+                    To restore a backup, extract the backup file one folder up of the root of the Joomla website.<br>
+                    This usually is the folder /Users/&lt;your username&gt;/Development/Sites.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jbackupall_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jbackupall</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Create a backup of all local Joomla websites.</strong><br><br>
+                    <pre><code>Usage: jbackupall [-s] [-h]
+
+-s Silent. Do not display any messages to standard output.
+-h Help. Display this info.</code></pre><br>
+                    This scrips searches for all Joomla websites in your development environment and
+                    creates a backup of each website found.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jdbdump_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jdbdump</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Create a database dump of a Joomla website.</strong><br><br>
+                    <pre><code>Usage: jdbdump [-t] [-c] [-o] [-h]
+
+-t Add a date-time-stamp to the database dump filename.
+-c Compress the database dump with gzip.
+-o Overwrite existing database dump.
+-h Help. Display this info.</code></pre><br>
+                    Run this command in the root of a Joomla website.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jdbdumpall_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jdbdumpall</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Create a database dump of all Joomla website databases.</strong><br><br>
+                    <pre><code>Usage: jdbdumpall [-s] [-h]
+
+-s Silent. Do not display any messages to standard output.
+-h Help. Display this info.</code></pre><br>
+                    This scrips searches for all Joomla websites in the development environment and creates a database dump for each website found.<br>
+                    The database dumps are save in the Databases backup folder.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jdbimp_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jdbimp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Import a database dump into the database of a Joomla website.</strong><br><br>
+                    <pre><code>Usage: jdbimp [-s] [-h]
+-s silent, no messages will be shown (optional).
+-h Help. Display this info.</code></pre><br>
+                    Run this command in the root of a Joomla website.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jlistjoomlas_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jlistjoomlas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>List all Joomla websites in your development environment.</strong><br><br>
+                    <pre><code>Usage: jlistjoomlas [-s] [-h] [-r release]
+
+-s Short. Only display path and Joomla version.
+-r Release version. Only display information about Joomla sites with given release version (e.g., 1.5, 2.5, 3.4).
+-h Help. Display this info.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="joomlainfo_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">joomlainfo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Display information about a Joomla website.</strong><br><br>
+                    <pre><code>Usage: joomlainfo</code></pre><br>
+                    Run this command in the root of a Joomla website.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="jdbdropall_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jdbdropall</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Drop all database tables of a Joomla website.</strong><br><br>
+                    <pre><code>Usage: jdbdropall [-f] [-s] [-h]
+
+-f force, do not ask confirmation before dropping tables.
+-s silent, no messages will be shown (optional).
+-h Help. Display this info.</code></pre><br>
+                    Run this command in the root of a Joomla website.<br>
+                    The script asks your confirmation before dropping all tables of you do not specify the -f option.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="latestjoomla_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">latestjoomla</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Download a zipfile of the latest Joomla! version and unzip it in the current folder.</strong><br><br>
+                    <pre><code>Usage: latestjoomla</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addsite_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">addsite</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Add a new local website.</strong><br><br>
+                    <pre><code>Usage: addsite -n &lt;name&gt; -p &lt;php version&gt; [-d &lt;database name&gt;] [-j] [-o] [-s] [-h]
+
+-n the name for the new website (input without spaces, mandatory).
+-p the PHP version for the new website (mandatory).
+-d the database name for the new website (optional).
+-j download and install the latest Joomla version (optional).
+-o open the new website in the browser after creation (optional).
+-s silent, no messages will be shown (optional).
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delsite_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">delsite</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Delete a local website.</strong><br><br>
+                    <pre><code>Usage: delsite -n &lt;website_name&gt; [-d] [-f] [-s] [-h]
+
+-n the name for the website (without spaces).
+-d also drop the database.
+-f force, do not ask confirmation before deleting website and database.
+-s silent, no messages will be shown.
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="adddb_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">adddb</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Add a new database.</strong><br><br>
+                    <pre><code>Usage: adddb -d &lt;database name&gt; [-s] [-h]
+
+-d the database name for the new website (input without spaces, mandatory).
+-s silent, no messages will be shown (optional).
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deldb_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">deldb</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Delete a database.</strong><br><br>
+                    <pre><code>Usage: deldb -d <database_name> [-f] [-s] [-h]
+
+-d the name of the database to delete.
+-f force, do not ask confirmation before deleting the database.
+-s silent, no messages will be shown.
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="setsitephp_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">setsitephp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Set the PHP version of a local website.</strong><br><br>
+                    <pre><code>Usage: setsitephp -n &lt;website_name&gt; -p &lt;php_version&gt; [-s] [-h]
+
+-n the name for the new website (without spaces).
+-p the PHP version for the website.
+-s silent, no messages will be shown.
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sphp_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">sphp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Set the PHP CLI version.</strong><br><br>
+                    <pre><code>Usage: sphp &lt;php version&gt;</code></pre><br>
+                    Possible PHP versions: <?php echo implode(', ', $phpVersions); ?>.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="xdebug_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">xdebug</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Turn xdebug on or off in the installed PHP versions.</strong><br><br>
+                    <pre><code>Usage: xdebug &lt;on|off&gt;</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="setrights_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">setrights</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Set filerights of the current folder and all subfolders.</strong><br>
+                    Folder rights will be set to 755 (rwx-r-xr-x), file rights will be site to 644 (rw-r--r--).<br><br>
+                    <pre><code>Usage: setrights</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startdev_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startdev | stopdev | restartdev</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit.</strong><br><br>
+                    <pre><code>Usage: startdev | stopdev | restartdev</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startnginx_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startnginx | stopnginx | restartnginx</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart NginX service.</strong><br><br>strong
+                    <pre><code>Usage: startnginx | stopnginx | restartnginx</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startmariadb_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startmariadb | stopmariadb | restartmariadb</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart MariaDB service.</strong><br><br>strong
+                    <pre><code>Usage: startmariadb | stopmariadb | restartmariadb</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startphpfpm_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startphpfpm | stopphpfpm | restartphpfpm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart PHP FPM services.</strong><br><br>strong
+                    <pre><code>Usage: startphpfpm | stopphpfpm | restartphpfpm</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startdnsmasq_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startdnsmasq | stopdnsmasq | restartdnsmasq</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart DNSMasq service.</strong><br><br>strong
+                    <pre><code>Usage: startdnsmasq | stopdnsmasq | restartdnsmasq</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startmailpit_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startmailpit | stopmailpit | restartmailpit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart Mailpit service.</strong><br><br>strong
+                    <pre><code>Usage: startmailpit | stopmailpit | restartmailpit</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="setserver_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">setserver</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Switch between Apache and NginX webserver.</strong><br><br>
+                    <pre><code>Usage: setserver -n | -a [-s] [-h]
+
+-n set webserver to NginX.
+-a set webserver to Apache.
+
+You must specify either -n or -a.
+
+The other options are:
+-s silent, no messages will be shown (optional).
+-h display this help.</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
