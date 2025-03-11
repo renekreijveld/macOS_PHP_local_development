@@ -281,6 +281,14 @@ foreach ( $phpVersions as $version )
                             </tr>
                             <tr>
                                 <td>
+                                    <pre><code><strong>startapache | stopapache | restartapache</strong></code></pre>
+                                </td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startapache_modal">Start | Stop | Restart Apache service</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <pre><code><strong>startnginx | stopnginx | restartnginx</strong></code></pre>
                                 </td>
                                 <td>
@@ -456,6 +464,60 @@ foreach ( $phpVersions as $version )
                 <div id="collapse_faq" class="accordion-collapse collapse" aria-labelledby="heading_faq"
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body faqlist">
+                        <div class="accordion" id="faqApache">
+                            <p class="mt-3"><strong>Apache</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_ap_1" aria-expanded="true" aria-controls="faq_ap_1">
+                                        Where is the Apache configuration file?
+                                    </button>
+                                </p>
+                                <div id="faq_ap_1" class="accordion-collapse collapse" data-bs-parent="#faqApache">
+                                    <div class="accordion-body">
+                                        The Apache configuration file is <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/httpd.conf</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_ap_2" aria-expanded="true" aria-controls="faq_ap_2">
+                                        Where are the Apache local website server configurations?
+                                    </button>
+                                </p>
+                                <div id="faq_ap_2" class="accordion-collapse collapse" data-bs-parent="#faqApache">
+                                    <div class="accordion-body">
+                                        The Apache local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/vhosts</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_ap_3" aria-expanded="true" aria-controls="faq_ap_3">
+                                        Where are the Apache templates?
+                                    </button>
+                                </p>
+                                <div id="faq_ap_3" class="accordion-collapse collapse" data-bs-parent="#faqApache">
+                                    <div class="accordion-body">
+                                        The Apache templates are at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/templates</span>.<br>
+                                        The file <span class="badge bg-secondary fw-light font-monospace">template.conf</span> is used to create a new local website configuration.<br>
+                                        The file <span class="badge bg-secondary fw-light font-monospace">index.php</span> is placed in the root of a new local website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite script.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_ap_4" aria-expanded="true" aria-controls="faq_a[_4">
+                                        Where are the local websites located?
+                                    </button>
+                                </p>
+                                <div id="faq_ap_4" class="accordion-collapse collapse" data-bs-parent="#faqApache">
+                                    <div class="accordion-body">
+                                        Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
+                                        By default his is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>, but you could have specified a different folder at installation.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="accordion" id="faqNginX">
                             <p class="mt-3"><strong>NginX</strong></p>
                             <div class="accordion-item">
@@ -504,8 +566,9 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_nx_4" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                     <div class="accordion-body">
-                                        Every website that you create with the a<span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt.</span>.<br>
-                                        So the command <span class="badge bg-secondary fw-light font-monospace">addsite -n joomla5</span> will create the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/joomla5</span>. That is the root of the website.
+                                        Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
+                                        By default his is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>,
+                                        but you could have specified a different folder at installation.
                                     </div>
                                 </div>
                             </div>
@@ -535,7 +598,7 @@ foreach ( $phpVersions as $version )
                                     <div class="accordion-body">
                                         When Adminer has an update you will see the new version number in red at the top left of the Adminer screen.<br>
                                         To update Adminer, download the latest version from <a href="https://www.adminer.org/latest.php" target="_blank">https://www.adminer.org/latest.php</a>.<br>
-                                        Save the file as adminer.php in the folder <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites</span>. Overwrite the existing adminer.php file.
+                                        Save the file as adminer.php in the folder you set as the folder path where your websites will be stored. By default this is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites</span>. Overwrite the existing adminer.php file.
                                     </div>
                                 </div>
                             </div>
@@ -563,7 +626,8 @@ foreach ( $phpVersions as $version )
                                 <div id="faq_php_2" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
                                     <div class="accordion-body">
                                         The folder <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php</span> holds all installed PHP versions. Each PHP version has its own folder.<br>
-                                        In that folder you will find a <span class="badge bg-secondary fw-light font-monospace">conf.d</span> folder that holds the <span class="badge bg-secondary fw-light font-monospace">ext-xdebug.ini</span> file.
+                                        In each PHP version folder you will find the subfolder <span class="badge bg-secondary fw-light font-monospace">conf.d</span> that has the file <span class="badge bg-secondary fw-light font-monospace">ext-xdebug.ini</span> which is the configuration file for Xdebug.<br>
+                                        So for PHP 8.3 the Xdebug ini file is at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php/8.3/conf.d/ext-xdebug.ini</span>.
                                     </div>
                                 </div>
                             </div>
@@ -601,7 +665,7 @@ foreach ( $phpVersions as $version )
                                         I want to quickly make a database dump of a Joomla website. How do I do that?
                                     </button>
                                 </p>
-                                <div id="faq_joomla_1" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                <div id="faq_joomla_1" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
                                     <div class="accordion-body">
                                         Open a terminal and go to the root of the Joomla website you want to make a database dump for.<br>
                                         Type the command <span class="badge bg-secondary fw-light font-monospace">jdbdump</span>.<br>
@@ -617,12 +681,29 @@ foreach ( $phpVersions as $version )
                                         I want to quickly make a full backup of a Joomla website. How do I do that?
                                     </button>
                                 </p>
-                                <div id="faq_joomla_2" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                <div id="faq_joomla_2" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
                                     <div class="accordion-body">
                                         Open a terminal and go to the root of the Joomla website you want to backup.<br>
                                         Type the command <span class="badge bg-secondary fw-light font-monospace">jbackup</span>.<br>
                                         This will create a complete backup including a database dump of the website.<br>
                                         To see al options for jbackup, type <span class="badge bg-secondary fw-light font-monospace">jbackup -h</span>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="faqHomebrew">
+                            <p class="mt-3"><strong>Homebrew</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_hb_1" aria-expanded="true" aria-controls="faq_hb_1">
+                                        How do I check for Homebrew updates?
+                                    </button>
+                                </p>
+                                <div id="faq_hb_1" class="accordion-collapse collapse" data-bs-parent="#faqHomebrew">
+                                    <div class="accordion-body">
+                                        Open a terminal and type the command <span class="badge bg-secondary fw-light font-monospace">brew update</span> and press Enter.<br>
+                                        Homebrew then lists the number of outdated formulae.<br>
+                                        To update all outdated formulae, type the command <span class="badge bg-secondary fw-light font-monospace">brew upgrade</span> and press Enter.
                                     </div>
                                 </div>
                             </div>
@@ -1035,6 +1116,24 @@ Default action is .tgz backup.
                 <div class="modal-body">
                     <strong>Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit.</strong><br><br>
                     <pre><code>Usage: startdev | stopdev | restartdev</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="startapache_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">startapache | stopapache | restartapache</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Start | Stop | Restart Apache service.</strong><br><br>strong
+                    <pre><code>Usage: startapache | stopapache | restartapache</code></pre>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
