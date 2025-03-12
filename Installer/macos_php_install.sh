@@ -221,7 +221,7 @@ configure_php_fpm() {
 
         echo -e "- install for PHP ${php_version}."
         cp "${CONF_FILE}" "${BACKUP}"
-        curl -fsSL "${CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
+        curl -fsSL "${CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
     done
 }
 
@@ -258,7 +258,7 @@ configure_php_ini() {
         echo "- install for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        curl -fsSL "${XDEBUG_NEW}" | sed "s|libpath|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
+        curl -fsSL "${XDEBUG_NEW}" | sed "s|<lib_path>|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
@@ -270,7 +270,7 @@ configure_nginx() {
     NGINX_SERVERS="${HOMEBREW_PATH}/etc/nginx/servers"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|startpath|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_path>|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
@@ -290,16 +290,16 @@ configure_apache() {
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
     cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
+    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
+    curl -fsSL "${APACHE_CONF_NEW}" | sed "s|<homebrew_path>|${HOMEBREW_PATH}|g" | sed "s|<your_username>|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
