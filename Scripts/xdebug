@@ -15,7 +15,9 @@ VERSION=1.0
 # This script will enable or disable xdebug by renaming the ext-xdebug.ini file to ext-xdebug.ini.disabled for all installed PHP versions.
 
 OPTION=$1
-BASE_DIR="/opt/homebrew/etc/php"
+
+HOMEBREW_PATH=$(brew --prefix)
+BASE_DIR="${HOMEBREW_PATH}/etc/php"
 
 # Rename all ext-xdebug.ini.disabled files to ext-xdebug.ini
 xdebug_on() {
