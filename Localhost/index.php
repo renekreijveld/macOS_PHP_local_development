@@ -271,7 +271,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>xdebug</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#xdebug_modal">Turn xdebug on or off in the installed PHP versions.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#xdebug_modal">Turn xdebug on or off in the installed PHP versions or show status.</a>
                                 </td>
                             </tr>
                             <tr>
@@ -1086,7 +1086,10 @@ Default action is .tgz backup.
                 </div>
                 <div class="modal-body">
                     <strong>Turn xdebug on or off in the installed PHP versions.</strong><br><br>
-                    <pre><code>Usage: xdebug &lt;on|off&gt;</code></pre>
+                    <pre><code>Usage: xdebug &lt;on|off|status&gt;</code></pre><br>
+                    On: enables Xdebug for all PHP versions.<br>
+                    Off: disables Xdebug for all PHP versions.<br>
+                    Status: show the disables Xdebug status for all PHP versions.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
