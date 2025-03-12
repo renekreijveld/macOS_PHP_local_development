@@ -3,6 +3,7 @@
 # macos_php_install - Install a local Apache, NginX, PHP, MariaDB, Xdebug, Mailpit development environment on macOS
 #
 # This is a universal installer for both Intel and Silicon processors.
+# macOS versions supported: Big Sur, Monterey, Ventura, Sonoma, Sequoia
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
