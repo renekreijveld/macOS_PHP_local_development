@@ -8,9 +8,16 @@
  * Version 1.0
  */
 
-$phpDir     = '/opt/homebrew/etc/php';
-$apacheServersDir = '/opt/homebrew/etc/httpd/vhosts';
-$nginxServersDir = '/opt/homebrew/etc/nginx/servers';
+if (is_dir('/usr/local/Homebrew')) {
+    $etcDir = '/usr/local/etc';
+}
+if (is_dir('/opt/homebrew')) {
+    $etcDir = '/opt/homebrew/etc';
+}
+
+$phpDir     = $etcDir . '/php';
+$apacheServersDir = $etcDir . '/httpd/vhosts';
+$nginxServersDir = $etcDir . '/nginx/servers';
 $username = getenv('USER');
 
 function getPhpVersionFromNginXConfig ( $configFile )
@@ -474,7 +481,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_ap_1" class="accordion-collapse collapse" data-bs-parent="#faqApache">
                                     <div class="accordion-body">
-                                        The Apache configuration file is <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/httpd.conf</span>.
+                                        The Apache configuration file is <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/httpd/httpd.conf</span>.
                                     </div>
                                 </div>
                             </div>
@@ -486,7 +493,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_ap_2" class="accordion-collapse collapse" data-bs-parent="#faqApache">
                                     <div class="accordion-body">
-                                        The Apache local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/vhosts</span>.
+                                        The Apache local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/httpd/vhosts</span>.
                                     </div>
                                 </div>
                             </div>
@@ -498,7 +505,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_ap_3" class="accordion-collapse collapse" data-bs-parent="#faqApache">
                                     <div class="accordion-body">
-                                        The Apache templates are at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/httpd/templates</span>.<br>
+                                        The Apache templates are at <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/httpd/templates</span>.<br>
                                         The file <span class="badge bg-secondary fw-light font-monospace">template.conf</span> is used to create a new local website configuration.<br>
                                         The file <span class="badge bg-secondary fw-light font-monospace">index.php</span> is placed in the root of a new local website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite script.
                                     </div>
@@ -528,7 +535,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_nx_1" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                     <div class="accordion-body">
-                                        The NginX configuration file is <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/nginx.conf</span>.
+                                        The NginX configuration file is <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/nginx/nginx.conf</span>.
                                     </div>
                                 </div>
                             </div>
@@ -540,7 +547,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_nx_2" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                     <div class="accordion-body">
-                                        The NginX local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/servers</span>.
+                                        The NginX local website server configuration files are in <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/nginx/servers</span>.
                                     </div>
                                 </div>
                             </div>
@@ -552,7 +559,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_nx_3" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                     <div class="accordion-body">
-                                        The NginX templates are at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/nginx/templates</span>.<br>
+                                        The NginX templates are at <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/nginx/templates</span>.<br>
                                         The file <span class="badge bg-secondary fw-light font-monospace">template.conf</span> is used to create a new local website server configuration.<br>
                                         The file <span class="badge bg-secondary fw-light font-monospace">index.php</span> is placed in the root of a new local website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite script.
                                     </div>
@@ -613,7 +620,7 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_php_1" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
                                     <div class="accordion-body">
-                                        The folder <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php</span> holds all installed PHP versions. Each PHP version has its own folder with a php.ini file.
+                                        The folder <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/php</span> holds all installed PHP versions. Each PHP version has its own folder with a php.ini file.
                                     </div>
                                 </div>
                             </div>
@@ -625,9 +632,9 @@ foreach ( $phpVersions as $version )
                                 </p>
                                 <div id="faq_php_2" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
                                     <div class="accordion-body">
-                                        The folder <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php</span> holds all installed PHP versions. Each PHP version has its own folder.<br>
+                                        The folder <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/php</span> holds all installed PHP versions. Each PHP version has its own folder.<br>
                                         In each PHP version folder you will find the subfolder <span class="badge bg-secondary fw-light font-monospace">conf.d</span> that has the file <span class="badge bg-secondary fw-light font-monospace">ext-xdebug.ini</span> which is the configuration file for Xdebug.<br>
-                                        So for PHP 8.3 the Xdebug ini file is at <span class="badge bg-secondary fw-light font-monospace">/opt/homebrew/etc/php/8.3/conf.d/ext-xdebug.ini</span>.
+                                        So for PHP 8.3 the Xdebug ini file is at <span class="badge bg-secondary fw-light font-monospace"><?php echo $etcDir; ?>/php/8.3/conf.d/ext-xdebug.ini</span>.
                                     </div>
                                 </div>
                             </div>
