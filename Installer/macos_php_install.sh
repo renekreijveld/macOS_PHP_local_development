@@ -20,8 +20,9 @@
 # 1.7 Added password processing
 # 1.8 Added modification of sudoers for easy starting and stopping of services
 # 1.9 Made installer universal for Intel and Silicon processors
+# 1.10 More consistent variable naming
 
-VERSION=1.9
+VERSION=1.10
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
