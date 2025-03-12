@@ -260,8 +260,17 @@ if [ ! -z "${DATABASE_NAME}" ]; then
     showmessage "Database ${DATABASE_NAME} created."
 fi
 
-showmessage "Restarting nginx, you may need to enter your password."
-sudo brew services restart nginx
+if [ "${WEBSERVER}" == "nginx" ]; then
+    # Restart NginX
+    showmessage "Restarting nginx."
+    sudo brew services restart nginx
+fi
+
+if [ "${WEBSERVER}" == "apache" ]; then
+    # Restart Apache
+    showmessage "Restarting apache."
+    brew services restart httpd
+fi
 
 if [ "${JOOMLA}" == "yes" ]; then
     showmessage "Downloading and extracting the latest Joomla version."
