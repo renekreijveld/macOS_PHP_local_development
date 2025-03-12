@@ -664,6 +664,20 @@ foreach ( $phpVersions as $version )
                                     </div>
                                 </div>
                             </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_php_5" aria-expanded="true" aria-controls="faq_php_5">
+                                        How do I switch to another PHP CLI version?
+                                    </button>
+                                </p>
+                                <div id="faq_php_5" class="accordion-collapse collapse" data-bs-parent="#faqPHP">
+                                    <div class="accordion-body">
+                                        You can switch to another PHP CLI version with the <span class="badge bg-secondary fw-light font-monospace">sphp &lt;PHP version&gt;</span> command.<br>
+                                        For example <span class="badge bg-secondary fw-light font-monospace">sphp 7.4</span> switches the CLI version to PHP 7.4.<br>
+                                        The xdebug command described above also has effect for the CLI version.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="accordion" id="faqJoomla">
                             <p class="mt-3"><strong>Joomla scripts</strong></p>
@@ -712,6 +726,31 @@ foreach ( $phpVersions as $version )
                                         Open a terminal and type the command <span class="badge bg-secondary fw-light font-monospace">brew update</span> and press Enter.<br>
                                         Homebrew then lists the number of outdated formulae.<br>
                                         To update all outdated formulae, type the command <span class="badge bg-secondary fw-light font-monospace">brew upgrade</span> and press Enter.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_hb_2" aria-expanded="true" aria-controls="faq_hb_2">
+                                        How do I uninstall a formula or cask from Homebrew?
+                                    </button>
+                                </p>
+                                <div id="faq_hb_2" class="accordion-collapse collapse" data-bs-parent="#faqHomebrew">
+                                    <div class="accordion-body">
+                                        You can list all installed formulae and casks with the command <span class="badge bg-secondary fw-light font-monospace">brew list</span>.<br>
+                                        You can uninstall a formula or casks with the command <span class="badge bg-secondary fw-light font-monospace">brew uninstall FORMULA|CASK...</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_hb_3" aria-expanded="true" aria-controls="faq_hb_3">
+                                        How do I uninstall Homebrew?
+                                    </button>
+                                </p>
+                                <div id="faq_hb_3" class="accordion-collapse collapse" data-bs-parent="#faqHomebrew">
+                                    <div class="accordion-body">
+                                        Run the official uninstall script. You can find that here: <a href="https://github.com/homebrew/install#uninstall-homebrew">Uninstall Homebrew</a>.
                                     </div>
                                 </div>
                             </div>
