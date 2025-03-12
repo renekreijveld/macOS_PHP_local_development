@@ -15,13 +15,7 @@ VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 
-# Check processor
-if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-    PROCESSOR="silicon"
-fi
-if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-    PROCESSOR="intel"
-fi
+# Start directory of homebrew
 START_DIR=$(brew --prefix)
 
 # path where this script is located

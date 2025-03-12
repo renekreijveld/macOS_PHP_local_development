@@ -17,13 +17,7 @@ VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 
-# Check processor
-if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-    PROCESSOR="silicon"
-fi
-if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-    PROCESSOR="intel"
-fi
+# Start directory of homebrew
 START_DIR=$(brew --prefix)
 
 # default index.php template
@@ -234,14 +228,6 @@ sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<start_dir>|${START_DIR}|g" "${NGINX_CONF_FILE}"
-
-# Check processor
-if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-    PROCESSOR="silicon"
-fi
-if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-    PROCESSOR="intel"
-fi
 
 # Copy and modify the apache configuration template
 APACHE_VHOSTS_FILE=${APACHE_DIR}/extra/httpd-vhosts.conf
