@@ -16,14 +16,25 @@
 VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
+
+# Check processor
+if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
+    START_DIR="/opt/homebrew"
+    PROCESSOR="silicon"
+fi
+if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
+    START_DIR="/usr/local"
+    PROCESSOR="intel"
+fi
+
 # default index.php template
-INDEX_TEMPLATE=/opt/homebrew/etc/nginx/templates/index.php
+INDEX_TEMPLATE=${START_DIR}/etc/nginx/templates/index.php
 # nginx folder for website configurations
-NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
+NGINX_CONF_DIR=${START_DIR}/etc/nginx/servers
 # nginx configuration template
-NGINX_CONFIG_TEMPLATE=/opt/homebrew/etc/nginx/templates/template.conf
+NGINX_CONFIG_TEMPLATE=${START_DIR}/etc/nginx/templates/template.conf
 # apache etc dir
-APACHE_DIR=/opt/homebrew/etc/httpd
+APACHE_DIR=${START_DIR}/etc/httpd
 # apache folder for website configurations
 APACHE_CONF_DIR=${APACHE_DIR}/vhosts
 # apache configuration template
@@ -223,6 +234,15 @@ chmod 700 ${NGINX_CONF_FILE}
 sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${NGINX_CONF_FILE}"
+sed -i '' "s|<startdir>|${START_DIR}|g" "${NGINX_CONF_FILE}"
+
+# Check processor
+if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
+    PROCESSOR="silicon"
+fi
+if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
+    PROCESSOR="intel"
+fi
 
 # Copy and modify the apache configuration template
 APACHE_VHOSTS_FILE=${APACHE_DIR}/extra/httpd-vhosts.conf
@@ -232,6 +252,7 @@ chmod 700 ${APACHE_CONF_FILE}
 sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${APACHE_CONF_FILE}"
 sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${APACHE_CONF_FILE}"
 sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${APACHE_CONF_FILE}"
+sed -i '' "s|<startdir>|${START_DIR}|g" "${APACHE_CONF_FILE}"
 echo "IncludeOptional ${APACHE_CONF_FILE}" >> ${APACHE_VHOSTS_FILE}
 
 if [ ! -z "${DATABASE_NAME}" ]; then
