@@ -6,7 +6,7 @@ A logfile is created during installation.
 
 ## Requirements
 
-- M1/M2/M3/M4 Mac running macOS Sequoia (tested on macOS Sequoia 15.3.1).
+- macOS Big Sur / Monterey / Ventura / Sonoma / Sequoia (tested on macOS Sequoia 15.3.1).
 - This installation assumes you are running the Zsh shell in your terminal.
 
 ## User resources
@@ -65,14 +65,8 @@ To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_deve
 
 ## Install the development environment
 
-If you have an Apple Silicon machine, enter the following command in the terminal:
+To install, enter the following command in the terminal:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/installer_silicon.sh)"
-```
-
-If you have an Intel machine, enter the following command in the terminal:
-
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/installer_intel.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/macos_php_install.sh)"
 ```
