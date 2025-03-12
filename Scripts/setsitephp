@@ -14,10 +14,23 @@
 VERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
+
+# Check processor
+if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
+    START_DIR="/opt/homebrew"
+    PROCESSOR="silicon"
+fi
+if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
+    START_DIR="/usr/local"
+    PROCESSOR="intel"
+fi
+
+
+
 # nginx folder for website configurations
-NGINX_CONF_DIR=/opt/homebrew/etc/nginx/servers
+NGINX_CONF_DIR=${START_DIR}/etc/nginx/servers
 # apache folder for website configurations
-APACHE_CONF_DIR=/opt/homebrew/etc/httpd/vhosts
+APACHE_CONF_DIR=${START_DIR}/etc/httpd/vhosts
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
@@ -44,7 +57,7 @@ usage() {
 # Function to check if PHP version is valid
 is_valid_php_version() {
     PHP_VERSION=$1
-    if [ -d "/opt/homebrew/etc/php/${PHP_VERSION}" ]; then
+    if [ -d "${START_DIR}/etc/php/${PHP_VERSION}" ]; then
         return 0
     else
         return 1
@@ -106,7 +119,7 @@ fi
 if ! is_valid_php_version "${PHP_VERSION}"; then
     echo "Error: PHP version ${PHP_VERSION} is not installed."
     echo "Installed PHP versions are:"
-    ls /opt/homebrew/etc/php
+    ls ${START_DIR}/etc/php
     exit 1
 fi
 
