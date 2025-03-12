@@ -2,7 +2,7 @@
 
 This setup installs an Apache/NginX, MariaDB, PHP development stack on your macOS computer.
 
-Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia.
+Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia running on Intel and Silicon prcessors.
 
 You will get a setup with the following elements:
 
