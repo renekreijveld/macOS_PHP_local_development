@@ -1,6 +1,8 @@
 # Apache/NginX/MariaDB/PHP development stack for macOS
 
-This setup installs an Apache/NginX, MariaDB, PHP development stack on your Apple Silicon M1/M2/M3/M4 based macOS computer.
+This setup installs an Apache/NginX, MariaDB, PHP development stack on your macOS computer.
+
+Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia.
 
 You will get a setup with the following elements:
 
