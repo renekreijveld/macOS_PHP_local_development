@@ -236,7 +236,7 @@ install_php_switcher() {
 install_xdebug() {
     echo -e "\n\nInstall Xdebug:"
     for php_version in "${PHP_VERSIONS[@]}"; do
-        echo "- install Xdebug for php ${php_version}."
+        echo "- install Xdebug for PHP ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
 
         if [ "${php_version}" == "7.4" ]; then
