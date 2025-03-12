@@ -19,13 +19,12 @@ MYNAME=$(basename ${0})
 
 # Check processor
 if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-    START_DIR="/opt/homebrew"
     PROCESSOR="silicon"
 fi
 if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-    START_DIR="/usr/local"
     PROCESSOR="intel"
 fi
+START_DIR=$(brew --prefix)
 
 # default index.php template
 INDEX_TEMPLATE=${START_DIR}/etc/nginx/templates/index.php
@@ -234,7 +233,7 @@ chmod 700 ${NGINX_CONF_FILE}
 sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${NGINX_CONF_FILE}"
 sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${NGINX_CONF_FILE}"
-sed -i '' "s|<startdir>|${START_DIR}|g" "${NGINX_CONF_FILE}"
+sed -i '' "s|<start_dir>|${START_DIR}|g" "${NGINX_CONF_FILE}"
 
 # Check processor
 if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
@@ -252,7 +251,7 @@ chmod 700 ${APACHE_CONF_FILE}
 sed -i '' "s|<document_root>|${SITE_FOLDER}|g" "${APACHE_CONF_FILE}"
 sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" "${APACHE_CONF_FILE}"
 sed -i '' "s|<php_fpm_url>|${PHP_FPM_URL}|g" "${APACHE_CONF_FILE}"
-sed -i '' "s|<startdir>|${START_DIR}|g" "${APACHE_CONF_FILE}"
+sed -i '' "s|<start_dir>|${START_DIR}|g" "${APACHE_CONF_FILE}"
 echo "IncludeOptional ${APACHE_CONF_FILE}" >> ${APACHE_VHOSTS_FILE}
 
 if [ ! -z "${DATABASE_NAME}" ]; then

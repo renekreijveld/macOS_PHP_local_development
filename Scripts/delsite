@@ -17,13 +17,12 @@ MYNAME=$(basename ${0})
 
 # Check processor
 if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-    START_DIR="/opt/homebrew"
     PROCESSOR="silicon"
 fi
 if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-    START_DIR="/usr/local"
     PROCESSOR="intel"
 fi
+START_DIR=$(brew --prefix)
 
 # path where this script is located
 MYPATH=$(cd $(dirname ${0}); pwd -P)
