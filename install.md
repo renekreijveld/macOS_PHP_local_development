@@ -65,8 +65,14 @@ To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_deve
 
 ## Install the development environment
 
-In the terminal enter the following command:
+If you have an Apple Silicon machine, enter the following command in the terminal:
 
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/installer_silicon.sh)"
+```
+
+If you have an Intel machine, enter the following command in the terminal:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/installer_intel.sh)"
 ```
