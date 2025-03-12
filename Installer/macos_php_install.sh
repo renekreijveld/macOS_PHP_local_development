@@ -197,7 +197,7 @@ configure_mariadb() {
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 
-    echo "- Set root password."
+    echo "- Set MariaDB root password."
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
 
     echo "- Secure MariaDB installation."
@@ -256,7 +256,7 @@ configure_php_ini() {
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
         XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
 
-        echo "- install for PHP ${php_version}."
+        echo "- install php.ini for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
         curl -fsSL "${XDEBUG_NEW}" | sed "s|<lib_path>|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
