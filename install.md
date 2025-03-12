@@ -7,7 +7,8 @@ A logfile is created during installation.
 ## Requirements
 
 - macOS Big Sur / Monterey / Ventura / Sonoma / Sequoia (tested on macOS Sequoia 15.3.1).
-- This installation assumes you are running the Zsh shell in your terminal.
+
+This installation assumes you are running the Zsh shell in your terminal. The installer and installed software were tested on macOS Sequoia 15.3.1 and on macOS Ventura 13.7.4.
 
 ## User resources
 
