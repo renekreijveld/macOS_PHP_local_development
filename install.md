@@ -68,5 +68,5 @@ To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_deve
 In the terminal enter the following command:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/nginx_dev_installer.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/installer_silicon.sh)"
 ```
