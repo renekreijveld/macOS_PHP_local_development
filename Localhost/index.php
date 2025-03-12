@@ -513,7 +513,7 @@ foreach ( $phpVersions as $version )
                                 <div id="faq_ap_4" class="accordion-collapse collapse" data-bs-parent="#faqApache">
                                     <div class="accordion-body">
                                         Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
-                                        By default his is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>, but you could have specified a different folder at installation.
+                                        By default this is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>, but you could have specified a different folder at installation.
                                     </div>
                                 </div>
                             </div>
@@ -567,7 +567,7 @@ foreach ( $phpVersions as $version )
                                 <div id="faq_nx_4" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                     <div class="accordion-body">
                                         Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
-                                        By default his is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>,
+                                        By default this is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>,
                                         but you could have specified a different folder at installation.
                                     </div>
                                 </div>
