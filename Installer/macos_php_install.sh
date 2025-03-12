@@ -24,6 +24,7 @@
 VERSION=1.9
 
 # Folder where scripts are installed
+HOMEBREW_PATH=$(brew --prefix)
 SCRIPTS_DEST="/usr/local/bin"
 INSTALL_LOG="${HOME}/nginx_dev_install.log"
 CONFIG_DIR="${HOME}/.config/phpdev"
@@ -89,19 +90,11 @@ start() {
 
 prechecks() {
     # Check ETC DIR
-    if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
-        ETC_DIR="/opt/homebrew/etc"
+    if [ "${HOMEBREW_PATH}" == "/opt/homebrew" ]; then
         PROCESSOR="silicon"
     fi
-    if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
-        ETC_DIR="/usr/local/etc"
+    if [ "${HOMEBREW_PATH}" == "/usr/local" ]; then
         PROCESSOR="intel"
-    fi
-
-    # check if mandatory parameters are provided
-    if [ -z "${ETC_DIR}" ]; then
-        echo "Error: could not determine etc folder in Homebrew installarion, cannot continue."
-        exit 1
     fi
 
     PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
@@ -201,7 +194,7 @@ configure_mariadb() {
     echo "- secure MariaDB installation"
     echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
-    MY_CNF_FILE="${ETC_DIR}/my.cnf"
+    MY_CNF_FILE="${HOMEBREW_PATH}/etc/my.cnf"
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
     echo "- patch my.cnf file"
@@ -214,7 +207,7 @@ configure_mariadb() {
 configure_php_fpm() {
     echo -e "\nInstall PHP FPM ini files:"
     for php_version in "${PHP_VERSIONS[@]}"; do
-        CONF_FILE="${ETC_DIR}/php/${php_version}/php-fpm.d/www.conf"
+        CONF_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php-fpm.d/www.conf"
         BACKUP="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
@@ -247,16 +240,10 @@ install_xdebug() {
 
 configure_php_ini() {
     echo -e "\nInstall php.ini files:"
-    if [ "${PROCESSOR}" == "intel" ]; then
-        LIB_PATH="/usr/local/lib"
-    fi
-    if [ "${PROCESSOR}" == "silicon" ]; then
-        LIB_PATH="/opt/homebrew/lib"
-    fi
-
+    LIB_PATH="${HOMEBREW_PATH}/lib"
     for php_version in "${PHP_VERSIONS[@]}"; do
-        INI_FILE="${ETC_DIR}/php/${php_version}/php.ini"
-        XDEBUG_INI="${ETC_DIR}/php/${php_version}/conf.d/ext-xdebug.ini"
+        INI_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php.ini"
+        XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
         XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
@@ -270,19 +257,13 @@ configure_php_ini() {
 
 configure_nginx() {
     echo -e "\nConfigure NginX."
-    if [ "${PROCESSOR}" == "intel" ]; then
-        START_PATH="/usr/local"
-    fi
-    if [ "${PROCESSOR}" == "silicon" ]; then
-        START_PATH="/opt/homebrew"
-    fi
-    NGINX_CONF="${ETC_DIR}/nginx/nginx.conf"
+    NGINX_CONF="${HOMEBREW_PATH}/etc/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
-    NGINX_TEMPLATES="${ETC_DIR}/nginx/templates"
-    NGINX_SERVERS="${ETC_DIR}/nginx/servers"
+    NGINX_TEMPLATES="${HOMEBREW_PATH}/etc/nginx/templates"
+    NGINX_SERVERS="${HOMEBREW_PATH}/etc/nginx/servers"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|startpath|${START_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|startpath|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
@@ -291,14 +272,8 @@ configure_nginx() {
 
 configure_apache() {
     echo -e "\nConfigure Apache."
-    if [ "${PROCESSOR}" == "intel" ]; then
-        START_PATH="/usr/local"
-    fi
-    if [ "${PROCESSOR}" == "silicon" ]; then
-        START_PATH="/opt/homebrew"
-    fi
-    APACHE_ETC="${ETC_DIR}/httpd"
-    APACHE_CONF="${ETC_DIR}/httpd/httpd.conf"
+    APACHE_ETC="${HOMEBREW_PATH}/etc/httpd"
+    APACHE_CONF="${HOMEBREW_PATH}/etc/httpd/httpd.conf"
     APACHE_CONF_NEW="${GITHUB_BASE}/Apache/httpd.conf"
     APACHE_TEMPLATES="${APACHE_ETC}/templates"
     APACHE_VHOSTS="${APACHE_ETC}/vhosts"
@@ -308,21 +283,21 @@ configure_apache() {
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
     cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
+    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
     echo -e "\nConfigure Dnsmasq."
-    echo 'address=/.dev.test/127.0.0.1' >> ${ETC_DIR}/dnsmasq.conf
+    echo 'address=/.dev.test/127.0.0.1' >> ${HOMEBREW_PATH}/etc/dnsmasq.conf
     echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
     echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
@@ -342,8 +317,8 @@ install_ssl_certificates() {
     fi
     echo "- install local Certificate Authority."
     mkcert -install
-    mkdir -p ${ETC_DIR}/certs
-    cd ${ETC_DIR}/certs
+    mkdir -p ${HOMEBREW_PATH}/etc/certs
+    cd ${HOMEBREW_PATH}/etc/certs
     echo "- create localhost certificate."
     mkcert localhost >>${INSTALL_LOG} 2>&1
     echo "- create *.dev.test wildcard certificate."
@@ -385,10 +360,10 @@ fix_sudoers() {
     echo -e "Modify /etc/sudoers so you don't have to enter your password to start and stop services."
     echo "${PASSWORD}" | sudo -S chmod 640 /etc/sudoers
     if [ "${PROCESSOR}" == "silicon" ]; then
-        echo "${USERNAME} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+        echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
     fi
     if [ "${PROCESSOR}" == "intel" ]; then
-        echo "${USERNAME} ALL=(ALL) NOPASSWD: /usr/local/Homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+        echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/Homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
     fi
     echo "${PASSWORD}" | sudo -S chmod 440 /etc/sudoers
 }
