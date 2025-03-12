@@ -19,6 +19,9 @@ OPTION=$1
 HOMEBREW_PATH=$(brew --prefix)
 BASE_DIR="${HOMEBREW_PATH}/etc/php"
 
+# PHP Versions
+PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
+
 # Rename all ext-xdebug.ini.disabled files to ext-xdebug.ini
 xdebug_on() {
     # Find all files named 'ext-xdebug.ini.disabled' in subdirectories and rename them
@@ -35,11 +38,26 @@ xdebug_off() {
     done
 }
 
+# Get the status of xdebug
+xdebug_status() {
+    for php_version in "${PHP_VERSIONS[@]}"; do
+        if [[ -f "${BASE_DIR}"/${php_version}/conf.d/ext-xdebug.ini ]]; then
+            echo "PHP ${php_version}: Xdebug enabled."
+        else
+            echo "PHP ${php_version}: Xdebug disabled."
+        fi   
+    done
+}
+
+
 # Process option
 if [ "$OPTION" == "on" ]; then
     xdebug_on
 elif [ "$OPTION" == "off" ]; then
     xdebug_off
+elif [ "$OPTION" == "status" ]; then
+    xdebug_status
+    exit 0
 else
     echo "Invalid option. Usage: xdebug [on|off]"
     exit 1
