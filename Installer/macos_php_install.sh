@@ -196,16 +196,16 @@ configure_mariadb() {
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 
-    echo "- set root password"
+    echo "- Set root password."
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
 
-    echo "- secure MariaDB installation"
+    echo "- Secure MariaDB installation."
     echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     MY_CNF_FILE="${HOMEBREW_PATH}/etc/my.cnf"
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
-    echo "- patch my.cnf file"
+    echo "- Patch my.cnf file."
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
@@ -248,7 +248,6 @@ install_xdebug() {
 
 configure_php_ini() {
     echo -e "\nInstall php.ini files:"
-    LIB_PATH="${HOMEBREW_PATH}/lib"
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php.ini"
         XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
@@ -259,7 +258,7 @@ configure_php_ini() {
         echo "- install for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        curl -fsSL "${XDEBUG_NEW}" | sed "s|libpath|${LIB_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
+        curl -fsSL "${XDEBUG_NEW}" | sed "s|libpath|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
