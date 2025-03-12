@@ -86,6 +86,13 @@ start() {
 }
 
 prechecks() {
+    # Check Homebrew Repository
+    if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
+        echo -e "Error: it seems that this machine is an Intel machine because Homebrew is installed at /usr/local/Homebrew."
+        echo -e "Use the Intel installer for this kind of machine."
+        exit 1
+    fi
+
     PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
     echo -e "\nThe installer will first check if some required formulae are already installed."
     
