@@ -586,10 +586,23 @@ foreach ( $phpVersions as $version )
                             <div class="accordion-item">
                                 <p class="accordion-header">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_1" aria-expanded="true" aria-controls="faq_mdb_1">
-                                        How can I add a new database?
+                                        I want to manage databases and tables in the browser. How can I do that?
                                     </button>
                                 </p>
                                 <div id="faq_mdb_1" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
+                                    <div class="accordion-body">
+                                        Simply click the blue Adminer button at the top of the screen. Login with the password you set at the installation to manage databases and the tables.<br>
+                                        The default password is <span class="badge bg-secondary fw-light font-monospace">root</span>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_2" aria-expanded="true" aria-controls="faq_mdb_2">
+                                        How can I add a new database?
+                                    </button>
+                                </p>
+                                <div id="faq_mdb_2" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
                                     <div class="accordion-body">
                                         You can create a new database with the <span class="badge bg-secondary fw-light font-monospace">adddb</span> script. Type <span class="badge bg-secondary fw-light font-monospace">adddb -h</span> in a terminal for syntax and options.<br>
                                         You can also click the blue Adminer button above to open Adminer. Login with password <span class="badge bg-secondary fw-light font-monospace">root</span> to manage databases and the tables inside the databases.
@@ -598,11 +611,11 @@ foreach ( $phpVersions as $version )
                             </div>
                             <div class="accordion-item">
                                 <p class="accordion-header">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_2" aria-expanded="true" aria-controls="faq_mdb_2">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_3" aria-expanded="true" aria-controls="faq_mdb_3">
                                         How do I update Adminer?
                                     </button>
                                 </p>
-                                <div id="faq_mdb_2" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
+                                <div id="faq_mdb_3" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
                                     <div class="accordion-body">
                                         When Adminer has an update you will see the new version number in red at the top left of the Adminer screen.<br>
                                         To update Adminer, download the latest version from <a href="https://www.adminer.org/latest.php" target="_blank">https://www.adminer.org/latest.php</a>.<br>
@@ -709,6 +722,33 @@ foreach ( $phpVersions as $version )
                                         Type the command <span class="badge bg-secondary fw-light font-monospace">jbackup</span>.<br>
                                         This will create a complete backup including a database dump of the website.<br>
                                         To see al options for jbackup, type <span class="badge bg-secondary fw-light font-monospace">jbackup -h</span>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="faqMailpit">
+                            <p class="mt-3"><strong>Mailpit</strong></p>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mp_1" aria-expanded="true" aria-controls="faq_mp_1">
+                                        I wamt to test mail sending with Mailpit. How do I do that?
+                                    </button>
+                                </p>
+                                <div id="faq_mp_1" class="accordion-collapse collapse" data-bs-parent="#faqMailpit">
+                                    <div class="accordion-body">
+                                        Using Mailpit is very easy.<br>
+                                        <ol>
+                                            <li>Login into the backend of a local Joomla website.</li>
+                                            <li>Go to System > Global Configuration.</>
+                                            <li>Go to the tab Server.</li>
+                                            <li>In the Mail section, make sure Mailer is set to <strong>PHP Mail</strong>.</li>
+                                            <li>Click Save & Close.</li>
+                                            <li>Go once more to System > Global Configuration > tab Server.</li>
+                                            <li>At the bottom of the page, click the Send Test Mail button.</li>
+                                            <li>Click Close.</li>
+                                            <li>Click the Mailpit button at the top of this page.</li>
+                                            <li>You will then see the mail sent from Joomla.</li>
+                                        </ol>
                                     </div>
                                 </div>
                             </div>
