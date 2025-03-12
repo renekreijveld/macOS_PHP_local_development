@@ -8,7 +8,8 @@
  * Version 1.0
  */
 
-if (is_dir('/usr/local/Homebrew')) {
+# Determine oath of local etc folder
+ if (is_dir('/usr/local/Homebrew')) {
     $etcDir = '/usr/local/etc';
 }
 if (is_dir('/opt/homebrew')) {
