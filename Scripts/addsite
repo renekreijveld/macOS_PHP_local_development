@@ -77,7 +77,7 @@ contains_spaces() {
 # Function to check if PHP version is valid
 is_valid_php_version() {
     PHP_VERSION=$1
-    if [ -d "/opt/homebrew/etc/php/${PHP_VERSION}" ]; then
+    if [ -d "${START_DIR}/etc/php/${PHP_VERSION}" ]; then
         return 0
     else
         return 1
@@ -167,7 +167,7 @@ fi
 if ! is_valid_php_version "${PHP_VERSION}"; then
     echo "Error: PHP version ${PHP_VERSION} is not installed."
     echo "Installed PHP versions are:"
-    ls /opt/homebrew/etc/php
+    ls ${START_DIR}/etc/php
     exit 1
 fi
 
