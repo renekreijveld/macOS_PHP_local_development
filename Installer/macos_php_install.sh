@@ -84,7 +84,14 @@ start() {
     echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer ${VERSION}.\n"
     echo "Installation output will be logged in the file ${INSTALL_LOG}."
     echo -e "Check this file if you encounter any issues during the installation.\n"
-    read -p "Press Enter to start the installation, press Ctrl-C to abort."
+    echo -e "\tWARNING! If you already have a PHP development environment installed"
+    echo -e "\t(like MAMP/Apachefriends/Laragon/Valet/other) that runs a webserver on "
+    echo -e "\tport 80 and/or a database server at port 3306:\n"
+    echo -e "\t##############################"
+    echo -e "\t## THEN DO NOT INSTALL THIS ##"
+    echo -e "\t##############################\n"
+    echo -e "If not, you're good to go :-)\n"
+    read -p "Press Enter to start the installation, press Ctrl-C to abort. "
     touch "${INSTALL_LOG}"
 }
 
