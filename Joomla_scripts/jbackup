@@ -151,7 +151,7 @@ cd ${WEBSITE_FOLDER}
 # Cleanup database dump
 rm -f ${database}.sql
 
-showmessage "Your backup is ready at ${BACKUPFILE}."
+showmessage "\nYour backup is ready at ${BACKUPFILE}.\n"
 # create the backup
 if [ "${ZIP}" == "no" ]
 then
