@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# nginx_dev_installer - Install a local Apache, NginX, PHP, MariaDB, Xdebug, Mailpit development environment on macOS
+# macos_php_install - Install a local Apache, NginX, PHP, MariaDB, Xdebug, Mailpit development environment on macOS
 #
-# This installer is specifically for Intel processors
+# This is a universal installer for both Intel and Silicon processors.
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
@@ -18,8 +18,9 @@
 # 1.6 Added new scripts for apache
 # 1.7 Added password processing
 # 1.8 Added modification of sudoers for easy starting and stopping of services
+# 1.9 Made installer universal for Intel and Silicon processors
 
-VERSION=1.8
+VERSION=1.9
 
 # Folder where scripts are installed
 SCRIPTS_DEST="/usr/local/bin"
@@ -86,6 +87,22 @@ start() {
 }
 
 prechecks() {
+    # Check ETC DIR
+    if [ "${HOMEBREW_REPOSITORY}" == "/opt/homebrew" ]; then
+        ETC_DIR="/opt/homebrew/etc"
+        PROCESSOR="silicon"
+    fi
+    if [ "${HOMEBREW_REPOSITORY}" == "/usr/local/Homebrew" ]; then
+        ETC_DIR="/usr/local/etc"
+        PROCESSOR="intel"
+    fi
+
+    # check if mandatory parameters are provided
+    if [ -z "${ETC_DIR}" ]; then
+        echo "Error: could not determine etc folder in Homebrew installarion, cannot continue."
+        exit 1
+    fi
+
     PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
     echo -e "\nThe installer will first check if some required formulae are already installed."
     
@@ -173,16 +190,20 @@ install_formulae() {
 }
 
 configure_mariadb() {
-    echo -e "\nConfigure MariaDB."
+    echo -e "\nConfigure MariaDB:"
     brew services start mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 
+    echo "- set root password"
     mariadb -e "SET PASSWORD FOR root@localhost = PASSWORD('${MARIADBPW}');"
+
+    echo "- secure MariaDB installation"
     echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
-    MY_CNF_FILE="/opt/homebrew/etc/my.cnf"
+    MY_CNF_FILE="${ETC_DIR}/my.cnf"
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
+    echo "- patch my.cnf file"
     cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
@@ -190,11 +211,13 @@ configure_mariadb() {
 }
 
 configure_php_fpm() {
+    echo -e "\nInstall PHP FPM ini files:"
     for php_version in "${PHP_VERSIONS[@]}"; do
-        CONF_FILE="/opt/homebrew/etc/php/${php_version}/php-fpm.d/www.conf"
+        CONF_FILE="${ETC_DIR}/php/${php_version}/php-fpm.d/www.conf"
         BACKUP="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
+        echo -e "- install for PHP ${php_version}."
         cp "${CONF_FILE}" "${BACKUP}"
         curl -fsSL "${CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
     done
@@ -222,31 +245,43 @@ install_xdebug() {
 }
 
 configure_php_ini() {
-    echo " "
-    echo "Install php.ini files."
+    echo -e "\nInstall php.ini files:"
+    if [ "${PROCESSOR}" == "intel" ]; then
+        LIB_PATH="/usr/local/lib"
+    fi
+    if [ "${PROCESSOR}" == "silicon" ]; then
+        LIB_PATH="/opt/homebrew/lib"
+    fi
+
     for php_version in "${PHP_VERSIONS[@]}"; do
-        INI_FILE="/opt/homebrew/etc/php/${php_version}/php.ini"
-        XDEBUG_INI="/opt/homebrew/etc/php/${php_version}/conf.d/ext-xdebug.ini"
+        INI_FILE="${ETC_DIR}/php/${php_version}/php.ini"
+        XDEBUG_INI="${ETC_DIR}/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
         XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
 
+        echo "- install for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUP}"
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        curl -fsSL "${XDEBUG_NEW}" | tee "${XDEBUG_INI}" > /dev/null
+        curl -fsSL "${XDEBUG_NEW}" | sed "s|libpath|${LIB_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
     done
 }
 
 configure_nginx() {
-    echo " "
-    echo "Configure NginX."
-    NGINX_CONF="/opt/homebrew/etc/nginx/nginx.conf"
+    echo -e "\nConfigure NginX."
+    if [ "${PROCESSOR}" == "intel" ]; then
+        START_PATH="/usr/local"
+    fi
+    if [ "${PROCESSOR}" == "silicon" ]; then
+        START_PATH="/opt/homebrew"
+    fi
+    NGINX_CONF="${ETC_DIR}/nginx/nginx.conf"
     NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
-    NGINX_TEMPLATES="/opt/homebrew/etc/nginx/templates"
-    NGINX_SERVERS="/opt/homebrew/etc/nginx/servers"
+    NGINX_TEMPLATES="${ETC_DIR}/nginx/templates"
+    NGINX_SERVERS="${ETC_DIR}/nginx/servers"
 
     cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${NGINX_CONF}" > /dev/null
+    curl -fsSL "${NGINX_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|startpath|${START_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
@@ -254,10 +289,15 @@ configure_nginx() {
 }
 
 configure_apache() {
-    echo " "
-    echo "Configure Apache."
-    APACHE_ETC="/opt/homebrew/etc/httpd"
-    APACHE_CONF="/opt/homebrew/etc/httpd/httpd.conf"
+    echo -e "\nConfigure Apache."
+    if [ "${PROCESSOR}" == "intel" ]; then
+        START_PATH="/usr/local"
+    fi
+    if [ "${PROCESSOR}" == "silicon" ]; then
+        START_PATH="/opt/homebrew"
+    fi
+    APACHE_ETC="${ETC_DIR}/httpd"
+    APACHE_CONF="${ETC_DIR}/httpd/httpd.conf"
     APACHE_CONF_NEW="${GITHUB_BASE}/Apache/httpd.conf"
     APACHE_TEMPLATES="${APACHE_ETC}/templates"
     APACHE_VHOSTS="${APACHE_ETC}/vhosts"
@@ -267,22 +307,21 @@ configure_apache() {
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
     cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_SSL_CONF_NEW}" | tee "${APACHE_SSL_CONF}" > /dev/null
+    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|your_username|${USERNAME}|g" | sed "s|<startdir>|${START_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
-    echo " "
-    echo "Configure Dnsmasq."
-    echo 'address=/.dev.test/127.0.0.1' >> /opt/homebrew/etc/dnsmasq.conf
+    echo -e "\nConfigure Dnsmasq."
+    echo 'address=/.dev.test/127.0.0.1' >> ${ETC_DIR}/dnsmasq.conf
     echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
     echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
@@ -295,16 +334,18 @@ create_local_folders() {
 }
 
 install_ssl_certificates() {
-    echo " "
-    echo "Local SSL certificates will now be installed, two pop-up windows will appear."
-    read -p "Input your password in these window to install the certificates. Press Enter to continue."
-    echo -e "\nInstall local Certificate Authority."
+    echo -e "\nInstall local SSL certificates:"
+    if [ "${PROCESSOR}" == "silicon" ]; then
+        echo "Two pup-up windows will appear."
+        read -p "Input your password in these windows to install the certificates. Press Enter to continue."
+    fi
+    echo "- install local Certificate Authority."
     mkcert -install
-    mkdir -p /opt/homebrew/etc/certs
-    cd /opt/homebrew/etc/certs
-    echo "Create localhost certificate."
+    mkdir -p ${ETC_DIR}/certs
+    cd ${ETC_DIR}/certs
+    echo "- create localhost certificate."
     mkcert localhost >>${INSTALL_LOG} 2>&1
-    echo "Create *.dev.test wildcard certificate."
+    echo "- create *.dev.test wildcard certificate."
     mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
 }
 
@@ -313,8 +354,6 @@ install_local_scripts() {
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
-        SCRIPT_VERSION=$(sed -n 's/VERSION=//p' script.${script})
-        echo "${script}_VERSION=${SCRIPT_VERSION}" >> "${CONFIG_FILE}"
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
@@ -326,8 +365,6 @@ install_joomla_scripts() {
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
-        SCRIPT_VERSION=$(sed -n 's/VERSION=//p' script.${script})
-        echo "${script}_VERSION=${SCRIPT_VERSION}" >> "${CONFIG_FILE}"
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
@@ -346,7 +383,12 @@ install_root_tools() {
 fix_sudoers() {
     echo -e "Modify /etc/sudoers so you don't have to enter your password to start and stop services."
     echo "${PASSWORD}" | sudo -S chmod 640 /etc/sudoers
-    echo "${USERNAME} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+    if [ "${PROCESSOR}" == "silicon" ]; then
+        echo "${USERNAME} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+    fi
+    if [ "${PROCESSOR}" == "intel" ]; then
+        echo "${USERNAME} ALL=(ALL) NOPASSWD: /usr/local/Homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+    fi
     echo "${PASSWORD}" | sudo -S chmod 440 /etc/sudoers
 }
 
