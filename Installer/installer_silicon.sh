@@ -2,6 +2,8 @@
 
 # nginx_dev_installer - Install a local Apache, NginX, PHP, MariaDB, Xdebug, Mailpit development environment on macOS
 #
+# This installer is specifically for Apple Silicon machines with a M1/M2/M3/M4 processor
+#
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
 # This script comes without any warranty. Use it at your own risk, always backup your data and software before running this script.
