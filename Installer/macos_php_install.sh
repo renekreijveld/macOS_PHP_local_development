@@ -291,16 +291,16 @@ configure_apache() {
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
     cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
     cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
     curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
     cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_CONF_NEW}" | sed "s|<homebrew_path>|${HOMEBREW_PATH}|g" | sed "s|<your_username>|${USERNAME}|g" | tee "${APACHE_CONF}" > /dev/null
+    curl -fsSL "${APACHE_CONF_NEW}" | sed "s|<homebrew_path>|${HOMEBREW_PATH}|g" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<root_folder>|${ROOTFOLDER}|g" | tee "${APACHE_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
     curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
