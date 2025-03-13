@@ -1331,7 +1331,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart Apache service.</strong><br><br>strong
+                    <strong>Start | Stop | Restart Apache service.</strong><br><br>
                     <pre><code>Usage: startapache | stopapache | restartapache</code></pre>
                 </div>
                 <div class="modal-footer">
