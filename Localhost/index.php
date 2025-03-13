@@ -968,9 +968,10 @@ foreach ( $phpVersions as $version )
                 <div id="collapse_about" class="accordion-collapse collapse" aria-labelledby="heading_about"
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body">
-                        <p>This a local PHP development environment for macOS. It allows you to run PHP based websites on your macOS machine, for local PHP webdevelopment.</p>
+                        <p>This a command-line driven local PHP development environment for macOS. It allows you to run PHP based websites on your macOS machine, for local PHP webdevelopment.</p>
                         <p>This setup has the following elements:</p>
                         <ul>
+                            <li>Although this setup is command-line driven, a set of scripts is provided to do the heavy lifting.</li>
                             <li>Both Apache and NginX are installed as webservers. You can easyily switch between the two.</li>
                             <li>MariaDB database server.</li>
                             <li>PHP 7.4/8.1/8.2/8.3/8.4, multiple local sites can run concurrently with different PHP versions.</li>
