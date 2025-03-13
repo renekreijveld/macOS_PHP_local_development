@@ -1,12 +1,13 @@
 # Apache/NginX/MariaDB/PHP development stack for macOS
 
-This setup installs an Apache/NginX, MariaDB, PHP development stack on your macOS computer.
+This a command-line driven local PHP development environment for macOS. It allows you to run PHP based websites on your macOS machine, for local PHP webdevelopment.
 
 Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia running on Intel and Silicon prcessors.
 
 You will get a setup with the following elements:
 
-- Easy switch between Apache or NginX webserver.
+- Although this setup is command-line driven, a set of scripts is provided to do the heavy lifting.
+- Both Apache and NginX are installed as webservers. You can easyily switch between the two.
 - MariaDB database server.
 - PHP 7.4/8.1/8.2/8.3/8.4, multiple local sites can run concurrently with different PHP versions.
 - Xdebug installed and enabled in all PHP versions.
