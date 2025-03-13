@@ -86,7 +86,7 @@ start() {
     echo "Installation output will be logged in the file ${INSTALL_LOG}."
     echo -e "Check this file if you encounter any issues during installation.\n"
     echo -e "\tWARNING! If you already have a PHP development environment installed"
-    echo -e "\t(like MAMP/Apachefriends/Valet/Laravel Herd/other) that runs a"
+    echo -e "\t(like MAMP/Apachefriends/Laravel Valet/Laravel Herd/other) that runs a"
     echo -e "\twebserver on port 80 and/or a database server at port 3306:\n"
     echo -e "\t##############################"
     echo -e "\t## THEN DO NOT INSTALL THIS ##"
