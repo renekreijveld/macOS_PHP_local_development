@@ -21,6 +21,30 @@ $apacheServersDir = $etcDir . '/httpd/vhosts';
 $nginxServersDir = $etcDir . '/nginx/servers';
 $username = getenv('USER');
 
+$configFile = getenv('HOME') . '/.config/phpdev/config';
+
+// Read the contents of the configuration file
+$configContents = file_get_contents($configFile);
+
+// Parse the configuration file contents
+$configLines = explode("\n", $configContents);
+$config = [];
+foreach ($configLines as $line) {
+    // Skip empty lines and comments
+    if (empty($line) || strpos(trim($line), '#') === 0) {
+        continue;
+    }
+
+    // Split the line into key and value
+    list($key, $value) = explode('=', $line, 2);
+    $config[trim($key)] = trim($value);
+}
+
+// Assign the value of ROOTFOLDER to a PHP variable
+$rootFolder = $config['ROOTFOLDER'] ?? null;
+$mariadbbackupFolder = $config['MARIADBBACKUP'] ?? null;
+$sitesbackupFolder = $config['SITESBACKUP'] ?? null;
+
 function getPhpVersionFromNginXConfig ( $configFile )
 {
     // Mapping of PHP FPM ports to PHP versions
@@ -535,12 +559,9 @@ foreach ( $phpVersions as $version )
                                                 </p>
                                                 <div id="faq_ap_4" class="accordion-collapse collapse" data-bs-parent="#faqApache">
                                                     <div class="accordion-body">
-                                                        Every website that you create with the <span
-                                                            class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you
-                                                        set at installation.<br>
-                                                        By default this is <span
-                                                            class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>,
-                                                        but you could have specified a different folder at installation.
+                                                        Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
+                                                        On your system that is <span class="badge bg-secondary fw-light font-monospace"><?php echo $rootFolder; ?></span>.<br>
+                                                        So the root folder for website <span class="badge bg-secondary fw-light font-monospace">joomla5</span> is then <span class="badge bg-secondary fw-light font-monospace"><?php echo $rootFolder; ?>/joomla5</span>.
                                                     </div>
                                                 </div>
                                             </div>
@@ -611,12 +632,10 @@ foreach ( $phpVersions as $version )
                                                 </p>
                                                 <div id="faq_nx_4" class="accordion-collapse collapse" data-bs-parent="#faqNginX">
                                                     <div class="accordion-body">
-                                                        Every website that you create with the <span
-                                                            class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you
-                                                        set at installation.<br>
-                                                        By default this is <span
-                                                            class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites/&lt;sitename&gt</span>,
-                                                        but you could have specified a different folder at installation.
+                                                        Every website that you create with the <span class="badge bg-secondary fw-light font-monospace">addsite</span> script is stored in the folder you set at installation.<br>
+                                                        On your system that is <span class="badge bg-secondary fw-light font-monospace"><?php echo $rootFolder; ?></span>.<br>
+                                                        So the root folder for website <span class="badge bg-secondary fw-light font-monospace">joomla5</span> is then <span
+                                                            class="badge bg-secondary fw-light font-monospace"><?php echo $rootFolder; ?>/joomla5</span>.
                                                     </div>
                                                 </div>
                                             </div>
@@ -671,6 +690,18 @@ foreach ( $phpVersions as $version )
                                                         To update Adminer, download the latest version from <a href="https://www.adminer.org/latest.php" target="_blank">https://www.adminer.org/latest.php</a>.<br>
                                                         Save the file as adminer.php in the folder you set as the folder path where your websites will be stored. By default this is <span class="badge bg-secondary fw-light font-monospace">/Users/<?php echo $username; ?>/Development/Sites</span>.
                                                         Overwrite the existing adminer.php file.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <p class="accordion-header">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_mdb_4" aria-expanded="true" aria-controls="faq_mdb_4">
+                                                        Where are the database backups located that I create with the &nbsp;<span class="badge bg-secondary fw-light font-monospace">jdbdumpall</span>&nbsp; script?
+                                                    </button>
+                                                </p>
+                                                <div id="faq_mdb_4" class="accordion-collapse collapse" data-bs-parent="#faqMariaDB">
+                                                    <div class="accordion-body">
+                                                        On your system these are saved in the folder  <span class="badge bg-secondary fw-light font-monospace"><?php echo $mariadbbackupFolder; ?></span>.<br>
                                                     </div>
                                                 </div>
                                             </div>
@@ -805,8 +836,28 @@ foreach ( $phpVersions as $version )
                                                     <div class="accordion-body">
                                                         Open a terminal and go to the root of the Joomla website you want to backup.<br>
                                                         Type the command <span class="badge bg-secondary fw-light font-monospace">jbackup</span>.<br>
-                                                        This will create a complete backup including a database dump of the website.<br>
+                                                        This will create a backup including database dump of the website.<br>
+                                                        The backup is save in the folder <span class="badge bg-secondary fw-light font-monospace"><?php echo $sitesbackupFolder; ?></span>.<br>
                                                         To see al options for jbackup, type <span class="badge bg-secondary fw-light font-monospace">jbackup -h</span>.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <p class="accordion-header">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_joomla_3" aria-expanded="true" aria-controls="faq_joomla_3">
+                                                        How do I restore a Joomla website from a backup that I created with the &nbsp;<span class="badge bg-secondary fw-light font-monospace">jbackup</span>&nbsp; script?
+                                                    </button>
+                                                </p>
+                                                <div id="faq_joomla_3" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
+                                                    <div class="accordion-body">
+                                                        Find the filename of the backup. Backups are stored in the folder <span class="badge bg-secondary fw-light font-monospace"><?php echo $sitesbackupFolder; ?></span>.<br>
+                                                        Open a terminal and go to the root folder of your local websites: <span class="badge bg-secondary fw-light font-monospace"><?php echo $rootFolder; ?></span>.<br><br>
+                                                        Is the backup file a ZIP file (filename ends with .zip)?<br>
+                                                        Then type the command <span class="badge bg-secondary fw-light font-monospace">unzip -q -o <?php echo $sitesbackupFolder; ?>/&lt;backup_filename&gt;</span>.<br><br>
+                                                        Is the backup file a Tar Gzip file (filename ends with .tgz)?<br>
+                                                        Then type the command <span class="badge bg-secondary fw-light font-monospace">tar xzf <?php echo $sitesbackupFolder; ?>/&lt;backup_filename&gt;</span>.<br><br>
+                                                        When the backup extraction is ready, go into the folder of the website with the cd command.<br>
+                                                        Then import the database backup with the <span class="badge bg-secondary fw-light font-monospace">jdbimp</span> command.
                                                     </div>
                                                 </div>
                                             </div>
@@ -917,13 +968,27 @@ foreach ( $phpVersions as $version )
                 <div id="collapse_about" class="accordion-collapse collapse" aria-labelledby="heading_about"
                     data-bs-parent="#toolsAccordion">
                     <div class="accordion-body">
-                        <p>The Apache NginX MariaDB PHP Xdebug Mailpit installer and all scripts written by René Kreijveld.</p>
+                        <p>This a local PHP development environment for macOS. It allows you to run PHP based websites on your macOS machine, for local PHP webdevelopment.</p>
+                        <p>This setup has the following elements:</p>
+                        <ul>
+                            <li>Both Apache and NginX are installed as webservers. You can easyily switch between the two.</li>
+                            <li>MariaDB database server.</li>
+                            <li>PHP 7.4/8.1/8.2/8.3/8.4, multiple local sites can run concurrently with different PHP versions.</li>
+                            <li>Xdebug installed and enabled in all PHP versions.</li>
+                            <li>Option to disable/enable Xdebug.</li>
+                            <li>SSL certificates on all local websites installed automatically.</li>
+                            <li>Mailpit for easy email testing.</li>
+                            <li>Scripts to add and delete local websites and databases and to start, stop and restart the development stack.</li>
+                            <li>A comprehensive set of bash scripts tweaked for local Joomla! CMS website development.</li>
+                        </ul>
+                        <p>Is this better or easier than tools like MAMP, Laravel Valet, Laravel Herd and other tools like this?<br>
+                        Probably not :-).<br>But it is very open and flexible and if you're not afraid to use the macOS terminal you can modify it to your liking. Just checkout the Github Repo.</p>
+                        <p><i class="nf nf-fa-github"></i> <a href="https://github.com/renekreijveld/macOS_NginX_local_development"
+                                target="_blank">Created by René Kreijveld</a>.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <p><i class="nf nf-fa-github"></i> <a href="https://github.com/renekreijveld/macOS_NginX_local_development"
-                target="_blank">Created by René Kreijveld</a>.</p>
     </div>
 
     <div class="modal fade" id="jbackup_modal" tabindex="-1">
