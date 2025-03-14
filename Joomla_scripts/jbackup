@@ -54,7 +54,6 @@ usage() {
     echo "-o Overwrite existing backupfile and/or database dump."
     echo "-s silent, no messages will be shown (optional)."
     echo -e "-h Help. Display this info.\n"
-    echo -e "Run ${MYNAME} at the root of your website, where the configuration.php is.\n"
     exit 0
 }
 
@@ -98,7 +97,6 @@ else
 fi
 
 showmessage "${MYNAME} ${VERSION}"
-
 
 # Check if WEBSITE_NAME is not empty
 if [ ! -z "${WEBSITE_NAME}" ]; then
