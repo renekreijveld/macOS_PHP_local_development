@@ -1001,15 +1001,15 @@ foreach ( $phpVersions as $version )
                 </div>
                 <div class="modal-body">
                     <strong>Create a tar gzip or zip backup a Joomla website.</strong><br><br>
-                    <pre><code>Usage: jbackup [-z] [-t] [-o] [-s] [-h]
+                    <pre><code>Usage: jbackup [-n <ame></ame>] [-z] [-t] [-o] [-s] [-h]
 
 Default action is .tgz backup.
+-n the name for the website to backup.
 -z Zip. Backup to a zipfile instead of a tgzfile.
 -t Add a date/time-stamp to the backup file.
 -o Overwrite existing backupfile and/or database dump.
 -s silent, no messages will be shown (optional).
 -h Help. Display this info.</code></pre><br>
-                    Run this command in the root of a Joomla website.<br>
                     To restore a backup, extract the backup file one folder up of the root of the Joomla website.<br>
                     This usually is the folder /Users/&lt;your username&gt;/Development/Sites.
                 </div>
@@ -1052,8 +1052,9 @@ Default action is .tgz backup.
                 </div>
                 <div class="modal-body">
                     <strong>Create a database dump of a Joomla website.</strong><br><br>
-                    <pre><code>Usage: jdbdump [-t] [-c] [-o] [-h]
+                    <pre><code>Usage: jdbdump [-n <name>] [-t] [-c] [-o] [-h]
 
+-n the name for the website to make the database dump for.
 -t Add a date-time-stamp to the database dump filename.
 -c Compress the database dump with gzip.
 -o Overwrite existing database dump.
