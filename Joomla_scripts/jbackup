@@ -29,22 +29,12 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-# Check if jfunctions script exists
-if [[ ! -f "${MYPATH}/jfunctions" ]]; then
-    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
-    exit 1
-else
-    # Gather Joomla information
-    source "${MYPATH}/jfunctions"
-fi
-
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
     source "${CONFIG_FILE}"
 else
     SITESBACKUP="${PWD}"
 fi   
-
 
 # show message function
 showmessage() {
@@ -56,8 +46,9 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} [-z] [-t] [-o] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} [-n <name>] [-z] [-t] [-o] [-s] [-h]\n"
     echo "Default action is .tgz backup."
+    echo "-n the name for the website to backup."
     echo "-z Zip. Backup to a zipfile instead of a tgzfile."
     echo "-t Add a date/time-stamp to the backup file."
     echo "-o Overwrite existing backupfile and/or database dump."
@@ -71,8 +62,12 @@ ZIP="no"
 SILENT="no"
 OVERWRITE="no"
 TIMESTAMP="no"
-while getopts ztosh opt; do
+WEBSITE_NAME=""
+while getopts n:ztosh opt; do
     case "${opt}" in
+    n)
+        WEBSITE_NAME=$OPTARG
+        ;;
     z)
         ZIP="yes"
         ;;
@@ -103,6 +98,26 @@ else
 fi
 
 showmessage "${MYNAME} ${VERSION}"
+
+
+# Check if WEBSITE_NAME is not empty
+if [ ! -z "${WEBSITE_NAME}" ]; then
+    WEBSITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
+    if [ ! -d "${WEBSITE_FOLDER}" ]; then
+        echo "Error: website folder ${WEBSITE_FOLDER} not found, exiting."
+        exit 1
+    fi
+    cd ${WEBSITE_FOLDER}
+fi
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
+    exit 1
+else
+    # Gather Joomla information
+    source "${MYPATH}/jfunctions"
+fi
 
 # Check if database dump exists
 WEBSITE_FOLDER=$(basename "$PWD")
