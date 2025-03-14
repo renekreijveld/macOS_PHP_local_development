@@ -47,11 +47,12 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-o] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-v <joomla version>] [-o] [-s] [-h]\n"
     echo "-n the website name for the new website (without spaces)."
     echo "-p the PHP version for the new website."
     echo "-d the database name for the new website."
     echo "-j download and install the latest Joomla version."
+    echo "-v use a specific Joomla version (3.10.0 and up)."
     echo "-o open the new website in the browser after creation."
     echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
@@ -91,7 +92,8 @@ database_exists() {
 SILENT="no"
 OPEN="no"
 JOOMLA="no"
-while getopts "n:p:d:josh" opt; do
+JVERSION=""
+while getopts "n:p:d:jv:osh" opt; do
     case ${opt} in
     n)
         WEBSITE_NAME=$OPTARG
@@ -104,6 +106,9 @@ while getopts "n:p:d:josh" opt; do
         ;;
     j)
         JOOMLA="yes"
+        ;;
+    v)
+        JVERSION=$OPTARG
         ;;
     o)
         OPEN="yes"
@@ -258,9 +263,13 @@ if [ "${WEBSERVER}" == "apache" ]; then
 fi
 
 if [ "${JOOMLA}" == "yes" ]; then
-    showmessage "Downloading and extracting the latest Joomla version."
+    showmessage "Downloading and extracting Joomla"
     cd ${SITE_FOLDER}
-    latestjoomla
+    if [ ! -z "${JVERSION}" ]; then
+        latestjoomla -v ${JVERSION} -s
+    else
+        latestjoomla 
+    fi
 fi
 
 if [ "${OPEN}" == "yes" ]; then
