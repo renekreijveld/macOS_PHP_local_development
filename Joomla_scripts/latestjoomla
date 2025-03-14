@@ -43,10 +43,10 @@ while getopts v:sh opt; do
     esac
 done
 
-if [ ! "$VERSION" == "latest" ]; then
-    MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
-    MINOR_VERSION=$(echo $VERSION | cut -d. -f2)
-    PATCH_VERSION=$(echo $VERSION | cut -d. -f3)
+if [ ! "${VERSION}" == "latest" ]; then
+    MAJOR_VERSION=$(echo ${VERSION} | cut -d. -f1)
+    MINOR_VERSION=$(echo ${VERSION} | cut -d. -f2)
+    PATCH_VERSION=$(echo ${VERSION} | cut -d. -f3)
     DOWNLOAD_URL="https://downloads.joomla.org/cms/joomla${MAJOR_VERSION}/${MAJOR_VERSION}-${MINOR_VERSION}-${PATCH_VERSION}/Joomla_${MAJOR_VERSION}-${MINOR_VERSION}-${PATCH_VERSION}-Stable-Full_Package.zip"
 else
     DOWNLOAD_URL="https://www.joomla.org/latest"
