@@ -12,6 +12,8 @@
 
 VERSION=1.1
 
+MYNAME=$(basename "$0")
+
 # display usage information
 usage() {
     echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
