@@ -1001,7 +1001,7 @@ foreach ( $phpVersions as $version )
                 </div>
                 <div class="modal-body">
                     <strong>Create a tar gzip or zip backup a Joomla website.</strong><br><br>
-                    <pre><code>Usage: jbackup [-n <ame></ame>] [-z] [-t] [-o] [-s] [-h]
+                    <pre><code>Usage: jbackup [-n &lt;name&gt;] [-z] [-t] [-o] [-s] [-h]
 
 Default action is .tgz backup.
 -n the name for the website to backup.
@@ -1052,7 +1052,7 @@ Default action is .tgz backup.
                 </div>
                 <div class="modal-body">
                     <strong>Create a database dump of a Joomla website.</strong><br><br>
-                    <pre><code>Usage: jdbdump [-n <name>] [-t] [-c] [-o] [-h]
+                    <pre><code>Usage: jdbdump [-n &lt;name&gt;] [-t] [-c] [-o] [-h]
 
 -n the name for the website to make the database dump for.
 -t Add a date-time-stamp to the database dump filename.
