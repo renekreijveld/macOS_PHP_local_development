@@ -8,17 +8,76 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added option to download a specific Joomla version
 
-VERSION=1.0
+VERSION=1.1
+
+# display usage information
+usage() {
+    echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-v <joomla version>] [-s] [-h]\n"
+    echo "-v download a specific Joomla version."
+    echo "If you do not specify a version, the latest version will be downloaded."
+    echo "-s silent, no messages will be shown."
+    echo -e "-h Help. Display this info.\n"
+    exit 0
+}
+
+VERSION="latest"
+SILENT="no"
+while getopts v:sh opt; do
+    case "${opt}" in
+    v)
+        VERSION=$OPTARG
+        ;;
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2;
+        exit 1
+        ;;
+    esac
+done
+
+if [ ! "$VERSION" == "latest" ]; then
+    MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+    MINOR_VERSION=$(echo $VERSION | cut -d. -f2)
+    PATCH_VERSION=$(echo $VERSION | cut -d. -f3)
+    DOWNLOAD_URL="https://downloads.joomla.org/cms/joomla${MAJOR_VERSION}/${MAJOR_VERSION}-${MINOR_VERSION}-${PATCH_VERSION}/Joomla_${MAJOR_VERSION}-${MINOR_VERSION}-${PATCH_VERSION}-Stable-Full_Package.zip"
+else
+    DOWNLOAD_URL="https://www.joomla.org/latest"
+fi
+
+if [ "${MAJOR_VERSION}" -lt 4 ] && [ "${MINOR_VERSION}" -lt 10 ]; then
+    echo "Only Joomla version 3.10.0 or higher can be downloaded."
+    exit 1
+fi
 
 # Download latest Joomla version and save as joomla_latest.zip
-curl -sL https://www.joomla.org/latest > joomla_latest.zip
+if [ "${SILENT}" == "no" ]; then
+    curl -L ${DOWNLOAD_URL} > joomla.zip
+else
+    curl -sL ${DOWNLOAD_URL} > joomla.zip
+fi
 
-# Unzip joomla_latest.zip
-unzip -q -o joomla_latest.zip
+if [[ ! -f joomla.zip ]]; then
+    echo "Joomla version ${VERSION} could not be downloaded."
+    exit 1;
+fi
 
-# Cleanup joomla_latest.zip
-rm joomla_latest.zip
+# Unzip joomla.zip
+unzip -q -o joomla.zip
+
+# Cleanup joomla.zip
+rm joomla.zip
 
 # Set correct files and folders rights
-/usr/local/bin/setrights
+if [ "${SILENT}" == "no" ]; then
+    /usr/local/bin/setrights
+else
+    /usr/local/bin/setrights -s
+fi
