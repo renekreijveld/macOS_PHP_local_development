@@ -18,10 +18,10 @@ MYNAME=$(basename "$0")
 usage() {
     echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-v <joomla version>] [-s] [-h]\n"
-    echo "-v download a specific Joomla version."
-    echo "If you do not specify a version, the latest version will be downloaded."
+    echo "-v download a specific Joomla version (3.10.0 and up)."
     echo "-s silent, no messages will be shown."
     echo -e "-h Help. Display this info.\n"
+    echo "If you do not specify a version, the latest version will be downloaded."
     exit 0
 }
 
