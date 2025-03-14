@@ -15,6 +15,11 @@ VERSION=1.6
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
 
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
+
 SILENT="no"
 # Function to show messages (honoring silent mode)
 showmessage() {
@@ -23,24 +28,15 @@ showmessage() {
     fi
 }
 
-# Check if jfunctions script exists
-if [[ ! -f "${MYPATH}/jfunctions" ]]; then
-    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
-    exit 1
-else
-    # Gather Joomla information
-    source "${MYPATH}/jfunctions"
-fi
-
 # Display usage information
 usage() {
     echo "${MYNAME} ${VERSION}, written by René Kreijveld."
-    echo -e "\nUsage: ${MYNAME} [-t] [-c] [-o] [-h]\n"
+    echo -e "\nUsage: ${MYNAME} [-n <name>] [-t] [-c] [-o] [-h]\n"
+    echo "-n the name for the website to make the database dump for."
     echo "-t Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
     echo "-o Overwrite existing database dump."
-    echo "-h Help. Display this info."
-    echo -e "\nRun ${MYNAME} at the root of your website, where the configuration.php is.\n"
+    echo "-h Help. Display this info.\n"
     exit 0
 }
 
@@ -48,8 +44,12 @@ usage() {
 COMPRESS="no"
 SHOWDATE="no"
 OVERWRITE="no"
-while getopts "tcoh" opt; do
+WEBSITE_NAME=""
+while getopts n:tcoh opt; do
     case "${opt}" in
+    n)
+        WEBSITE_NAME=$OPTARG
+        ;;
     t)
         SHOWDATE="yes"
         ;;
@@ -69,6 +69,36 @@ while getopts "tcoh" opt; do
     esac
 done
 
+showmessage "${MYNAME} ${VERSION}"
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
+
+# Check if WEBSITE_NAME is not empty
+if [ ! -z "${WEBSITE_NAME}" ]; then
+    WEBSITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
+    if [ ! -d "${WEBSITE_FOLDER}" ]; then
+        echo "Error: website folder ${WEBSITE_FOLDER} not found, exiting."
+        exit 1
+    fi
+    showmessage "Going in to website folder ${WEBSITE_FOLDER}."
+    cd ${WEBSITE_FOLDER}
+fi
+
+# Check if jfunctions script exists
+if [[ ! -f "${MYPATH}/jfunctions" ]]; then
+    echo "Error: Required script 'jfunctions' not found in ${MYPATH}. Exiting."
+    exit 1
+else
+    # Gather Joomla information
+    source "${MYPATH}/jfunctions"
+fi
+
 # Add a timestamp if requested
 if [[ "${SHOWDATE}" == "yes" ]]; then
     NOW=$(date +".%Y%m%d-%H%M%S")
@@ -76,9 +106,7 @@ else
     NOW=""
 fi
 
-# Inform the user about the process
-showmessage "${MYNAME} ${VERSION}"
-
+# Check for compression
 if [[ "${COMPRESS}" == "yes" ]]; then
     EXTENSION=".gz"
 else
