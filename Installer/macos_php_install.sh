@@ -118,14 +118,15 @@ prechecks() {
     done
 
     if [ ${#INSTALLED_FORMULAE[@]} -gt 0 ]; then
-        echo -e "\nCannot continue. The following formulae are already installed with Homebrew:"
+        echo -e "\nThe following formulae are already installed with Homebrew:"
         for formula in "${INSTALLED_FORMULAE[@]}"; do
             echo "  - ${formula}"
         done
-        echo -e "\nInstalling this Apache NginX, PHP, MariaDB, Xdebug, Mailpit environment would give unpredictable results."
-        echo -e "Please uninstall these formulae first and run the installer again.\n"
-        echo "Make sure to back up your websites and databases before uninstalling!"
-        exit 1
+        echo -e "\nIf a formula is already installed, it will not be updated."
+        echo "If you want to update the already installed formulae, run 'brew update' followed by 'brew upgrade' first."
+        echo -e "\nThis will script will do its best to make backups of current configuration files."
+        echo -e "If a local configuration file was found at ${HOME}/.config/phpdev it will backup that too."
+        echo -e "\nPress Enter to continue installation or press Ctrl-C to abort. "
     else
         echo "None of the precheck formulae were already installed. Proceeding."
     fi
@@ -140,6 +141,13 @@ check_configfile() {
 }
 
 ask_defaults() {
+    # Check if config file already exists and if so, backup it
+    if [[ -f "${CONFIG_FILE}" ]]; then
+        # Backup existing config file
+        BACKUPFILE="${CONFIG_FILE}.$(date +%Y%m%d-%H%M%S)"
+        cp "${CONFIG_FILE}" "${BACKUPFILE}"
+        echo "Existing config file was backupped to ${BACKUPFILE}."        
+    fi   
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
     echo -e "\nBefore the installarion starts, some default values need to be set."
@@ -207,7 +215,9 @@ configure_mariadb() {
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
     echo "- Patch my.cnf file."
-    cp "${MY_CNF_FILE}" "${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
+    BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
+    cp "${MY_CNF_FILE}" "${BACKUPFILE}"
+    echo "- existing config file was backupped to ${BACKUPFILE}."
     curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
@@ -217,11 +227,12 @@ configure_php_fpm() {
     echo -e "\nInstall PHP FPM ini files:"
     for php_version in "${PHP_VERSIONS[@]}"; do
         CONF_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php-fpm.d/www.conf"
-        BACKUP="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
+        BACKUPFILE="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
         CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
 
         echo -e "- install for PHP ${php_version}."
-        cp "${CONF_FILE}" "${BACKUP}"
+        cp "${CONF_FILE}" "${BACKUPFILE}"
+        echo "- existing www.conf file was backupped to ${BACKUPFILE}."
         curl -fsSL "${CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
     done
 }
@@ -252,12 +263,13 @@ configure_php_ini() {
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php.ini"
         XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
-        BACKUP="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
+        BACKUPFILE="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
         XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
 
         echo "- install php.ini for PHP ${php_version}."
-        cp "${INI_FILE}" "${BACKUP}"
+        cp "${INI_FILE}" "${BACKUPFILE}"
+        echo "- existing php.ini file was backupped to ${BACKUPFILE}."
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
         curl -fsSL "${XDEBUG_NEW}" | sed "s|<lib_path>|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
     done
@@ -270,7 +282,9 @@ configure_nginx() {
     NGINX_TEMPLATES="${HOMEBREW_PATH}/etc/nginx/templates"
     NGINX_SERVERS="${HOMEBREW_PATH}/etc/nginx/servers"
 
-    cp "${NGINX_CONF}" "${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
+    BACKUPFILE="${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
+    cp "${NGINX_CONF}" "${BACKUPFILE}"
+    echo "Existing NginX config file was backupped to ${BACKUPFILE}."
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_path>|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
@@ -290,12 +304,20 @@ configure_apache() {
     APACHE_SSL_CONF="${APACHE_ETC}/extra/httpd-ssl.conf"
     APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
 
-    cp "${APACHE_VHOSTS_CONF}" "${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
-    cp "${APACHE_SSL_CONF}" "${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
-    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
-    cp "${APACHE_CONF}" "${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
+    BACKUPFILE="${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
+    cp "${APACHE_CONF}" "${BACKUPFILE}"
+    echo "Existing Apache config file was backupped to ${BACKUPFILE}."
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s|<homebrew_path>|${HOMEBREW_PATH}|g" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<root_folder>|${ROOTFOLDER}|g" | tee "${APACHE_CONF}" > /dev/null
+
+    BACKUPFILE="${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
+    cp "${APACHE_VHOSTS_CONF}" "${BACKUPFILE}"
+    echo "Existing Vhosts config file was backupped to ${BACKUPFILE}."
+    curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
+
+    BACKUPFILE="${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
+    cp "${APACHE_SSL_CONF}" "${BACKUPFILE}"
+    echo "Existing SSL config file was backupped to ${BACKUPFILE}."
+    curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
     curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
