@@ -911,7 +911,7 @@ foreach ( $phpVersions as $version )
                                                         How do I install updates for the installed Joomla scripts?
                                                     </button>
                                                 </p>
-                                                <div id="faq_joomla_1" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
+                                                <div id="faq_joomla_0" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
                                                     <div class="accordion-body">
                                                         Check the update instructions at <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/update.md" target="_blank">Github.</a>
                                                     </div>
