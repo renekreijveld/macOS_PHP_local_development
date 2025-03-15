@@ -81,8 +81,8 @@ update_local_scripts() {
 
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
-        echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
     done
+    echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
 }
 
 update_joomla_scripts() {
@@ -97,8 +97,8 @@ update_joomla_scripts() {
 
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
-        echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
     done
+    echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
 }
 
 update_root_tools() {
