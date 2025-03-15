@@ -21,8 +21,9 @@
 # 1.8 Added modification of sudoers for easy starting and stopping of services
 # 1.9 Made installer universal for Intel and Silicon processors
 # 1.10 More consistent variable naming
+# 1.11 Added checks and handling of existing Homebrew based installation
 
-VERSION=1.10
+VERSION=1.11
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
@@ -118,6 +119,7 @@ prechecks() {
     done
 
     if [ ${#INSTALLED_FORMULAE[@]} -gt 0 ]; then
+        clear
         echo -e "\nThe following formulae are already installed with Homebrew:"
         for formula in "${INSTALLED_FORMULAE[@]}"; do
             echo "  - ${formula}"
@@ -125,8 +127,9 @@ prechecks() {
         echo -e "\nIf a formula is already installed, it will not be updated."
         echo "If you want to update the already installed formulae, run 'brew update' followed by 'brew upgrade' first."
         echo -e "\nThis will script will do its best to make backups of current configuration files."
-        echo -e "If a local configuration file was found at ${HOME}/.config/phpdev it will backup that too."
-        echo -e "\nPress Enter to continue installation or press Ctrl-C to abort. "
+        echo -e "If a local configuration file was found at ${HOME}/.config/phpdev it will backup that too.\n"
+        echo -e "Press Enter to start the installation.\n"
+        read -p "If you want to update brew first or abort the installation, press Ctrl-C now. "
     else
         echo "None of the precheck formulae were already installed. Proceeding."
     fi
@@ -361,7 +364,7 @@ install_ssl_certificates() {
     echo -e "\nInstall local SSL certificates:"
     if [ "${PROCESSOR}" == "silicon" ]; then
         echo "Two pup-up windows will appear."
-        read -p "Input your password in these windows to install the certificates. Press Enter to continue."
+        read -p "Input your password in these windows to install the certificates. Press Enter to continue. "
     fi
     echo "- install local Certificate Authority."
     mkcert -install
