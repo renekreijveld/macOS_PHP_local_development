@@ -14,7 +14,6 @@ VERSION=1.1
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
 SCRIPTS_DEST="/usr/local/bin"
-UPDATE_LOG="${HOME}/nginx_dev_update.log"
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
@@ -56,10 +55,8 @@ prompt_for_input() {
 start() {
     clear
     echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development script updater ${VERSION}.\n"
-    echo "Installation output will be logged in the file ${UPDATE_LOG}."
     echo -e "This updater and the software it installs come without any warranty. Use it at your own risk.\nAlways backup your data and software before running the installer and use the software it installs.\n"
     read -s -p "Input your password, this is needed for updating system files: " PASSWORD
-    touch "${UPDATE_LOG}"
 }
 
 # Load configuration file defaults
@@ -73,9 +70,9 @@ load_configfile() {
 }
 
 update_local_scripts() {
-    echo -e "\nUpdate local scripts."
+    echo -e "\nUpdate local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        echo "- install ${script}."
+        echo "- update ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
@@ -83,9 +80,9 @@ update_local_scripts() {
 }
 
 update_joomla_scripts() {
-    echo -e "\nUpdate Joomla scripts."
+    echo -e "\nUpdate Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "- install ${script}."
+        echo "- update ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
