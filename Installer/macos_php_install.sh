@@ -396,21 +396,31 @@ install_ssl_certificates() {
 }
 
 install_local_scripts() {
-    echo -e "\nInstall local scripts."
+    echo -e "\nInstall local scripts:"
+    echo -e "If a script already exists, a backup copy will be made."
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- install ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+
+        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
+            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
+        fi
+
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
 }
 
 install_joomla_scripts() {
-    echo -e "\nInstall Joomla scripts."
+    echo -e "\nInstall Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "- install ${script}."
-        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+
+        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
+            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
+        fi
+
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
     done
@@ -419,6 +429,13 @@ install_joomla_scripts() {
 install_root_tools() {
     cd "${ROOTFOLDER}"
     echo -e "\nInstall landingpage."
+
+    if [ -f "${ROOTFOLDER}/index.php" ]; then
+        BACKUPFILE="${ROOTFOLDER}/index.php.$(date +%Y%m%d-%H%M%S)"
+        cp "${ROOTFOLDER}/index.php" "${BACKUPFILE}"
+        echo "Existing landingpage index.php backupped to ${BACKUPFILE}."
+    fi
+
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php
     echo "Install adminer.php script."
