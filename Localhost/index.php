@@ -73,6 +73,38 @@ function getPhpVersionFromNginXConfig ( $configFile )
     return "No PHP version found in $configFile";
 }
 
+function getJoomlaInfo ( $sitename ): array
+{
+    $siteInfo = shell_exec( '/usr/local/bin/joomlainfo -n ' . $sitename . ' -c' );
+
+    // Parse the configuration file contents
+    $infoLines = explode( "\n", $siteInfo );
+    $siteConfig      = [];
+    foreach ( $infoLines as $line )
+    {
+        // Split the line into key and value
+        list( $key, $value ) = explode( '=', $line, 2 );
+        $siteConfig[ trim( $key ) ] = trim( $value );
+    }
+
+    if ( file_exists( $siteConfig['PATH'] . '/.htaccess') )
+    {
+        echo $siteConfig['HTACCESS'] = 'Yes';
+    }
+    else
+    {
+        echo $siteConfig[ 'HTACCESS' ] = 'No';
+    }
+ 
+    return $siteConfig;
+}
+
+function getJoomlaDatabase ( $sitename ): string
+{
+    $database = shell_exec( '/usr/local/bin/joomlainfo -n ' . $sitename . ' -d' );
+    return $database;
+}
+
 // Get all entries in the PHPdirectory
 $entries = scandir( $phpDir );
 
@@ -187,15 +219,34 @@ foreach ( $phpVersions as $version )
                     <div class="accordion-body">
                         <p><strong>Apache</strong>: <?php echo $status[ 'httpd' ]; ?></p>
                         <p>The following websites are configured in your Apache setup:</p>
-                        <ul>
+                        <table class="table">
+                            <tr>
+                                <th>Website name</th>
+                                <th>PHP version</td>
+                                <th>Joomla version</td>
+                                <th>Database</td>
+                                <th>DB User</td>
+                                <th>DB Password</td>
+                                <th>DB Prefix</td>
+                                <th>.htaccess</td>
+                            </tr>
                             <?php foreach ( $apacheWebsites as $website ) : ?>
                                 <?php if ($website !== 'localhost') : ?>
                                 <?php $phpVersion = getPhpVersionFromNginXConfig( $apacheServersDir . "/$website.conf" ); ?>
-                                <li><a href="https://<?php echo $website; ?>.dev.test" target="_blank"><?php echo $website; ?></a> (php
-                                    <?php echo $phpVersion; ?>)</li>
+                                <?php $joomlaInfo = getJoomlaInfo( $website ); ?>
+                                <tr>
+                                    <td><a href="https://<?php echo $website; ?>.dev.test" target="_blank"><?php echo $website; ?></a></td>
+                                    <td><?php echo $phpVersion; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'VERSION' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'DATABASE' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'DBUSER' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'PASSWORD' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'PREFIX' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'HTACCESS' ]; ?></td>
+                                </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
-                        </ul>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -211,13 +262,32 @@ foreach ( $phpVersions as $version )
                     <div class="accordion-body">
                         <p><strong>NginX</strong>: <?php echo $status[ 'nginx' ]; ?></p>
                         <p>The following websites are configured in your NginX setup:</p>
-                        <ul>
-                            <?php foreach ( $nginxWebsites as $website ) : ?>
-                                <?php $phpVersion = getPhpVersionFromNginXConfig( $nginxServersDir . "/$website.conf" ); ?>
-                                <li><a href="https://<?php echo $website; ?>.dev.test"
-                                        target="_blank"><?php echo $website; ?></a> (php <?php echo $phpVersion; ?>)</li>
+                        <table class="table">
+                            <tr>
+                                <th>Website name</th>
+                                <th>PHP version</td>
+                                <th>Joomla version</td>
+                                <th>Database</td>
+                                <th>DB User</td>
+                                <th>DB Password</td>
+                                <th>DB Prefix</td>
+                            </tr>
+                            <?php foreach ( $apacheWebsites as $website ) : ?>
+                                <?php if ( $website !== 'localhost' ) : ?>
+                                <?php $phpVersion = getPhpVersionFromNginXConfig( $apacheServersDir . "/$website.conf" ); ?>
+                                <?php $joomlaInfo = getJoomlaInfo( $website ); ?>
+                                <tr>
+                                    <td><a href="https://<?php echo $website; ?>.dev.test" target="_blank"><?php echo $website; ?></a></td>
+                                    <td><?php echo $phpVersion; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'VERSION' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'DATABASE' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'DBUSER' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'PASSWORD' ]; ?></td>
+                                    <td><?php echo $joomlaInfo[ 'PREFIX' ]; ?></td>
+                                </tr>
+                                <?php endif; ?>
                             <?php endforeach; ?>
-                        </ul>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -479,7 +549,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>latestjoomla</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdropall_modal">Download a zipfile of the latest Joomla! version and unzip it in the current folder.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#latestjoomla_modal">Download a zipfile of Joomla! and unzip it in the current folder.</a>
                                 </td>
                             </tr>
                         </table>
@@ -1185,8 +1255,15 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Download a zipfile of the latest Joomla! version and unzip it in the current folder.</strong><br><br>
-                    <pre><code>Usage: latestjoomla</code></pre>
+                    <strong>Download Joomla and unzip in current folder.</strong><br><br>
+                    <pre><code>Usage: Usage: latestjoomla [-v <joomla version>] [-u] [-s] [-h]
+
+-v download a specific Joomla version (3.10.0 and up).
+-u download from a specific URL.
+-s silent, no messages will be shown.
+-h Help. Display this info.
+
+If you do not specify a version, the latest version will be downloaded.</code></pre><br>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1196,7 +1273,7 @@ Default action is .tgz backup.
     </div>
 
     <div class="modal fade" id="addsite_modal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">addsite</h5>
@@ -1204,15 +1281,19 @@ Default action is .tgz backup.
                 </div>
                 <div class="modal-body">
                     <strong>Add a new local website.</strong><br><br>
-                    <pre><code>Usage: addsite -n &lt;name&gt; -p &lt;php version&gt; [-d &lt;database name&gt;] [-j] [-o] [-s] [-h]
+                    <pre><code>Usage: addsite -n &lt;sitename&gt; -p &lt;php_version&gt; [-d &lt;db_name&gt;] [-j] [-v &lt;version&gt;] [-u] [-o] [-s] [-h]
 
--n the name for the new website (input without spaces, mandatory).
--p the PHP version for the new website (mandatory).
--d the database name for the new website (optional).
--j download and install the latest Joomla version (optional).
--o open the new website in the browser after creation (optional).
--s silent, no messages will be shown (optional).
--h display this help.</code></pre>
+-n the website name for the new website (without spaces).
+-p the PHP version for the new website.
+-d the database name for the new website.
+-j download and install Joomla.
+-v specify a joomla version to download and install, you can use 3.10.0 and up.
+-u download from a specific URL.
+-o open the new website in the browser after creation.
+-s silent, no messages will be shown.
+-h display this help.
+
+If you do not use the -v option, the latest version will be downloaded.</code></pre>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
