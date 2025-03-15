@@ -128,8 +128,8 @@ prechecks() {
         echo "If you want to update the already installed formulae, run 'brew update' followed by 'brew upgrade' first."
         echo -e "\nThis will script will do its best to make backups of current configuration files."
         echo -e "If a local configuration file was found at ${HOME}/.config/phpdev it will backup that too.\n"
-        echo -e "Press Enter to start the installation.\n"
-        read -p "If you want to update brew first or abort the installation, press Ctrl-C now. "
+        echo -e "Press Enter to start the installation,"
+        read -p "but if you want to update brew first or abort the installation, press Ctrl-C. "
     else
         echo "None of the precheck formulae were already installed. Proceeding."
     fi
@@ -144,13 +144,14 @@ check_configfile() {
 }
 
 ask_defaults() {
+    clear
     # Check if config file already exists and if so, backup it
     if [[ -f "${CONFIG_FILE}" ]]; then
         # Backup existing config file
         BACKUPFILE="${CONFIG_FILE}.$(date +%Y%m%d-%H%M%S)"
         cp "${CONFIG_FILE}" "${BACKUPFILE}"
         echo "Existing config file backupped to ${BACKUPFILE}."        
-    fi   
+    fi
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
     echo -e "\nBefore the installarion starts, some default values need to be set."
