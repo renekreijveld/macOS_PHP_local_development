@@ -47,15 +47,17 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} -n <website_name> -p <php_version> [-d <database_name>] [-j] [-v <joomla version>] [-o] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} -n <sitename> -p <php_version> [-d <db_name>] [-j] [-v <version>] [-u] [-o] [-s] [-h]\n"
     echo "-n the website name for the new website (without spaces)."
     echo "-p the PHP version for the new website."
     echo "-d the database name for the new website."
-    echo "-j download and install the latest Joomla version."
-    echo "-v use a specific Joomla version (3.10.0 and up)."
+    echo "-j download and install Joomla."
+    echo "-v specify a joomla version to download and install, you can use 3.10.0 and up."
+    echo "-u download from a specific URL."
     echo "-o open the new website in the browser after creation."
     echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
+    echo -e "If you do not use the -v option, the latest version will be downloaded.\n"
     exit 0
 }
 
@@ -93,7 +95,8 @@ SILENT="no"
 OPEN="no"
 JOOMLA="no"
 JVERSION=""
-while getopts "n:p:d:jv:osh" opt; do
+USEURL=""
+while getopts "n:p:d:jv:uosh" opt; do
     case ${opt} in
     n)
         WEBSITE_NAME=$OPTARG
@@ -109,6 +112,9 @@ while getopts "n:p:d:jv:osh" opt; do
         ;;
     v)
         JVERSION=$OPTARG
+        ;;
+    u)
+        USEURL="-u"
         ;;
     o)
         OPEN="yes"
@@ -266,9 +272,9 @@ if [ "${JOOMLA}" == "yes" ]; then
     showmessage "Downloading and extracting Joomla"
     cd ${SITE_FOLDER}
     if [ ! -z "${JVERSION}" ]; then
-        latestjoomla -v ${JVERSION} -s
+        latestjoomla -v ${JVERSION} ${USEURL} -s
     else
-        latestjoomla 
+        latestjoomla ${USEURL} -s
     fi
 fi
 
