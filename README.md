@@ -18,3 +18,5 @@ You will get a setup with the following elements:
 - A comprehensive set of bash scripts tweaked for local Joomla! CMS website development.
 
 Follow these <a href="../../blob/main/install.md">installation instructions</a> to get everything up and running.
+
+Regular updates will be published in this repository. Follow these <a href="../../blob/main/update.md">update instructions</a> to update your local scripts.
