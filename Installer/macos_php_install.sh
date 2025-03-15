@@ -215,10 +215,16 @@ configure_mariadb() {
     MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
 
     echo "- Patch my.cnf file."
-    BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
-    cp "${MY_CNF_FILE}" "${BACKUPFILE}"
-    echo "- existing config file backupped to ${BACKUPFILE}."
-    curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
+
+    if grep -q "bind-address = 127.0.0.1" my.cnf; then
+        echo "The my.cnf is already patched."
+    else
+        BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
+        cp "${MY_CNF_FILE}" "${BACKUPFILE}"
+        echo "- existing config file backupped to ${BACKUPFILE}."
+        curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
+    fi
+
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
 }
@@ -370,7 +376,7 @@ install_ssl_certificates() {
     fi
 
     if [ -f "${HOMEBREW_PATH}/etc/certs/_wildcard.dev.test.pem" ]; then
-        echo "- *.dev.test wildcard already installed."
+        echo "- *.dev.test wildcard certificate already installed."
     else
         echo "- create *.dev.test wildcard certificate."
         mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
