@@ -154,8 +154,9 @@ ask_defaults() {
     fi
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
-    echo -e "\nBefore the installarion starts, some default values need to be set."
-    echo "These values will be used during the installation process and will be used by the various scripts."
+    echo -e "\nBefore the installation starts, some default values need to be set."
+    echo "These values will be used during the installation process and will stored in a config file to be used by the various scripts."
+    echo -e "\nThe location of the config file is ${CONFIG_FILE}.\n"
     echo -e "If the default proposed value is correct, just press Enter.\n"
     rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
     sitesbackup=$(prompt_for_input "$HOME/Development/Backup/sites" "Folder path for website backups:")
@@ -220,7 +221,7 @@ configure_mariadb() {
 
     echo "- Patch my.cnf file."
 
-    if grep -q "bind-address = 127.0.0.1" my.cnf; then
+    if grep -q "bind-address = 127.0.0.1" ${MY_CNF_FILE}; then
         echo "The my.cnf is already patched."
     else
         BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
@@ -249,6 +250,13 @@ configure_php_fpm() {
 
 install_php_switcher() {
     echo -e "\nInstall PHP switcher script."
+
+    if [ -f "${SCRIPTS_DEST}/sphp" ]; then
+        BACKUPFILE="${SCRIPTS_DEST}/sphp.$(date +%Y%m%d-%H%M%S)"
+        echo "${PASSWORD}" | sudo -S cp "${SCRIPTS_DEST}/sphp" "${BACKUPFILE}" > /dev/null
+        echo "Existing sphp script backupped to ${BACKUPFILE}."
+    fi 
+
     curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | tee "sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f sphp "${SCRIPTS_DEST}/sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/sphp" > /dev/null
