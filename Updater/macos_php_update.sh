@@ -70,7 +70,7 @@ load_configfile() {
 }
 
 update_local_scripts() {
-    echo -e "\nUpdate local scripts:"
+    echo -e "\n\nUpdate local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- update ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
@@ -96,8 +96,7 @@ update_root_tools() {
 }
 
 the_end() {
-    echo -e "\nUpdate completed!\n"
-    echo "Enjoy your development setup!"
+    echo -e "\nUpdate completed, enjoy your development setup!"
 }
 
 # Execute the script in order
