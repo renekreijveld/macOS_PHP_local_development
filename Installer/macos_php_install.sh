@@ -86,9 +86,9 @@ start() {
     echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer script ${VERSION}.\n"
     echo "Installation output will be logged in the file ${INSTALL_LOG}."
     echo -e "Check this file if you encounter any issues during installation.\n"
-    echo -e "\tWARNING! If you already have a PHP development environment installed"
-    echo -e "\t(like MAMP/Apachefriends/Laravel Valet/Laravel Herd/other) that runs a"
-    echo -e "\twebserver on port 80 and/or a database server at port 3306:\n"
+    echo -e "\tWARNING! If you already have a PHP development environment other than"
+    echo -e "\tHomebrew installed (like MAMP/Apachefriends/Laravel Valet/Laravel Herd/other)"
+    echo -e "\tthat runs a webserver on port 80 and/or a database server at port 3306:\n"
     echo -e "\t##############################"
     echo -e "\t## THEN DO NOT INSTALL THIS ##"
     echo -e "\t##############################\n"
@@ -222,7 +222,7 @@ configure_mariadb() {
     echo "- Patch my.cnf file."
 
     if grep -q "bind-address = 127.0.0.1" ${MY_CNF_FILE}; then
-        echo "The my.cnf is already patched."
+        echo "The my.cnf file is already patched."
     else
         BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
         cp "${MY_CNF_FILE}" "${BACKUPFILE}"
