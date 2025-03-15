@@ -217,7 +217,7 @@ configure_mariadb() {
     echo -e "${MARIADBPW}\nn\nn\nY\nY\nY\nY" | mariadb-secure-installation >>${INSTALL_LOG} 2>&1
 
     MY_CNF_FILE="${HOMEBREW_PATH}/etc/my.cnf"
-    MY_CNF_ADDITION="${GITHUB_BASE}/MariaDB/my.cnf.addition"
+    MY_CNF_ADDITION="${GITHUB_BASE}/src/MariaDB/my.cnf.addition"
 
     echo "- Patch my.cnf file."
 
@@ -239,7 +239,7 @@ configure_php_fpm() {
     for php_version in "${PHP_VERSIONS[@]}"; do
         CONF_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php-fpm.d/www.conf"
         BACKUPFILE="${CONF_FILE}.$(date +%Y%m%d-%H%M%S)"
-        CONF_NEW="${GITHUB_BASE}/PHP_fpm_configs/php${php_version}.conf"
+        CONF_NEW="${GITHUB_BASE}/src/PHP_fpm_configs/php${php_version}.conf"
 
         echo -e "- install for PHP ${php_version}."
         cp "${CONF_FILE}" "${BACKUPFILE}"
@@ -257,7 +257,7 @@ install_php_switcher() {
         echo "Existing sphp script backupped to ${BACKUPFILE}."
     fi 
 
-    curl -fsSL "${GITHUB_BASE}/Scripts/sphp" | tee "sphp" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Scripts/sphp" | tee "sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f sphp "${SCRIPTS_DEST}/sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/sphp" > /dev/null
 }
@@ -283,8 +283,8 @@ configure_php_ini() {
         XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUPFILE="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
         BACKUPFILEXDB="${XDEBUG_INI}.$(date +%Y%m%d-%H%M%S)"
-        INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
-        XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
+        INI_NEW="${GITHUB_BASE}/src/PHP_ini_files/php${php_version}.ini"
+        XDEBUG_NEW="${GITHUB_BASE}/src/PHP_ini_files/ext-xdebug${php_version}.ini"
 
         echo "- install php.ini for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUPFILE}"
@@ -299,7 +299,7 @@ configure_php_ini() {
 configure_nginx() {
     echo -e "\nConfigure NginX."
     NGINX_CONF="${HOMEBREW_PATH}/etc/nginx/nginx.conf"
-    NGINX_CONF_NEW="${GITHUB_BASE}/NginX/nginx.conf"
+    NGINX_CONF_NEW="${GITHUB_BASE}/src/NginX/nginx.conf"
     NGINX_TEMPLATES="${HOMEBREW_PATH}/etc/nginx/templates"
     NGINX_SERVERS="${HOMEBREW_PATH}/etc/nginx/servers"
 
@@ -309,21 +309,21 @@ configure_nginx() {
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_path>|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
-    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Templates/nginx_vhost_template.conf" | tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Templates/index.php" | tee "${NGINX_TEMPLATES}/index.php" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Templates/nginx_vhost_template.conf" | tee "${NGINX_TEMPLATES}/template.conf" > /dev/null
 }
 
 configure_apache() {
     echo -e "\nConfigure Apache."
     APACHE_ETC="${HOMEBREW_PATH}/etc/httpd"
     APACHE_CONF="${HOMEBREW_PATH}/etc/httpd/httpd.conf"
-    APACHE_CONF_NEW="${GITHUB_BASE}/Apache/httpd.conf"
+    APACHE_CONF_NEW="${GITHUB_BASE}/src/Apache/httpd.conf"
     APACHE_TEMPLATES="${APACHE_ETC}/templates"
     APACHE_VHOSTS="${APACHE_ETC}/vhosts"
     APACHE_VHOSTS_CONF="${APACHE_ETC}/extra/httpd-vhosts.conf"
-    APACHE_VHOSTS_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-vhosts.conf"
+    APACHE_VHOSTS_CONF_NEW="${GITHUB_BASE}/src/Apache/extra/httpd-vhosts.conf"
     APACHE_SSL_CONF="${APACHE_ETC}/extra/httpd-ssl.conf"
-    APACHE_SSL_CONF_NEW="${GITHUB_BASE}/Apache/extra/httpd-ssl.conf"
+    APACHE_SSL_CONF_NEW="${GITHUB_BASE}/src/Apache/extra/httpd-ssl.conf"
 
     BACKUPFILE="${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     cp "${APACHE_CONF}" "${BACKUPFILE}"
@@ -341,9 +341,9 @@ configure_apache() {
     curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
-    curl -fsSL "${GITHUB_BASE}/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
-    curl -fsSL "${GITHUB_BASE}/Apache/vhosts/localhost.conf" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Templates/index.php" | tee "${APACHE_TEMPLATES}/index.php" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Templates/apache_vhost_template.conf" | tee "${APACHE_TEMPLATES}/template.conf" > /dev/null
+    curl -fsSL "${GITHUB_BASE}/src/Apache/vhosts/localhost.conf" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS}/localhost.conf" > /dev/null
 }
 
 configure_dnsmasq() {
@@ -400,7 +400,7 @@ install_local_scripts() {
     echo -e "If a script already exists, a backup copy will be made."
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- install ${script}."
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/src/Scripts/${script}" | tee "script.${script}" > /dev/null
 
         if [ -f "${SCRIPTS_DEST}/${script}" ]; then
             echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
@@ -415,7 +415,7 @@ install_joomla_scripts() {
     echo -e "\nInstall Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "- install ${script}."
-        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/src/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
 
         if [ -f "${SCRIPTS_DEST}/${script}" ]; then
             echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
@@ -436,7 +436,7 @@ install_root_tools() {
         echo "Existing landingpage index.php backupped to ${BACKUPFILE}."
     fi
 
-    curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > index.php
+    curl -fsSL "${GITHUB_BASE}/src/Localhost/index.php" > index.php
     echo "<?php phpinfo();" > phpinfo.php
     echo "Install adminer.php script."
     curl -sL "https://www.adminer.org/latest.php" > adminer.php

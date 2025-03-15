@@ -25,7 +25,7 @@ brew upgrade
 To update the installed command line tools and Joomla scripts enter the following command:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Updater/macos_php_update.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/src/Updater/macos_php_update.sh)"
 ```
 
 This will update all local scripts and the landingpage running at https://localhost.

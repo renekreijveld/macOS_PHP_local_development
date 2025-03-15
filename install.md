@@ -58,16 +58,16 @@ The Homebrew version is then displayed. The Homebrew version at the time of this
 
 ## Optional: install Visual Studio Code through Homebrew
 
-To install Visual Studio Code <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/Casks/install_vscode.md" target="_blank">follow these installation instructions</a> to get that up and running.
+To install Visual Studio Code <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/src/Casks/install_vscode.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Optional: Install and configure iTerm2 through Homebrew
 
-To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/Casks/install_iterm2.md" target="_blank">follow these installation instructions</a> to get that up and running.
+To install iTerm2 <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/src/Casks/install_iterm2.md" target="_blank">follow these installation instructions</a> to get that up and running.
 
 ## Install the development environment
 
 To install, enter the following command in the terminal:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/Installer/macos_php_install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/refs/heads/main/src/Installer/macos_php_install.sh)"
 ```
