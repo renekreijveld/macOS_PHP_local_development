@@ -873,6 +873,31 @@ foreach ( $phpVersions as $version )
                             </div>
                             <div class="accordion-item">
                                 <p class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_list_cli" aria-expanded="true" aria-controls="faq_list_cli">
+                                        Command line tools
+                                    </button>
+                                </p>
+                                <div id="faq_list_cli" class="accordion-collapse collapse" data-bs-parent="#faqList">
+                                    <div class="accordion-body">
+                                        <div class="accordion" id="faqCLI">
+                                            <div class="accordion-item">
+                                                <p class="accordion-header">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_cli_0" aria-expanded="true" aria-controls="faq_cli_0">
+                                                        How do I install updates for the installed Command line tools?
+                                                    </button>
+                                                </p>
+                                                <div id="faq_cli_0" class="accordion-collapse collapse" data-bs-parent="#faqCLI">
+                                                    <div class="accordion-body">
+                                                        Check the update instructions at <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/update.md" target="_blank">Github.</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <p class="accordion-header">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_list_jmla" aria-expanded="true" aria-controls="faq_list_jmla">
                                         Joomla scripts
                                     </button>
@@ -880,6 +905,18 @@ foreach ( $phpVersions as $version )
                                 <div id="faq_list_jmla" class="accordion-collapse collapse" data-bs-parent="#faqList">
                                     <div class="accordion-body">
                                         <div class="accordion" id="faqJoomla">
+                                            <div class="accordion-item">
+                                                <p class="accordion-header">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_joomla_0" aria-expanded="true" aria-controls="faq_joomla_0">
+                                                        How do I install updates for the installed Joomla scripts?
+                                                    </button>
+                                                </p>
+                                                <div id="faq_joomla_1" class="accordion-collapse collapse" data-bs-parent="#faqJoomla">
+                                                    <div class="accordion-body">
+                                                        Check the update instructions at <a href="https://github.com/renekreijveld/macOS_PHP_local_development/blob/main/update.md" target="_blank">Github.</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="accordion-item">
                                                 <p class="accordion-header">
                                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq_joomla_1" aria-expanded="true" aria-controls="faq_joomla_1">
