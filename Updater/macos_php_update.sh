@@ -74,8 +74,14 @@ update_local_scripts() {
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- update ${script}."
         curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+
+        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
+            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
+        fi
+
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
+        echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
     done
 }
 
@@ -85,13 +91,26 @@ update_joomla_scripts() {
         echo "- update ${script}."
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
         curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+
+        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
+            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
+        fi
+
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
+        echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
     done
 }
 
 update_root_tools() {
     echo -e "\nUpdate landingpage."
+
+    if [ -f "${ROOTFOLDER}/index.php" ]; then
+        BACKUPFILE="${ROOTFOLDER}/index.php.$(date +%Y%m%d-%H%M%S)"
+        cp "${ROOTFOLDER}/index.php" "${BACKUPFILE}"
+        echo "Existing landingpage index.php backupped to ${BACKUPFILE}."
+    fi
+
     curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > ${ROOTFOLDER}/index.php
 }
 
