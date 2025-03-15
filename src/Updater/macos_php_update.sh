@@ -73,7 +73,7 @@ update_local_scripts() {
     echo -e "\n\nUpdate local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
         echo "- update ${script}."
-        curl -fsSL "${GITHUB_BASE}/Scripts/${script}" | tee "script.${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/src/Scripts/${script}" | tee "script.${script}" > /dev/null
 
         if [ -f "${SCRIPTS_DEST}/${script}" ]; then
             echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
@@ -89,8 +89,7 @@ update_joomla_scripts() {
     echo -e "\nUpdate Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         echo "- update ${script}."
-        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | sudo tee "${SCRIPTS_DEST}/${script}" > /dev/null
-        curl -fsSL "${GITHUB_BASE}/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
+        curl -fsSL "${GITHUB_BASE}/src/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
 
         if [ -f "${SCRIPTS_DEST}/${script}" ]; then
             echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
