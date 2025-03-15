@@ -17,8 +17,9 @@ MYNAME=$(basename "$0")
 # display usage information
 usage() {
     echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} [-v <joomla version>] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} [-v <joomla version>] [-u] [-s] [-h]\n"
     echo "-v download a specific Joomla version (3.10.0 and up)."
+    echo "-u download from a specific URL."
     echo "-s silent, no messages will be shown."
     echo -e "-h Help. Display this info.\n"
     echo "If you do not specify a version, the latest version will be downloaded."
@@ -27,10 +28,14 @@ usage() {
 
 JVERSION="latest"
 SILENT="no"
-while getopts v:sh opt; do
+USEURL="no"
+while getopts v:ush opt; do
     case "${opt}" in
     v)
         JVERSION=$OPTARG
+        ;;
+    u)
+        USEURL="yes"
         ;;
     s)
         SILENT="yes"
@@ -54,16 +59,20 @@ else
     DOWNLOAD_URL="https://www.joomla.org/latest"
 fi
 
-if [ "${MAJOR_VERSION}" -lt 4 ] && [ "${MINOR_VERSION}" -lt 10 ]; then
-    echo "Only Joomla version 3.10.0 or higher can be downloaded."
-    exit 1
+if [ "${USEURL}" == "yes" ]; then
+    read -p "Enter URL: " DOWNLOAD_URL
+else
+    if [ "${MAJOR_VERSION}" -lt 4 ] && [ "${MINOR_VERSION}" -lt 10 ]; then
+        echo "Only Joomla version 3.10.0 or higher can be downloaded."
+        exit 1
+    fi
 fi
 
 # Download latest Joomla version and save as joomla_latest.zip
 if [ "${SILENT}" == "no" ]; then
-    curl -L ${DOWNLOAD_URL} > joomla.zip
+    curl -L "${DOWNLOAD_URL}" > joomla.zip
 else
-    curl -sL ${DOWNLOAD_URL} > joomla.zip
+    curl -sL "${DOWNLOAD_URL}" > joomla.zip
 fi
 
 if [[ ! -f joomla.zip ]]; then
