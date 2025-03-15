@@ -110,7 +110,7 @@ update_root_tools() {
         echo "Existing landingpage index.php backupped to ${BACKUPFILE}."
     fi
 
-    curl -fsSL "${GITHUB_BASE}/Localhost/index.php" > ${ROOTFOLDER}/index.php
+    curl -fsSL "${GITHUB_BASE}/src/Localhost/index.php" > ${ROOTFOLDER}/index.php
 }
 
 the_end() {
