@@ -17,6 +17,8 @@ You will get a setup with the following elements:
 - Scripts to add and delete local websites and databases and to start, stop and restart the development stack.
 - A comprehensive set of bash scripts tweaked for local Joomla! CMS website development.
 
+If you already have a Homebrew based PHP development setup: do not worry. The installer script creates backups of all configuration files it installs.
+
 Follow these <a href="../../blob/main/install.md">installation instructions</a> to get everything up and running.
 
 Regular updates will be published in this repository. Follow these <a href="../../blob/main/update.md">update instructions</a> to update your local scripts.
