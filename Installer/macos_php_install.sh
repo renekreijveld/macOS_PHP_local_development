@@ -146,7 +146,7 @@ ask_defaults() {
         # Backup existing config file
         BACKUPFILE="${CONFIG_FILE}.$(date +%Y%m%d-%H%M%S)"
         cp "${CONFIG_FILE}" "${BACKUPFILE}"
-        echo "Existing config file was backupped to ${BACKUPFILE}."        
+        echo "Existing config file backupped to ${BACKUPFILE}."        
     fi   
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
@@ -217,7 +217,7 @@ configure_mariadb() {
     echo "- Patch my.cnf file."
     BACKUPFILE="${MY_CNF_FILE}.$(date +%Y%m%d-%H%M%S)"
     cp "${MY_CNF_FILE}" "${BACKUPFILE}"
-    echo "- existing config file was backupped to ${BACKUPFILE}."
+    echo "- existing config file backupped to ${BACKUPFILE}."
     curl -fsSL "${MY_CNF_ADDITION}" | tee -a "${MY_CNF_FILE}" > /dev/null
     brew services stop mariadb >>${INSTALL_LOG} 2>&1
     sleep 5
@@ -232,7 +232,7 @@ configure_php_fpm() {
 
         echo -e "- install for PHP ${php_version}."
         cp "${CONF_FILE}" "${BACKUPFILE}"
-        echo "- existing www.conf file was backupped to ${BACKUPFILE}."
+        echo "- existing www.conf file backupped to ${BACKUPFILE}."
         curl -fsSL "${CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | tee "${CONF_FILE}" > /dev/null
     done
 }
@@ -264,12 +264,15 @@ configure_php_ini() {
         INI_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php.ini"
         XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
         BACKUPFILE="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
+        BACKUPFILEXDB="${XDEBUG_INI}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/PHP_ini_files/php${php_version}.ini"
         XDEBUG_NEW="${GITHUB_BASE}/PHP_ini_files/ext-xdebug${php_version}.ini"
 
         echo "- install php.ini for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUPFILE}"
-        echo "- existing php.ini file was backupped to ${BACKUPFILE}."
+        cp "${XDEBUG_INI}" "${BACKUPFILEXDB}"
+        echo "- existing php.ini file backupped to ${BACKUPFILE}."
+        echo "- existing ext-xdebug.ini file backupped to ${BACKUPFILEXDB}."
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
         curl -fsSL "${XDEBUG_NEW}" | sed "s|<lib_path>|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
     done
@@ -284,7 +287,7 @@ configure_nginx() {
 
     BACKUPFILE="${NGINX_CONF}.$(date +%Y%m%d-%H%M%S)"
     cp "${NGINX_CONF}" "${BACKUPFILE}"
-    echo "Existing NginX config file was backupped to ${BACKUPFILE}."
+    echo "Existing NginX config file backupped to ${BACKUPFILE}."
     curl -fsSL "${NGINX_CONF_NEW}" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<start_path>|${HOMEBREW_PATH}|g" | tee "${NGINX_CONF}" > /dev/null
 
     mkdir -p "${NGINX_TEMPLATES}" "${NGINX_SERVERS}"
@@ -306,17 +309,17 @@ configure_apache() {
 
     BACKUPFILE="${APACHE_CONF}.$(date +%Y%m%d-%H%M%S)"
     cp "${APACHE_CONF}" "${BACKUPFILE}"
-    echo "Existing Apache config file was backupped to ${BACKUPFILE}."
+    echo "Existing Apache config file backupped to ${BACKUPFILE}."
     curl -fsSL "${APACHE_CONF_NEW}" | sed "s|<homebrew_path>|${HOMEBREW_PATH}|g" | sed "s|<your_username>|${USERNAME}|g" | sed "s|<root_folder>|${ROOTFOLDER}|g" | tee "${APACHE_CONF}" > /dev/null
 
     BACKUPFILE="${APACHE_VHOSTS_CONF}.$(date +%Y%m%d-%H%M%S)"
     cp "${APACHE_VHOSTS_CONF}" "${BACKUPFILE}"
-    echo "Existing Vhosts config file was backupped to ${BACKUPFILE}."
+    echo "Existing Vhosts config file backupped to ${BACKUPFILE}."
     curl -fsSL "${APACHE_VHOSTS_CONF_NEW}" | sed "s|<root_folder>|${ROOTFOLDER}|g" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_VHOSTS_CONF}" > /dev/null
 
     BACKUPFILE="${APACHE_SSL_CONF}.$(date +%Y%m%d-%H%M%S)"
     cp "${APACHE_SSL_CONF}" "${BACKUPFILE}"
-    echo "Existing SSL config file was backupped to ${BACKUPFILE}."
+    echo "Existing SSL config file backupped to ${BACKUPFILE}."
     curl -fsSL "${APACHE_SSL_CONF_NEW}" | sed "s|<start_dir>|${HOMEBREW_PATH}|g" | tee "${APACHE_SSL_CONF}" > /dev/null
 
     mkdir -p "${APACHE_TEMPLATES}" "${APACHE_VHOSTS}"
@@ -327,10 +330,19 @@ configure_apache() {
 
 configure_dnsmasq() {
     echo -e "\nConfigure Dnsmasq."
-    echo 'address=/.dev.test/127.0.0.1' >> ${HOMEBREW_PATH}/etc/dnsmasq.conf
-    echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
-    echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
-    echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
+    if [ -f "${HOMEBREW_PATH}/etc/dnsmasq.conf" ]; then
+        echo "- Dnsmasq already configured."
+    else
+        echo 'address=/.dev.test/127.0.0.1' >> ${HOMEBREW_PATH}/etc/dnsmasq.conf
+    fi
+
+    if [ -f "/etc/resolver/test" ]; then
+        echo "- Resolver already configured."
+    else
+        echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
+        echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
+        echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
+    fi
 }
 
 create_local_folders() {
@@ -349,10 +361,20 @@ install_ssl_certificates() {
     mkcert -install
     mkdir -p ${HOMEBREW_PATH}/etc/certs
     cd ${HOMEBREW_PATH}/etc/certs
-    echo "- create localhost certificate."
-    mkcert localhost >>${INSTALL_LOG} 2>&1
-    echo "- create *.dev.test wildcard certificate."
-    mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
+
+    if [ -f "${HOMEBREW_PATH}/etc/certs/localhost.pem" ]; then
+        echo "- localhost certificate already installed."
+    else
+        echo "- create localhost certificate."
+        mkcert localhost >>${INSTALL_LOG} 2>&1
+    fi
+
+    if [ -f "${HOMEBREW_PATH}/etc/certs/_wildcard.dev.test.pem" ]; then
+        echo "- *.dev.test wildcard already installed."
+    else
+        echo "- create *.dev.test wildcard certificate."
+        mkcert "*.dev.test" >>${INSTALL_LOG} 2>&1
+    fi
 }
 
 install_local_scripts() {
@@ -388,14 +410,23 @@ install_root_tools() {
 
 fix_sudoers() {
     echo -e "Modify /etc/sudoers so you don't have to enter your password to start and stop services."
-    echo "${PASSWORD}" | sudo -S chmod 640 /etc/sudoers
-    if [ "${PROCESSOR}" == "silicon" ]; then
-        echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+
+    echo "${PASSWORD}" | sudo -S cp /etc/sudoers sudoers.tmp
+    echo "${PASSWORD}" | sudo -S chmod 666 sudoers.tmp
+
+    if grep -q "/bin/brew" sudoers.tmp; then
+        echo "The /etc/sudoers is already modified."
+    else
+        echo "${PASSWORD}" | sudo -S chmod 640 /etc/sudoers
+        if [ "${PROCESSOR}" == "silicon" ]; then
+            echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+        fi
+        if [ "${PROCESSOR}" == "intel" ]; then
+            echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/Homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
+        fi
+        echo "${PASSWORD}" | sudo -S chmod 440 /etc/sudoers
     fi
-    if [ "${PROCESSOR}" == "intel" ]; then
-        echo "${USERNAME} ALL=(ALL) NOPASSWD: ${HOMEBREW_PATH}/Homebrew/bin/brew" | sudo tee -a /etc/sudoers > /dev/null
-    fi
-    echo "${PASSWORD}" | sudo -S chmod 440 /etc/sudoers
+    rm sudoers.tmp
 }
 
 the_end() {
