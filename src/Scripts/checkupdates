@@ -8,9 +8,10 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added update option
 
 # version
-THISVERSION=1.0
+THISVERSION=1.1
 
 # name of this
 MYNAME=$(basename ${0})
@@ -83,7 +84,7 @@ usage() {
     echo -e "\nUsage: ${MYNAME} [-u] [-i] [-h]\n"
     echo "-u show only updates."
     echo "-i install updates."
-    echo "-h Help. Display this info.\n"
+    echo -e "-h Help. Display this info.\n"
     exit 0
 }
 
