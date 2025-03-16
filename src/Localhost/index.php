@@ -8,7 +8,7 @@
  * Version history
  * 
  * 1.0 Initial version
- * SCRIPTVERSION=1.0
+ * THISVERSION=1.0
  */
 
 # Determine oath of local etc folder
