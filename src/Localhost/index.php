@@ -334,7 +334,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>adddb</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#adddb_modal">Add a new database.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#adddb_modal">Add a new database</a>
                                 </td>
                             </tr>
                             <tr>
@@ -342,7 +342,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>deldb</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#deldb_modal">Delete a database.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#deldb_modal">Delete a database</a>
                                 </td>
                             </tr>
                             <tr>
@@ -355,7 +355,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>setsitephp</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setsitephp_modal">Set the PHP version of a local website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setsitephp_modal">Set the PHP version of a local website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -363,7 +363,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>sphp</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#sphp_modal">Set the PHP CLI version.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#sphp_modal">Set the PHP CLI version</a>
                                 </td>
                             </tr>
                             <tr>
@@ -371,7 +371,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>xdebug</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#xdebug_modal">Turn xdebug on or off in the installed PHP versions or show status.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#xdebug_modal">Turn xdebug on or off in the installed PHP versions or show status</a>
                                 </td>
                             </tr>
                             <tr>
@@ -384,7 +384,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>startdev | stopdev | restartdev</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdev_modal">Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdev_modal">Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit</a>
                                 </td>
                             </tr>
                             <tr>
@@ -408,7 +408,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>startmariadb | stopmariadb | restartmariadb</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmariadb_modal">Start | Stop | Restart MariaDB service.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmariadb_modal">Start | Stop | Restart MariaDB service</a>
                                 </td>
                             </tr>
                             <tr>
@@ -416,7 +416,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>startphpfpm | stopphpfpm | restartphpfpm</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startphpfpm_modal">Start | Stop | Restart PHP-FPM services.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startphpfpm_modal">Start | Stop | Restart PHP-FPM services</a>
                                 </td>
                             </tr>
                             <tr>
@@ -424,7 +424,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>startdnsmasq | stopdnsmasq | restartdnsmasq</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdnsmasq_modal">Start | Stop | Restart DNSMasq service.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startdnsmasq_modal">Start | Stop | Restart DNSMasq service</a>
                                 </td>
                             </tr>
                             <tr>
@@ -432,7 +432,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>startmailpit | stopmailpit | restartmailpit</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmailpit_modal">Start | Stop | Restart Mailpit service.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#startmailpit_modal">Start | Stop | Restart Mailpit service</a>
                                 </td>
                             </tr>
                             <tr>
@@ -445,7 +445,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>setserver</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setserver_modal">Switch between Apache and NginX webserver.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setserver_modal">Switch between Apache and NginX webserver</a>
                                 </td>
                             </tr>
                             <tr>
@@ -453,7 +453,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>setrights</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setrights_modal">Set filerights of the current folder and all subfolders.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#setrights_modal">Set filerights of the current folder and all subfolders</a>
                                 </td>
                             </tr>
                         </table>
@@ -481,7 +481,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jbackup</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackup_modal">Create a tar gzip or zip backup a Joomla website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackup_modal">Create a tar gzip or zip backup a Joomla website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -489,7 +489,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jbackupall</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackupall_modal">Create a backup of all local Joomla websites.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jbackupall_modal">Create a backup of all local Joomla websites</a>
                                 </td>
                             </tr>
                             <tr>
@@ -497,7 +497,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jdbdump</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdump_modal">Create a database dump of a Joomla website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdump_modal">Create a database dump of a Joomla website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -505,7 +505,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jdbdumpall</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdumpall_modal">Create a database dump of all Joomla website databases.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdumpall_modal">Create a database dump of all Joomla website databases</a>
                                 </td>
                             </tr>
                             <tr>
@@ -513,7 +513,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jdbimp</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbimp_modal">Import a database dump into the database of a Joomla website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbimp_modal">Import a database dump into the database of a Joomla website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -526,7 +526,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jlistjoomlas</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jlistjoomlas_modal">List all Joomla websites in your development environment.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jlistjoomlas_modal">List all Joomla websites in your development environment</a>
                                 </td>
                             </tr>
                             <tr>
@@ -534,7 +534,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>joomlainfo</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#joomlainfo_modal">Display information about a Joomla website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#joomlainfo_modal">Display information about a Joomla website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -547,7 +547,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>jdbdropall</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdropall_modal">Drop all database tables of a Joomla website.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jdbdropall_modal">Drop all database tables of a Joomla website</a>
                                 </td>
                             </tr>
                             <tr>
@@ -555,7 +555,7 @@ foreach ( $phpVersions as $version )
                                     <pre><code><strong>latestjoomla</strong></code></pre>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#latestjoomla_modal">Download a zipfile of Joomla! and unzip it in the current folder.</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#latestjoomla_modal">Download a zipfile of Joomla! and unzip it in the current folder</a>
                                 </td>
                             </tr>
                         </table>
@@ -1113,7 +1113,7 @@ foreach ( $phpVersions as $version )
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Create a tar gzip or zip backup a Joomla website.</strong><br><br>
+                    <strong>Create a tar gzip or zip backup a Joomla website</strong><br><br>
                     <pre><code>Usage: jbackup [-n &lt;name&gt;] [-z] [-t] [-o] [-s] [-h]
 
 Default action is .tgz backup.
@@ -1141,7 +1141,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Create a backup of all local Joomla websites.</strong><br><br>
+                    <strong>Create a backup of all local Joomla websites</strong><br><br>
                     <pre><code>Usage: jbackupall [-s] [-h]
 
 -s Silent. Do not display any messages to standard output.
@@ -1164,7 +1164,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Create a database dump of a Joomla website.</strong><br><br>
+                    <strong>Create a database dump of a Joomla website</strong><br><br>
                     <pre><code>Usage: jdbdump [-n &lt;name&gt;] [-t] [-c] [-o] [-h]
 
 -n the name for the website to make the database dump for.
@@ -1189,7 +1189,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Create a database dump of all Joomla website databases.</strong><br><br>
+                    <strong>Create a database dump of all Joomla website databases</strong><br><br>
                     <pre><code>Usage: jdbdumpall [-s] [-h]
 
 -s Silent. Do not display any messages to standard output.
@@ -1212,7 +1212,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Import a database dump into the database of a Joomla website.</strong><br><br>
+                    <strong>Import a database dump into the database of a Joomla website</strong><br><br>
                     <pre><code>Usage: jdbimp [-s] [-h]
 -s silent, no messages will be shown (optional).
 -h Help. Display this info.</code></pre><br>
@@ -1233,7 +1233,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>List all Joomla websites in your development environment.</strong><br><br>
+                    <strong>List all Joomla websites in your development environment</strong><br><br>
                     <pre><code>Usage: jlistjoomlas [-s] [-h] [-r release]
 
 -s Short. Only display path and Joomla version.
@@ -1255,7 +1255,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Display information about a Joomla website.</strong><br><br>
+                    <strong>Display information about a Joomla website</strong><br><br>
                     <pre><code>Usage: joomlainfo</code></pre><br>
                     Run this command in the root of a Joomla website.
                 </div>
@@ -1274,7 +1274,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Drop all database tables of a Joomla website.</strong><br><br>
+                    <strong>Drop all database tables of a Joomla website</strong><br><br>
                     <pre><code>Usage: jdbdropall [-f] [-s] [-h]
 
 -f force, do not ask confirmation before dropping tables.
@@ -1298,7 +1298,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Download Joomla and unzip in current folder.</strong><br><br>
+                    <strong>Download Joomla and unzip in current folder</strong><br><br>
                     <pre><code>Usage: Usage: latestjoomla [-v <joomla version>] [-u] [-s] [-h]
 
 -v download a specific Joomla version (3.10.0 and up).
@@ -1323,7 +1323,7 @@ If you do not specify a version, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Add a new local website.</strong><br><br>
+                    <strong>Add a new local website</strong><br><br>
                     <pre><code>Usage: addsite -n &lt;sitename&gt; -p &lt;php_version&gt; [-d &lt;db_name&gt;] [-j] [-v &lt;version&gt;] [-u] [-o] [-s] [-h]
 
 -n the website name for the new website (without spaces).
@@ -1353,7 +1353,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Delete a local website.</strong><br><br>
+                    <strong>Delete a local website</strong><br><br>
                     <pre><code>Usage: delsite -n &lt;website_name&gt; [-d] [-f] [-s] [-h]
 
 -n the name for the website (without spaces).
@@ -1377,7 +1377,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Add a new database.</strong><br><br>
+                    <strong>Add a new database</strong><br><br>
                     <pre><code>Usage: adddb -d &lt;database name&gt; [-s] [-h]
 
 -d the database name for the new website (input without spaces, mandatory).
@@ -1399,7 +1399,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Delete a database.</strong><br><br>
+                    <strong>Delete a database</strong><br><br>
                     <pre><code>Usage: deldb -d <database_name> [-f] [-s] [-h]
 
 -d the name of the database to delete.
@@ -1422,7 +1422,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Set the PHP version of a local website.</strong><br><br>
+                    <strong>Set the PHP version of a local website</strong><br><br>
                     <pre><code>Usage: setsitephp -n &lt;website_name&gt; -p &lt;php_version&gt; [-s] [-h]
 
 -n the name for the new website (without spaces).
@@ -1445,7 +1445,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Set the PHP CLI version.</strong><br><br>
+                    <strong>Set the PHP CLI version</strong><br><br>
                     <pre><code>Usage: sphp &lt;php version&gt;</code></pre><br>
                     Possible PHP versions: <?php echo implode(', ', $phpVersions); ?>.
                 </div>
@@ -1464,7 +1464,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Turn xdebug on or off in the installed PHP versions.</strong><br><br>
+                    <strong>Turn xdebug on or off in the installed PHP versions</strong><br><br>
                     <pre><code>Usage: xdebug &lt;on|off|status&gt;</code></pre><br>
                     On: enables Xdebug for all PHP versions.<br>
                     Off: disables Xdebug for all PHP versions.<br>
@@ -1485,7 +1485,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Set filerights of the current folder and all subfolders.</strong><br>
+                    <strong>Set filerights of the current folder and all subfolders</strong><br>
                     Folder rights will be set to 755 (rwx-r-xr-x), file rights will be site to 644 (rw-r--r--).<br><br>
                     <pre><code>Usage: setrights</code></pre>
                 </div>
@@ -1504,7 +1504,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit.</strong><br><br>
+                    <strong>Start | Stop | Restart all services: Apache/NgniX, MariaDB, PHP FPM, DNSmasq, Mailpit</strong><br><br>
                     <pre><code>Usage: startdev | stopdev | restartdev</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1522,7 +1522,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart Apache service.</strong><br><br>
+                    <strong>Start | Stop | Restart Apache service</strong><br><br>
                     <pre><code>Usage: startapache | stopapache | restartapache</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1540,7 +1540,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart NginX service.</strong><br><br>strong
+                    <strong>Start | Stop | Restart NginX service</strong><br><br>strong
                     <pre><code>Usage: startnginx | stopnginx | restartnginx</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1558,7 +1558,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart MariaDB service.</strong><br><br>strong
+                    <strong>Start | Stop | Restart MariaDB service</strong><br><br>strong
                     <pre><code>Usage: startmariadb | stopmariadb | restartmariadb</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1576,7 +1576,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart PHP FPM services.</strong><br><br>strong
+                    <strong>Start | Stop | Restart PHP FPM services</strong><br><br>strong
                     <pre><code>Usage: startphpfpm | stopphpfpm | restartphpfpm</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1594,7 +1594,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart DNSMasq service.</strong><br><br>strong
+                    <strong>Start | Stop | Restart DNSMasq service</strong><br><br>strong
                     <pre><code>Usage: startdnsmasq | stopdnsmasq | restartdnsmasq</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1612,7 +1612,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart Mailpit service.</strong><br><br>strong
+                    <strong>Start | Stop | Restart Mailpit service</strong><br><br>strong
                     <pre><code>Usage: startmailpit | stopmailpit | restartmailpit</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1630,7 +1630,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Switch between Apache and NginX webserver.</strong><br><br>
+                    <strong>Switch between Apache and NginX webserver</strong><br><br>
                     <pre><code>Usage: setserver -n | -a [-s] [-h]
 
 -n set webserver to NginX.
