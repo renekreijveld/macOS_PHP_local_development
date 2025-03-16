@@ -12,8 +12,9 @@
  * 1.2 Added display of joomla info in sites list
  * 1.3 Fixes some issues with the display of the table infos
  * 1.4 Improve htaccess check
+ * 1.5 Added checkupdates documentation
  *
- * THISVERSION=1.4
+ * THISVERSION=1.5
  */
 
 # Determine oath of local etc folder
@@ -473,6 +474,14 @@ foreach ( $phpVersions as $version )
                             </td>
                             <td>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#setrights_modal">Set filerights of the current folder and all subfolders</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <pre><code><strong>checkupdates</strong></code></pre>
+                            </td>
+                            <td>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#checkupdates_modal">Checks and optionally installs updates for local scripts and the landingpage.</a>
                             </td>
                         </tr>
                     </table>
@@ -1507,6 +1516,28 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                 <strong>Set filerights of the current folder and all subfolders</strong><br>
                 Folder rights will be set to 755 (rwx-r-xr-x), file rights will be site to 644 (rw-r--r--).<br><br>
                 <pre><code>Usage: setrights</code></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="checkupdates_modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">checkupdates</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <strong>Checks and optionally installs updates for local scripts and the landingpage.</strong><br><br>
+                <pre><code>checkupdates [-u] [-i] [-h]
+
+-u show only updates.
+-i install updates.
+-h Help. Display this info.</code></pre>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
