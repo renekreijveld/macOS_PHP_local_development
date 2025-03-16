@@ -12,7 +12,7 @@
 # 1.0 Initial version
 # 1.1 Code optimisation, runs much faster now
 
-VERSION=1.1
+THISVERSION=1.1
 
 MYNAME=$(basename ${0})
 
@@ -25,7 +25,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-s] [-h]\n"
     echo "Set filerights in current directory and all subdirectories for files to 644 and for folders to 755."
     echo "-s Silent. No messages will be shown."
@@ -48,7 +48,7 @@ do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Set file rights
 showmessage "Setting file rights to 644 (-rw-r--r--)"

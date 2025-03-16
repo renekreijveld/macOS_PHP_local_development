@@ -11,7 +11,7 @@
 # 1.7 Updated for Joomla 5
 # 1.8 Code improvements and use of CONFIG_FILE
 
-VERSION=1.8
+THISVERSION=1.8
 
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
@@ -36,7 +36,7 @@ RELEASEVERSION=""
 
 # Display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-s] [-h] [-r release]\n"
     echo "-s Short. Only display path and Joomla version."
     echo "-r Release version. Only display information about Joomla sites with given release version (e.g., 1.5, 2.5, 3.4)."
@@ -54,7 +54,7 @@ while getopts "shr:" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}\n"
+showmessage "${MYNAME} ${THISVERSION}\n"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

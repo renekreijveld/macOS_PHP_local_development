@@ -11,7 +11,7 @@
 # 1.1 Request confirmation before deleting the website
 
 # version
-VERSION=1.1
+THISVERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 
@@ -42,7 +42,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n <name> [-d] [-f] [-s] [-h]\n"
     echo "-n the name for the website (without spaces)."
     echo "-d also drop the database."
@@ -94,7 +94,7 @@ while getopts ":n:dfsh" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

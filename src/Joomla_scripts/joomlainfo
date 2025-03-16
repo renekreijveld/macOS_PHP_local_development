@@ -17,7 +17,7 @@
 # 1.4 Updated display of version number for joomla 4 and up
 # 1.5 Code optimisations
 
-VERSION=1.5
+THISVERSION=1.5
 
 MYPATH=$(cd "$(dirname "${0}")" && pwd -P)
 MYNAME=$(basename "${0}")
@@ -29,7 +29,7 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 
 # Display usage information
 usage() {
-    echo "${MYNAME} ${VERSION}, written by René Kreijveld."
+    echo "${MYNAME} ${THISVERSION}, written by René Kreijveld."
     echo -e "\nUsage: ${MYNAME} [-n <name>] [-c] [-h]\n"
     echo "-n the name for the website to show the info of."
     echo "-c show website info compact."
@@ -81,7 +81,7 @@ fi
 
 # Output information
 if [ -z "${SHOW}" ]; then
-    echo -e "${MYNAME} ${VERSION}\n"
+    echo -e "${MYNAME} ${THISVERSION}\n"
     echo "This Joomla! website:"
     printf "Sitename    : %s\n" "${sitenameclean}"
     printf "Version     : %s\n" "${jversion}"
@@ -95,7 +95,7 @@ if [ -z "${SHOW}" ]; then
 fi  
 
 if [ "${SHOW}" == "compact" ]; then
-    echo "VERSION=${jversion}"
+    echo "THISVERSION=${jversion}"
     echo "DATABASE=${database}"
     echo "DBUSER=${dbuser}"
     echo "PASSWORD=${password}"

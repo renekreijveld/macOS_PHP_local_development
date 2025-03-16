@@ -18,7 +18,7 @@
 # 1.5 Added improved tests if files already exist and added -t and -z options
 
 # version
-VERSION=1.5
+THISVERSION=1.5
 
 # general variables
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
@@ -45,7 +45,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "\n${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-n <name>] [-z] [-t] [-o] [-s] [-h]\n"
     echo "Default action is .tgz backup."
     echo "-n the name for the website to backup."
@@ -96,7 +96,7 @@ else
     NOW=""
 fi
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Check if WEBSITE_NAME is not empty
 if [ ! -z "${WEBSITE_NAME}" ]; then

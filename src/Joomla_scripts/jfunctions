@@ -8,7 +8,7 @@
 # This script comes without any warranty. Use it at your own risk.
 
 # Define general variables
-VERSION=3.5
+THISVERSION=3.5
 
 joomlaconf=./configuration.php
 versionf1017=./includes/version.php

@@ -6,6 +6,12 @@
 # Based on the work of Phil Cook and Andy Miller.
 # This script is free software; you may redistribute it and/or modify it.
 # This script comes without any warranty. Use it at your own risk.
+#
+# Version history
+# 1.0 Initial version
+# 1.1 Modified for this setup
+
+THISVERSION=1.1
 
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"

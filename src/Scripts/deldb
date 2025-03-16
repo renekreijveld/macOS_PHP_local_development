@@ -10,9 +10,8 @@
 # 1.0 Initial version
 # 1.1 Request confirmation before dropping the database
 
-# Variables 
 # version
-VERSION=1.1
+THISVERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 # folder for phpdev configuration
@@ -29,7 +28,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -d <database_name> [-f] [-s] [-h]\n"
     echo "-d the name of the database to delete."
     echo "-f force, do not ask confirmation before deleting the database."
@@ -76,7 +75,7 @@ while getopts "d:fsh" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

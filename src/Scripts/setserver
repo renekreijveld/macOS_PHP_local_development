@@ -9,7 +9,7 @@
 # This program is free software; you may redistribute it and/or modify it.
 
 # version
-VERSION=1.0
+THISVERSION=1.0
 # name of this
 MYNAME=$(basename ${0})
 # folder for phpdev configuration
@@ -26,7 +26,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -n | -a [-s] [-h]\n"
     echo "-n set webserver to NginX."
     echo -e "-a set webserver to Apache.\n"
@@ -65,7 +65,7 @@ while getopts "ansh" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

@@ -10,13 +10,13 @@
 # 1.0 Initial version
 # 1.1 Added option to download a specific Joomla version
 
-VERSION=1.1
+THISVERSION=1.1
 
 MYNAME=$(basename "$0")
 
 # display usage information
 usage() {
-    echo -e "\n${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "\n${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-v <joomla version>] [-u] [-s] [-h]\n"
     echo "-v download a specific Joomla version (3.10.0 and up)."
     echo "-u download from a specific URL."
@@ -78,7 +78,7 @@ else
 fi
 
 if [[ ! -f joomla.zip ]]; then
-    echo "Joomla version ${VERSION} could not be downloaded."
+    echo "Joomla version ${THISVERSION} could not be downloaded."
     exit 1;
 fi
 

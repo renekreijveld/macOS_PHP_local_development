@@ -11,7 +11,7 @@
 # 1.1 Use config file
 
 # version
-VERSION=1.1
+THISVERSION=1.1
 # name of this
 MYNAME=$(basename ${0})
 # folder for phpdev configuration
@@ -28,7 +28,7 @@ showmessage() {
 
 # display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} -d <database_name> [-s] [-h]\n"
     echo "-d the database name for the new website (without spaces)."
     echo "-s silent, no messages will be shown."
@@ -79,7 +79,7 @@ while getopts "d:sh" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then

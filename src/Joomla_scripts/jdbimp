@@ -17,7 +17,7 @@
 # 1.4 Code optimisations
 
 # version
-VERSION=1.4
+THISVERSION=1.4
 
 # general variables
 MYPATH=$(cd $(dirname ${0}); pwd -P)
@@ -41,7 +41,7 @@ fi
 
 # Display usage information
 usage() {
-    echo -e "${MYNAME} ${VERSION}, written by René Kreijveld.\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
     echo -e "Usage: ${MYNAME} [-s] [-h]\n"
     echo "-s silent, no messages will be shown (optional)."
     echo -e "-h Help. Display this info.\n"
@@ -66,7 +66,7 @@ while getopts "sh" opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # check if database dump exists.
 if [ ! -e ${database}.sql ]; then

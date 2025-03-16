@@ -10,7 +10,7 @@
 # Version history:
 # 1.6 Added use of config file
 
-VERSION=1.6
+THISVERSION=1.6
 
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
@@ -30,7 +30,7 @@ showmessage() {
 
 # Display usage information
 usage() {
-    echo "${MYNAME} ${VERSION}, written by René Kreijveld."
+    echo "${MYNAME} ${THISVERSION}, written by René Kreijveld."
     echo -e "\nUsage: ${MYNAME} [-n <name>] [-t] [-c] [-o] [-h]\n"
     echo "-n the name for the website to make the database dump for."
     echo "-t Add a date-time-stamp to the database dump filename."
@@ -69,7 +69,7 @@ while getopts n:tcoh opt; do
     esac
 done
 
-showmessage "${MYNAME} ${VERSION}"
+showmessage "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
