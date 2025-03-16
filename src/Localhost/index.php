@@ -1540,7 +1540,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart NginX service</strong><br><br>strong
+                    <strong>Start | Stop | Restart NginX service</strong><br><br>
                     <pre><code>Usage: startnginx | stopnginx | restartnginx</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1558,7 +1558,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart MariaDB service</strong><br><br>strong
+                    <strong>Start | Stop | Restart MariaDB service</strong><br><br>
                     <pre><code>Usage: startmariadb | stopmariadb | restartmariadb</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1576,7 +1576,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart PHP FPM services</strong><br><br>strong
+                    <strong>Start | Stop | Restart PHP FPM services</strong><br><br>
                     <pre><code>Usage: startphpfpm | stopphpfpm | restartphpfpm</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1594,7 +1594,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart DNSMasq service</strong><br><br>strong
+                    <strong>Start | Stop | Restart DNSMasq service</strong><br><br>
                     <pre><code>Usage: startdnsmasq | stopdnsmasq | restartdnsmasq</code></pre>
                 </div>
                 <div class="modal-footer">
@@ -1612,7 +1612,7 @@ If you do not use the -v option, the latest version will be downloaded.</code></
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Start | Stop | Restart Mailpit service</strong><br><br>strong
+                    <strong>Start | Stop | Restart Mailpit service</strong><br><br>
                     <pre><code>Usage: startmailpit | stopmailpit | restartmailpit</code></pre>
                 </div>
                 <div class="modal-footer">
