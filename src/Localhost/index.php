@@ -11,8 +11,9 @@
  * 1.1 Added state of services
  * 1.2 Added display of joomla info in sites list
  * 1.3 Fixes some issues with the display of the table infos
+ * 1.4 Improve htaccess check
  *
- * THISVERSION=1.3
+ * THISVERSION=1.4
  */
 
 # Determine oath of local etc folder
@@ -94,13 +95,22 @@ function getJoomlaInfo ( $sitename ): array
 		$siteConfig[ trim( $key ) ] = trim( $value );
 	}
 
-	if ( file_exists( $siteConfig['PATH'] . '/.htaccess') )
-	{
-		echo $siteConfig['HTACCESS'] = 'Yes';
-	}
-	else
-	{
-		echo $siteConfig[ 'HTACCESS' ] = 'No';
+	if (isset($siteConfig['PATH']) && file_exists($siteConfig['PATH'] . '/.htaccess')) {
+		$htaccessContent = trim(file_get_contents($siteConfig['PATH'] . '/.htaccess'));
+
+		// Checks that the file is not empty
+		if (!empty($htaccessContent)) {
+			// Check important instructions
+			if (preg_match('/RewriteEngine\s+On|Options\s+-Indexes|Deny\s+from\s+all|Require\s+all\s+denied/i', $htaccessContent)) {
+				$siteConfig['HTACCESS'] = 'Yes';
+			} else {
+				$siteConfig['HTACCESS'] = 'Minimal';
+			}
+		} else {
+			$siteConfig['HTACCESS'] = 'Empty';
+		}
+	} else {
+		$siteConfig['HTACCESS'] = 'No';
 	}
 
 	return $siteConfig;
