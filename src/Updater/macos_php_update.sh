@@ -18,7 +18,7 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
 # Local scripts to update
-LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
+LOCAL_SCRIPTS=("addsite" "checkupdates" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
     "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
     "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
     "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights" 
