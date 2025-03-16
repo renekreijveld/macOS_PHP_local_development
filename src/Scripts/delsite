@@ -24,8 +24,6 @@ MYPATH=$(cd $(dirname ${0}); pwd -P)
 NGINX_CONF_DIR=${START_DIR}/etc/nginx/servers
 # apache etc dir
 APACHE_DIR=${START_DIR}/etc/httpd
-# apache etc dir
-APACHE_VHOSTS_CONF=${APACHE_DIR}/extra/httpd-vhosts.conf
 # apache folder for website configurations
 APACHE_CONF_DIR=${APACHE_DIR}/vhosts
 # Websites root
@@ -159,8 +157,6 @@ rm -f ${NGINX_CONF_FILE}
 # Delete the Apache configuration
 APACHE_CONF_FILE=${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf
 rm -f ${APACHE_CONF_FILE}
-DELTXT="IncludeOptional ${APACHE_CONF_FILE}"
-sed -i '' "s|${DELTXT}||g" ${APACHE_VHOSTS_CONF}
 
 if [ "${WEBSERVER}" == "nginx" ]; then
     # Restart NginX
