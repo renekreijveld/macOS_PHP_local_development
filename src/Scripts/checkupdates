@@ -80,8 +80,9 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
-    echo -e "\nUsage: ${MYNAME} [-u]] [-h]\n"
+    echo -e "\nUsage: ${MYNAME} [-u] [-i] [-h]\n"
     echo "-u show only updates."
+    echo "-i install updates."
     echo "-h Help. Display this info.\n"
     exit 0
 }
@@ -91,52 +92,68 @@ check_version() {
     local type="$2"
     local title="$3"
     local local_version repo_version script_path repo_url
-
-    script_path="${LOCAL_SCRIPTS_DIR}/$script"
     
-    if [[ -n "$script_path" ]]; then
+    # Determine correct repo subfolder (Joomla_scripts or Scripts)
+    if [[ "$type" == "script" ]]; then
+        script_path="${LOCAL_SCRIPTS_DIR}/$script"
+        repo_url="$REPO_BASE_URL/Scripts/$script"
+        local_version=$(grep -E '^THISVERSION=' "${script_path}" | cut -d '=' -f2 | tr -d '"')
+        repo_version=$(curl -s "${repo_url}" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
+    elif [[ "$type" == "joomlascript" ]]; then
+        script_path="${LOCAL_SCRIPTS_DIR}/$script"
+        repo_url="$REPO_BASE_URL/Joomla_scripts/$script"
+        local_version=$(grep -E '^THISVERSION=' "${script_path}" | cut -d '=' -f2 | tr -d '"')
+        repo_version=$(curl -s "${repo_url}" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
+    elif [[ "$type" == "index" ]]; then
+        script_path="${ROOTFOLDER}/index.php"
+        repo_url="$REPO_BASE_URL/Localhost/$script"
+        local_version=$(grep "THISVERSION=" "${script_path}" | cut -d '=' -f2 | tr -d '"')
+        repo_version=$(curl -s "${repo_url}" | grep "THISVERSION=" | cut -d '=' -f2 | tr -d '"')
+    else
+        return
+    fi
 
-        # Determine correct repo subfolder (Joomla_scripts or Scripts)
-        if [[ "$type" == "script" ]]; then
-            local_version=$(grep -E '^THISVERSION=' "$script_path" | cut -d '=' -f2 | tr -d '"')
-            repo_url="$REPO_BASE_URL/Scripts/$script"
-            repo_version=$(curl -s "$repo_url" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
-        elif [[ "$type" == "joomlascript" ]]; then
-            local_version=$(grep -E '^THISVERSION=' "$script_path" | cut -d '=' -f2 | tr -d '"')
-            repo_url="$REPO_BASE_URL/Joomla_scripts/$script"
-            repo_version=$(curl -s "$repo_url" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
-        elif [[ "$type" == "index" ]]; then
-            local_version=$(grep "THISVERSION=" "${ROOTFOLDER}/index.php" | cut -d '=' -f2 | tr -d '"')
-            repo_url="$REPO_BASE_URL/Localhost/$script"
-            repo_version=$(curl -s "$repo_url" | grep "THISVERSION=" | cut -d '=' -f2 | tr -d '"')
+    if [[ -n "$local_version" && -n "$repo_version" ]]; then
+        if [[ "$local_version" != "$repo_version" ]] && [[ ${ONLYUPDATES} == "yes" ]]; then
+            NRUPDATES=$((NRUPDATES + 1))
+            echo -e "- update available for $script (installed: $local_version, latest: $repo_version)"
+            if [ ${INSTALL} == "yes" ]; then
+                install_update $script $script_path $repo_url
+            fi
         else
-            return
-        fi
-
-        if [[ -n "$local_version" && -n "$repo_version" ]]; then
-            if [[ "$local_version" != "$repo_version" ]] && [[ ${ONLYUPDATES} == "yes" ]]; then
-                NRUPDATES=$((NRUPDATES + 1))
-                echo -e "- update available for $script (installed: $local_version, latest: $repo_version)"
-            else
-                if [[ ${ONLYUPDATES} == "no" ]]; then
-                    echo "- $script is up to date (version: $local_version)"
-                fi
+            if [[ ${ONLYUPDATES} == "no" ]]; then
+                echo "- $script is up to date (version: $local_version)"
             fi
         fi
+    fi
+}
+
+install_update() {
+    local script="$1"
+    local path="$2"
+    local url="$3"
+    echo "Updating ${script}"
+    curl -fsSL "${url}" | tee "script.${script}" > /dev/null
+    if [ -f "$path" ]; then
+        echo "${PASSWORD}" | sudo -S mv -f "${path}" "${path}.$(date +%Y%m%d-%H%M%S)" > /dev/null
+    fi
+    echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${path}" > /dev/null
+    if [ ! "${script}" == "index.php" ]; then
+        echo "${PASSWORD}" | sudo -S chmod +x "${path}" > /dev/null
     fi
 }
 
 check_scripts() {
     echo -e "\nChecking local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        check_version "$script" "script" "regular scripts"
+        check_version "${script}" "script" "regular scripts"
     done
 }
 
 check_joomla_scripts() {
     echo -e "\nChecking Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        check_version "$script" "joomlascript" "Joomla scripts"
+        check_version "${script}" "joomlascript" "Joomla scripts"
     done
 }
 
@@ -146,10 +163,14 @@ check_landingpage() {
 }
 
 ONLYUPDATES="no"
-while getopts uh opt; do
+INSTALL="no"
+while getopts uih opt; do
     case "${opt}" in
     u)
         ONLYUPDATES="yes"
+        ;;
+    i)
+        INSTALL="yes"
         ;;
     h)
         usage
@@ -170,6 +191,10 @@ else
     echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
     exit 1
 fi   
+
+if [ ${INSTALL} == "yes" ]; then
+    read -s -p "Input your password, this is needed to install the updates: " PASSWORD
+fi
 
 NRUPDATES=0
 check_scripts
