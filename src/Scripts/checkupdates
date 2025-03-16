@@ -136,8 +136,16 @@ check_joomla_scripts() {
 
 check_landingpage() {
     echo -e "Checking Localhost landingpage:"
-    check_version "$script" "index"
+    check_version "index.php" "index"
 }
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+else
+    echo "Error: configuration file ${CONFIG_FILE} not found, exiting."
+    exit 1
+fi   
 
 check_scripts
 check_joomla_scripts
