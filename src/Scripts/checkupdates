@@ -21,49 +21,49 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 
 # Local scripts to update
 LOCAL_SCRIPTS=(
-    "adddb"
-    "addsite"
-    "checkupdates"
-    "deldb"
-    "delsite"
-    "restartapache"
-    "restartdev"
-    "restartdnsmasq"
-    "restartmailpit"
-    "restartmariadb"
-    "restartnginx"
-    "restartphpfpm"
-    "setrights"
-    "setserver"
-    "setsitephp"
-    "startapache"
-    "startdev"
-    "startdnsmasq"
-    "startmailpit"
-    "startmariadb"
-    "startnginx"
-    "startphpfpm"
-    "stopapache"
-    "stopdev"
-    "stopdnsmasq"
-    "stopmailpit"
-    "stopmariadb"
-    "stopnginx"
-    "stopphpfpm"
+    "adddb" 
+    "addsite" 
+    "checkupdates" 
+    "deldb" 
+    "delsite" 
+    "restartapache" 
+    "restartdev" 
+    "restartdnsmasq" 
+    "restartmailpit" 
+    "restartmariadb" 
+    "restartnginx" 
+    "restartphpfpm" 
+    "setrights" 
+    "setserver" 
+    "setsitephp" 
+    "startapache" 
+    "startdev" 
+    "startdnsmasq" 
+    "startmailpit" 
+    "startmariadb" 
+    "startnginx" 
+    "startphpfpm" 
+    "stopapache" 
+    "stopdev" 
+    "stopdnsmasq" 
+    "stopmailpit" 
+    "stopmariadb" 
+    "stopnginx" 
+    "stopphpfpm" 
     "xdebug"
 )
 
 # Joomla scripts to update
 JOOMLA_SCRIPTS=(
-    "jbackup"
-    "jbackupall"
-    "jdbdropall"
-    "jdbdump"
-    "jdbdumpall
-    "jdbimp"
-    "jfunctions"
-    "jlistjoomlas"
-    "joomlainfo"
+    "jbackup" 
+    "jbackupall" 
+    "jdbdropall" 
+    "jdbdump" 
+    "jdbdumpall" 
+    "jdbimp" 
+    "jfunctions" 
+    "jlistjoomlas" 
+    "joomlainfo" 
     "latestjoomla"
 )
 
@@ -80,15 +80,17 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME}\n"
+    echo -e "\nUsage: ${MYNAME} [-u]] [-h]\n"
+    echo "-u show only updates."
+    echo "-h Help. Display this info.\n"
     exit 0
 }
 
 check_version() {
     local script="$1"
     local type="$2"
+    local title="$3"
     local local_version repo_version script_path repo_url
-
 
     script_path="${LOCAL_SCRIPTS_DIR}/$script"
     
@@ -112,10 +114,13 @@ check_version() {
         fi
 
         if [[ -n "$local_version" && -n "$repo_version" ]]; then
-            if [[ "$local_version" != "$repo_version" ]]; then
+            if [[ "$local_version" != "$repo_version" ]] && [[ ${ONLYUPDATES} == "yes" ]]; then
+                NRUPDATES=$((NRUPDATES + 1))
                 echo -e "- update available for $script (installed: $local_version, latest: $repo_version)"
             else
-                echo "- $script is up to date (version: $local_version)"
+                if [[ ${ONLYUPDATES} == "no" ]]; then
+                    echo "- $script is up to date (version: $local_version)"
+                fi
             fi
         fi
     fi
@@ -124,21 +129,39 @@ check_version() {
 check_scripts() {
     echo -e "\nChecking local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
-        check_version "$script" "script"
+        check_version "$script" "script" "regular scripts"
     done
 }
 
 check_joomla_scripts() {
     echo -e "\nChecking Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
-        check_version "$script" "joomlascript"
+        check_version "$script" "joomlascript" "Joomla scripts"
     done
 }
 
 check_landingpage() {
     echo -e "\nChecking Localhost landingpage:"
-    check_version "index.php" "index"
+    check_version "index.php" "index" "local landingpage"
 }
+
+ONLYUPDATES="no"
+while getopts uh opt; do
+    case "${opt}" in
+    u)
+        ONLYUPDATES="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2;
+        exit 1
+        ;;
+    esac
+done
+
+echo "${MYNAME} ${THISVERSION}"
 
 # Load configuration file defaults
 if [[ -f "${CONFIG_FILE}" ]]; then
@@ -148,6 +171,12 @@ else
     exit 1
 fi   
 
+NRUPDATES=0
 check_scripts
+echo "${NRUPDATES} updates found."
+NRUPDATES=0
 check_joomla_scripts
+echo "${NRUPDATES} updates found."
+NRUPDATES=0
 check_landingpage
+echo "${NRUPDATES} updates found."
