@@ -5,7 +5,10 @@
  * Landing for the local development environment.
  * Witten by: René Kreijveld
  * 
- * Version 1.0
+ * Version history
+ * 
+ * 1.0 Initial version
+ * SCRIPTVERSION=1.0
  */
 
 # Determine oath of local etc folder
