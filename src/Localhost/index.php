@@ -8,7 +8,10 @@
  * Version history
  * 
  * 1.0 Initial version
- * THISVERSION=1.0
+ * 1.1 Added state of services
+ * 1.2 Added display of joomla info in sites list
+ * 
+ * THISVERSION=1.2
  */
 
 # Determine oath of local etc folder
