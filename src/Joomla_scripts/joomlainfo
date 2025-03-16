@@ -16,8 +16,9 @@
 # 1.3 Added test if jfunctions exists
 # 1.4 Updated display of version number for joomla 4 and up
 # 1.5 Code optimisations
+# 1.6 Fixed bug Joomla version
 
-THISVERSION=1.5
+THISVERSION=1.6
 
 MYPATH=$(cd "$(dirname "${0}")" && pwd -P)
 MYNAME=$(basename "${0}")
@@ -95,7 +96,7 @@ if [ -z "${SHOW}" ]; then
 fi  
 
 if [ "${SHOW}" == "compact" ]; then
-    echo "THISVERSION=${jversion}"
+    echo "VERSION=${jversion}"
     echo "DATABASE=${database}"
     echo "DBUSER=${dbuser}"
     echo "PASSWORD=${password}"
