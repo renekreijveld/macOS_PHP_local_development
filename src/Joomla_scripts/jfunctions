@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# jfunctions - general bash functions for use in jooma bash scripts
+# jfunctions - general bash functions for use in Joomla scripts
 # Supports all Joomla versions
 #
 # Written by René Kreijveld - email@renekreijveld.nl
@@ -8,7 +8,7 @@
 # This script comes without any warranty. Use it at your own risk.
 
 # Define general variables
-THISVERSION=3.5
+THISVERSION=3.6
 
 joomlaconf=./configuration.php
 versionf1017=./includes/version.php
@@ -62,7 +62,7 @@ get_joomla25up_info()
 	verss=$(grep 'DEV_STATUS =' ${versionfile} | cut -d \' -f 2)
 }
 
-# Grab site info for Joomla version 2.5 and up
+# Grab site info for Joomla version 4.0 and up
 get_joomla4up_info()
 {
 	sitename=$(grep '$sitename =' ${joomlaconf} | cut -d \' -f 2 | sed 's/ /_/g')
