@@ -10,8 +10,9 @@
  * 1.0 Initial version
  * 1.1 Added state of services
  * 1.2 Added display of joomla info in sites list
+ * 1.3 Fixes some issues with the display of the table infos
  *
- * THISVERSION=1.2
+ * THISVERSION=1.3
  */
 
 # Determine oath of local etc folder
