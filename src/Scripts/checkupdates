@@ -121,21 +121,21 @@ check_version() {
 }
 
 check_scripts() {
-    echo -e "Checking local scripts:"
+    echo -e "\nChecking local scripts:"
     for script in "${LOCAL_SCRIPTS[@]}"; do
         check_version "$script" "script"
     done
 }
 
 check_joomla_scripts() {
-    echo -e "Checking Joomla scripts:"
+    echo -e "\nChecking Joomla scripts:"
     for script in "${JOOMLA_SCRIPTS[@]}"; do
         check_version "$script" "joomlascript"
     done
 }
 
 check_landingpage() {
-    echo -e "Checking Localhost landingpage:"
+    echo -e "\nChecking Localhost landingpage:"
     check_version "index.php" "index"
 }
 
