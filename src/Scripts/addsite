@@ -9,11 +9,12 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Added Joomla download option
+# 1.2 Added option to ignore if website root folder already exists
 
 # Variables 
 
 # version
-THISVERSION=1.1
+THISVERSION=1.2
 # name of this
 MYNAME=$(basename ${0})
 
@@ -47,10 +48,11 @@ showmessage() {
 # display usage information
 usage() {
     echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} -n <sitename> -p <php_version> [-d <db_name>] [-j] [-v <version>] [-u] [-o] [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} -n <sitename> -p <php_version> [-d <db_name>] [-i] [-j] [-v <version>] [-u] [-o] [-s] [-h]\n"
     echo "-n the website name for the new website (without spaces)."
     echo "-p the PHP version for the new website."
     echo "-d the database name for the new website."
+    echo "-i ignore existing folder: if the folder for the new site already exists, it will use that as the rootfolder."
     echo "-j download and install Joomla."
     echo "-v specify a joomla version to download and install, you can use 3.10.0 and up."
     echo "-u download from a specific URL."
@@ -96,7 +98,8 @@ OPEN="no"
 JOOMLA="no"
 JVERSION=""
 USEURL=""
-while getopts "n:p:d:jv:uosh" opt; do
+IGNOREFOLDER="no"
+while getopts "n:p:d:ijv:uosh" opt; do
     case ${opt} in
     n)
         WEBSITE_NAME=$OPTARG
@@ -106,6 +109,9 @@ while getopts "n:p:d:jv:uosh" opt; do
         ;;
     d)
         DATABASE_NAME=$OPTARG
+        ;;
+    i)
+        IGNOREFOLDER="yes"
         ;;
     j)
         JOOMLA="yes"
@@ -177,8 +183,8 @@ fi
 
 # Check if the site folder already exists
 SITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
-if [ -d "${SITE_FOLDER}" ]; then
-    echo "Error: The website folder '$site_folder' already exists."
+if [ -d "${SITE_FOLDER}" ] && [ "${IGNOREFOLDER}" == "no" ]; then
+    echo "Error: The website folder '${SITE_FOLDER}' already exists."
     exit 1
 fi
 
@@ -198,19 +204,24 @@ fi
 
 showmessage "Add new website ${WEBSITE_NAME} to the NginX configuration."
 
-# Create the website directory
-showmessage "Create website root folder ${SITE_FOLDER}."
-mkdir -p ${SITE_FOLDER}
+# Create the website directory and optionally add an index.php
+if [ -d "${SITE_FOLDER}" ]; then
+    showmessage "Website folder ${SITE_FOLDER} already exists, using existing folder."
+else
+    showmessage "Create website root folder ${SITE_FOLDER}."
+    mkdir -p ${SITE_FOLDER}
+
+    INDEX_PHP_FILE=${SITE_FOLDER}/index.php
+    showmessage "Installing index.php in root folder ${WEBSITE_NAME}."
+    cp ${INDEX_TEMPLATE} ${INDEX_PHP_FILE}
+    sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" ${INDEX_PHP_FILE}
+    sed -i '' "s|<document_root>|${SITE_FOLDER}|g" ${INDEX_PHP_FILE}
+    sed -i '' "s|<database_name>|${DATABASE_NAME}|g" ${INDEX_PHP_FILE}
+    sed -i '' "s|<db_password>|${MARIADBPW}|g" ${INDEX_PHP_FILE}
+    sed -i '' "s|<php_version>|${PHP_VERSION}|g" ${INDEX_PHP_FILE}
+fi
 
 # Copy and modify the index.php website template
-INDEX_PHP_FILE=${SITE_FOLDER}/index.php
-showmessage "Installing index.php in root folder ${WEBSITE_NAME}."
-cp ${INDEX_TEMPLATE} ${INDEX_PHP_FILE}
-sed -i '' "s|<website_name>|${WEBSITE_NAME}|g" ${INDEX_PHP_FILE}
-sed -i '' "s|<document_root>|${SITE_FOLDER}|g" ${INDEX_PHP_FILE}
-sed -i '' "s|<database_name>|${DATABASE_NAME}|g" ${INDEX_PHP_FILE}
-sed -i '' "s|<db_password>|${MARIADBPW}|g" ${INDEX_PHP_FILE}
-sed -i '' "s|<php_version>|${PHP_VERSION}|g" ${INDEX_PHP_FILE}
 
 # Set the php-fpm URL based on the PHP version
 case ${PHP_VERSION} in
