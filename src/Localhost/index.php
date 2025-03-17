@@ -1358,11 +1358,12 @@ If you do not specify a version, the latest version will be downloaded.</code></
             </div>
             <div class="modal-body">
                 <strong>Add a new local website</strong><br><br>
-                <pre><code>Usage: addsite -n &lt;sitename&gt; -p &lt;php_version&gt; [-d &lt;db_name&gt;] [-j] [-v &lt;version&gt;] [-u] [-o] [-s] [-h]
+                <pre><code>Usage: addsite -n &lt;sitename&gt; -p &lt;php_version&gt; [-d &lt;db_name&gt;] [-i] [-j] [-v &lt;version&gt;] [-u] [-o] [-s] [-h]
 
 -n the website name for the new website (without spaces).
 -p the PHP version for the new website.
 -d the database name for the new website.
+-i ignore existing folder: if the folder for the new site already exists, it will use that as the rootfolder.
 -j download and install Joomla.
 -v specify a joomla version to download and install, you can use 3.10.0 and up.
 -u download from a specific URL.
