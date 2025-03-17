@@ -9,9 +9,10 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Rewrote to backup all MariaDB databases, not only the Joomla databases.
+# 1.2 Bugfix IF statements
 
 # version
-THISVERSION=1.1
+THISVERSION=1.2
 
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
@@ -61,14 +62,14 @@ create_backup() {
     BACKUPFILE="${MARIADBBACKUP}/${dbname}${NOW}.sql"
 
     # Set filename for output
-    if [ ${COMPRESS} == "yes" ] ; then
+    if [ "${COMPRESS}" == "yes" ] ; then
         OUTPUTFILE="${BACKUPFILE}.gz"
     else    
         OUTPUTFILE="${BACKUPFILE}"
     fi
 
     # If backup file already exists and we are not forcing, ask for confirmation
-    if [ -f "${OUTPUTFILE}" ] && [ ${FORCES} == "no" ]; then
+    if [ -f "${OUTPUTFILE}" ] && [ "${FORCE}" == "no" ]; then
         read -p "Backup for database ${dbname} already exists. Overwrite? (y/n): " confirm
         if [[ "${confirm}" != "y" ]]; then
             showmessage "Skipping backup for database ${dbname}"
@@ -80,8 +81,8 @@ create_backup() {
     mariadb-dump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --user=root --password=${MARIADBPW} "${dbname}" > "${BACKUPFILE}"
 
     # If backup file was created, compress it if needed
-    if [ -f ${BACKUPFILE} ]; then
-        if [ ${COMPRESS} == "yes" ] ; then
+    if [ -f "${BACKUPFILE}" ]; then
+        if [ "${COMPRESS}" == "yes" ] ; then
             gzip ${BACKUPFILE}
             showmessage "Backup ready in file ${BACKUPFILE}.gz"
         else
