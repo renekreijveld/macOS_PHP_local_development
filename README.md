@@ -26,6 +26,8 @@ Regular updates will be published in this repository. Follow these <a href="../.
 If you really **dislike working on the commandline** in a terminal, then this tool is not for you. But if you are comfortable with the commandline, then this tool will give you a powerfull local PHP development environment.
 
 Is this better or easier than tools like MAMP, Laravel Valet, Laravel Herd and other toolslike this?<br>
-Probably not :-).<br>But it is very open, flexible and if you're not afraid to use the macOS terminal you can modify it to your liking. And it is free.
+Probably not :-).
+
+But it is open, flexible and if you're not afraid to use the macOS terminal you can modify it to your liking. And it is free.
 
 Do you like and use this tool? Please consider <a href="https://renekreijveld.nl/donate" target="_blank">a donation</a> to support further development.
