@@ -4,7 +4,7 @@ This a command-line driven local PHP development environment for macOS. It allow
 
 Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia running on Intel and Silicon prcessors.
 
-You will get a setup with the following elements:
+This tool has the following characteristics:
 
 - Although this setup is command-line driven, a set of scripts is provided to do the heavy lifting.
 - Both Apache and NginX are installed as webservers. You can easyily switch between the two.
