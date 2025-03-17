@@ -16,8 +16,9 @@
  * 1.6 Updated jdbdumpall documentation
  * 1.7 Added donatiopn link
  * 1.8 Moved Joomla scripts to Command line tools
+ * 1.9 Added version number in header
  *
- * THISVERSION=1.8
+ * THISVERSION=1.9
  */
 
 # Determine oath of local etc folder
@@ -28,6 +29,7 @@ if (is_dir('/opt/homebrew')) {
     $etcDir = '/opt/homebrew/etc';
 }
 
+$thisversion = '1.8';
 $phpDir = $etcDir . '/php';
 $apacheServersDir = $etcDir . '/httpd/vhosts';
 $nginxServersDir = $etcDir . '/nginx/servers';
@@ -184,7 +186,7 @@ foreach ($phpVersions as $version) {
 
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="text-center mb-4">Apache | NginX | MariaDB | PHP | Xdebug | Mailpit<br>development environment</h1>
+        <h1 class="text-center mb-4">Apache | NginX | MariaDB | PHP | Xdebug | Mailpit<br>development environment <?php echo $thisversion; ?></h1>
 
         <div class="m-4 text-center">
             <a href="https://localhost/adminer.php?username=root" target="_blank" class="btn btn-primary me-2"><i
