@@ -14,8 +14,8 @@ You will get a setup with the following elements:
 - Option to disable/enable Xdebug.
 - SSL certificates on all local websites installed automatically.
 - Mailpit for easy email testing.
-- Scripts to add and delete local websites and databases and to start, stop and restart the development stack.
-- A comprehensive set of bash scripts tweaked for local Joomla! CMS website development.
+- A large number of commandline scripts are installed to make life easy for you. For example scripts to add and delete local websites and databases, scripts to backup websites and databases and scripts to start, stop and restart the development stack.
+- Everything is well documented in the Localhost landing page.
 
 If you already have a Homebrew based PHP development setup: do not worry. The installer script creates backups of all configuration files it installs.
 
@@ -23,4 +23,6 @@ Follow these <a href="../../blob/main/install.md">installation instructions</a> 
 
 Regular updates will be published in this repository. Follow these <a href="../../blob/main/update.md">update instructions</a> to update your local scripts.
 
-If you like this tool, please consider <a href="https://renekreijveld.nl/donate" target="_blank">a donation</a> to support further development.
+If you really **dislike working on the commandline** in a terminal, then this tool is not for you. But if you are comfortable with the commandline, then this tool will give you a powerfull local PHP development environment.
+
+Do you like and use this tool? Please consider <a href="https://renekreijveld.nl/donate" target="_blank">a donation</a> to support further development.
