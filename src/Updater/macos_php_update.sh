@@ -18,11 +18,11 @@ SCRIPTS_DEST="/usr/local/bin"
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-LOCAL_SCRIPTS=( "adddb" "addsite" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
-    "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" "restartdnsmasq" 
-    "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" "setsitephp" 
-    "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" "stopapache" 
-    "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
+LOCAL_SCRIPTS=( "adddb" "addsite" "checkupdates" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" 
+    "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" 
+    "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" 
+    "setsitephp" "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" 
+    "stopapache" "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
 
 # GitHub Repo Base URL
 GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
