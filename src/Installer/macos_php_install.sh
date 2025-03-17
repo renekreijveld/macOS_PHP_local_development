@@ -22,8 +22,9 @@
 # 1.9 Made installer universal for Intel and Silicon processors
 # 1.10 More consistent variable naming
 # 1.11 Added checks and handling of existing Homebrew based installation
+# 1.12 Added check if installed scripts are already in the PATH variable
 
-VERSION=1.11
+THISVERSION=1.12
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
@@ -55,6 +56,8 @@ GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/
 # Logged-in User
 USERNAME=$(whoami)
 
+EXISTING_PATHS=()
+
 trap "echo 'Installation interrupted. Exiting...'; exit 1" SIGINT
 
 # Function to check if a Homebrew formula is installed
@@ -83,7 +86,10 @@ prompt_for_input() {
 
 start() {
     clear
-    echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer script ${VERSION}.\n"
+    echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development installer script ${THISVERSION}.\n"
+    echo -e "\t#########################################################"
+    echo -e "\t## PLEASE READ EVERYTHING CAREFULLY BEFORE CONTINUING! ##"
+    echo -e "\t#########################################################\n"
     echo "Installation output will be logged in the file ${INSTALL_LOG}."
     echo -e "Check this file if you encounter any issues during installation.\n"
     echo -e "\tWARNING! If you already have a PHP development environment other than"
@@ -92,13 +98,16 @@ start() {
     echo -e "\t##############################"
     echo -e "\t## THEN DO NOT INSTALL THIS ##"
     echo -e "\t##############################\n"
-    echo -e "If not, you're good to go :-)\n"
+    echo -e "If you already have a Homebrew based installation, this script will try to update its configuration to work with the new setup."
+    echo -e "You mast stop all services (Apache, NginX, PHP's, MariaDB, Mysql, Dnsmasq, Mailhog, Mailpit) before running this script."
+    echo -e "If you need to stop current running services, press Ctrl-C now.\n"
     echo -e "This installer and the software it installs come without any warranty. Use it at your own risk.\nAlways backup your data and software before running the installer and use the software it installs.\n"
     read -p "Press Enter to start the installation, press Ctrl-C to abort. "
     touch "${INSTALL_LOG}"
 }
 
 prechecks() {
+    clear
     # Check ETC DIR
     if [ "${HOMEBREW_PATH}" == "/opt/homebrew" ]; then
         PROCESSOR="silicon"
@@ -108,7 +117,7 @@ prechecks() {
     fi
 
     PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
-    echo -e "\nThe installer will first check if some required formulae are already installed."
+    echo "The installer will first check if some required formulae are already installed."
     
     INSTALLED_FORMULAE=()
 
@@ -119,17 +128,15 @@ prechecks() {
     done
 
     if [ ${#INSTALLED_FORMULAE[@]} -gt 0 ]; then
-        clear
-        echo -e "\nThe following formulae are already installed with Homebrew:"
+        echo -e "\nThe following formulae are already installed with Homebrew:\n"
         for formula in "${INSTALLED_FORMULAE[@]}"; do
             echo "  - ${formula}"
         done
-        echo -e "\nIf a formula is already installed, it will not be updated."
-        echo "If you want to update the already installed formulae, run 'brew update' followed by 'brew upgrade' first."
-        echo -e "\nThis will script will do its best to make backups of current configuration files."
+        echo -e "\nThis installer does not update these formulae."
+        echo "It is best to run a 'brew update' followed by 'brew upgrade' first to update all formulae to their latest version."
+        echo -e "\nThis will script will do its best to make backups of all current configuration files."
         echo -e "If a local configuration file was found at ${HOME}/.config/phpdev it will backup that too.\n"
-        echo -e "Press Enter to start the installation,"
-        read -p "but if you want to update brew first or abort the installation, press Ctrl-C. "
+        read -p "Press Enter to start the installation, or press Ctrl-C to abort and update brew first. "
     else
         echo "None of the precheck formulae were already installed. Proceeding."
     fi
@@ -155,7 +162,8 @@ ask_defaults() {
     # Create config directory if it doesn't exist
     mkdir -p "${CONFIG_DIR}"
     echo -e "\nBefore the installation starts, some default values need to be set."
-    echo "These values will be used during the installation process and will stored in a config file to be used by the various scripts."
+    echo "These values will be used during installation and will be saved in a config file."
+    echo "There are various scripts the depend on this config file. These scripts will not work without it."
     echo -e "\nThe location of the config file is ${CONFIG_FILE}.\n"
     echo -e "If the default proposed value is correct, just press Enter.\n"
     rootfolder=$(prompt_for_input "$HOME/Development/Sites" "Folder path where your websites will be stored:")
@@ -173,7 +181,7 @@ ask_defaults() {
     echo "MARIADBBACKUP=${mariadbbackup}" >> "${CONFIG_FILE}"
     echo "MARIADBPW=${mariadbpw}" >> "${CONFIG_FILE}"
     echo "WEBSERVER=nginx" >> "${CONFIG_FILE}"
-    echo "INSTALLER_VERSION=${VERSION}" >> "${CONFIG_FILE}"
+    echo "INSTALLER_VERSION=${THISVERSION}" >> "${CONFIG_FILE}"
     check_configfile
 }
 
@@ -248,6 +256,15 @@ configure_php_fpm() {
     done
 }
 
+test_script_path() {
+    local script_path="$1"
+    local script_name=$(basename "${script_path}")
+    local current_path=$(which "${script_name}")
+    if [ "${current_path}" != "${script_path}" ]; then
+        EXISTING_PATHS+=("${current_path}")
+    fi
+}
+
 install_php_switcher() {
     echo -e "\nInstall PHP switcher script."
 
@@ -260,6 +277,7 @@ install_php_switcher() {
     curl -fsSL "${GITHUB_BASE}/src/Scripts/sphp" | tee "sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S mv -f sphp "${SCRIPTS_DEST}/sphp" > /dev/null
     echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/sphp" > /dev/null
+    test_script_path "${SCRIPTS_DEST}/sphp"
 }
 
 install_xdebug() {
@@ -408,6 +426,7 @@ install_local_scripts() {
 
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
+        test_script_path "${SCRIPTS_DEST}/${script}"
     done
 }
 
@@ -423,6 +442,7 @@ install_joomla_scripts() {
 
         echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
         echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
+        test_script_path "${SCRIPTS_DEST}/${script}"
     done
 }
 
@@ -464,12 +484,31 @@ fix_sudoers() {
     rm sudoers.tmp
 }
 
+report_existing_paths() {
+    if [ ${#EXISTING_PATHS[@]} -gt 0 ]; then
+        echo -e "\n################"
+        echo -e "## ATTENTION! ##"
+        echo -e "################\n"
+        echo -e "The following scripts were already installed in a different location than ${SCRIPTS_DEST}:\n"
+        for path in "${EXISTING_PATHS[@]}"; do
+            echo "- ${path}"
+        done
+        echo -e "\nAll new scripts are installed in ${SCRIPTS_DEST}."
+        echo "The scripts in the list above are still available in the old locations and these come first in the PATH variable."
+        echo -e "If you want to use the new development enviroment,\nyou MUST delete or rename the scripts in the old locations first!.\n"
+        echo -e "Staring the new environment without cleaning up the old scripts first, will result in errors."
+    fi
+}
+
 the_end() {
     /usr/local/bin/stopphpfpm > /dev/null 2>&1
     echo -e "\nInstallation completed!\n"
     echo -e "The installation log is available at ${INSTALL_LOG}.\n"
     echo "Run 'startdev' to start your environment. The current webserver is set to NginX."
     echo "You can switch between NginX and Apache with the 'setserver' script."
+    if [ ${#EXISTING_PATHS[@]} -gt 0 ]; then
+        echo "Do not forget to clean up the old scripts before starting the new development enviroment!\n"
+    fi
     echo "Enjoy your development setup!"
 }
 
@@ -494,4 +533,5 @@ install_local_scripts
 install_joomla_scripts
 install_root_tools
 fix_sudoers
+report_existing_paths
 the_end
