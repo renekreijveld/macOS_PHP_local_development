@@ -22,3 +22,5 @@ If you already have a Homebrew based PHP development setup: do not worry. The in
 Follow these <a href="../../blob/main/install.md">installation instructions</a> to get everything up and running.
 
 Regular updates will be published in this repository. Follow these <a href="../../blob/main/update.md">update instructions</a> to update your local scripts.
+
+Do you like this tool? Feel free to <a href="https://buymeacoffee.com/renekreijveld" target="_blank">buy me a coffee</a>.
