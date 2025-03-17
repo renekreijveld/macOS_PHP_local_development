@@ -14,7 +14,7 @@ This tool has the following characteristics:
 - Option to disable/enable Xdebug.
 - SSL certificates on all local websites installed automatically.
 - Mailpit for easy email testing.
-- A large number of commandline scripts are installed to make life easy for you. For example scripts to add and delete local websites and databases, scripts to backup websites and databases and scripts to start, stop and restart the development stack.
+- A large number of commandline scripts to make life easy for you. For example: scripts to add and delete local websites and databases, scripts to create backups, and scripts to start, stop and restart the development environment.
 - Everything is well documented in the Localhost landing page.
 
 If you already have a Homebrew based PHP development setup: do not worry. The installer script creates backups of all configuration files it installs.
