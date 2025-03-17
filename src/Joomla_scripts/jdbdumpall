@@ -10,9 +10,10 @@
 # 1.0 Initial version
 # 1.1 Rewrote to backup all MariaDB databases, not only the Joomla databases.
 # 1.2 Bugfix IF statements
+# 1.3 Convert confirmation answer to uppercase
 
 # version
-THISVERSION=1.2
+THISVERSION=1.3
 
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
@@ -71,7 +72,9 @@ create_backup() {
     # If backup file already exists and we are not forcing, ask for confirmation
     if [ -f "${OUTPUTFILE}" ] && [ "${FORCE}" == "no" ]; then
         read -p "Backup for database ${dbname} already exists. Overwrite? (y/n): " confirm
-        if [[ "${confirm}" != "y" ]]; then
+        # Convert answer to uppercase
+        confirm=$(echo "${confirm}" | tr '[:lower:]' '[:upper:]')
+        if [[ "${confirm}" != "Y" ]]; then
             showmessage "Skipping backup for database ${dbname}"
             return
         fi
