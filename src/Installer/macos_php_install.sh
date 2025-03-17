@@ -510,6 +510,7 @@ the_end() {
         echo "Do not forget to clean up the old scripts before starting the new development enviroment!\n"
     fi
     echo "Enjoy your development setup!"
+    echo "\nIf you like this tool, please consider a donation to support further development: https://buymeacoffee.com/renekreijveld."
 }
 
 # Execute the script in order
