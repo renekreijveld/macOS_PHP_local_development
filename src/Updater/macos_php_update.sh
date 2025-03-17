@@ -8,6 +8,7 @@
 #
 # Version history
 # 1.0 Initial version.
+# 1.1 Moved all scripts to one Scripts folder
 
 VERSION=1.1
 
@@ -17,16 +18,11 @@ SCRIPTS_DEST="/usr/local/bin"
 CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
-# Local scripts to update
-LOCAL_SCRIPTS=("addsite" "checkupdates" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
-    "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
-    "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
-    "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights" 
-    "setsitephp" "startapache" "stopapache" "restartapache" "setserver")
-
-# Joomla scripts to update
-JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
-    "jdbimp" "jlistjoomlas" "joomlainfo" "latestjoomla")
+LOCAL_SCRIPTS=( "adddb" "addsite" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
+    "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" "restartdnsmasq" 
+    "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" "setsitephp" 
+    "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" "stopapache" 
+    "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
 
 # GitHub Repo Base URL
 GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
@@ -85,22 +81,6 @@ update_local_scripts() {
     echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
 }
 
-update_joomla_scripts() {
-    echo -e "\nUpdate Joomla scripts:"
-    for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "- update ${script}."
-        curl -fsSL "${GITHUB_BASE}/src/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
-
-        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
-            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
-        fi
-
-        echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
-        echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
-    done
-    echo "For each installed script a backup was made. Check the folder ${SCRIPTS_DEST}."
-}
-
 update_root_tools() {
     echo -e "\nUpdate landingpage."
 
@@ -121,6 +101,5 @@ the_end() {
 start
 load_configfile
 update_local_scripts
-update_joomla_scripts
 update_root_tools
 the_end

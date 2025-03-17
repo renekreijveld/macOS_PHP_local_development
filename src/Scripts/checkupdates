@@ -9,9 +9,10 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Added update option
+# 1.2 Moved all scripts to one Scripts folder
 
 # version
-THISVERSION=1.1
+THISVERSION=1.2
 
 # name of this
 MYNAME=$(basename ${0})
@@ -21,52 +22,11 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
 # Local scripts to update
-LOCAL_SCRIPTS=(
-    "adddb" 
-    "addsite" 
-    "checkupdates" 
-    "deldb" 
-    "delsite" 
-    "restartapache" 
-    "restartdev" 
-    "restartdnsmasq" 
-    "restartmailpit" 
-    "restartmariadb" 
-    "restartnginx" 
-    "restartphpfpm" 
-    "setrights" 
-    "setserver" 
-    "setsitephp" 
-    "startapache" 
-    "startdev" 
-    "startdnsmasq" 
-    "startmailpit" 
-    "startmariadb" 
-    "startnginx" 
-    "startphpfpm" 
-    "stopapache" 
-    "stopdev" 
-    "stopdnsmasq" 
-    "stopmailpit" 
-    "stopmariadb" 
-    "stopnginx" 
-    "stopphpfpm" 
-    "xdebug"
-)
-
-# Joomla scripts to update
-JOOMLA_SCRIPTS=(
-    "jbackup" 
-    "jbackupall" 
-    "jdbdropall" 
-    "jdbdump" 
-    "jdbdumpall" 
-    "jdbimp" 
-    "jfunctions" 
-    "jlistjoomlas" 
-    "joomlainfo" 
-    "latestjoomla"
-)
+LOCAL_SCRIPTS=( "adddb" "addsite" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
+    "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" "restartdnsmasq" 
+    "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" "setsitephp" 
+    "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" "stopapache" 
+    "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
 
 LOCAL_SCRIPTS_DIR="/usr/local/bin"
 REPO_BASE_URL="https://raw.githubusercontent.com/renekreijveld/macOS_PHP_local_development/main/src"
@@ -98,11 +58,6 @@ check_version() {
     if [[ "$type" == "script" ]]; then
         script_path="${LOCAL_SCRIPTS_DIR}/$script"
         repo_url="$REPO_BASE_URL/Scripts/$script"
-        local_version=$(grep -E '^THISVERSION=' "${script_path}" | cut -d '=' -f2 | tr -d '"')
-        repo_version=$(curl -s "${repo_url}" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
-    elif [[ "$type" == "joomlascript" ]]; then
-        script_path="${LOCAL_SCRIPTS_DIR}/$script"
-        repo_url="$REPO_BASE_URL/Joomla_scripts/$script"
         local_version=$(grep -E '^THISVERSION=' "${script_path}" | cut -d '=' -f2 | tr -d '"')
         repo_version=$(curl -s "${repo_url}" | grep -E '^THISVERSION=' | cut -d '=' -f2 | tr -d '"')
     elif [[ "$type" == "index" ]]; then
@@ -151,13 +106,6 @@ check_scripts() {
     done
 }
 
-check_joomla_scripts() {
-    echo -e "\nChecking Joomla scripts:"
-    for script in "${JOOMLA_SCRIPTS[@]}"; do
-        check_version "${script}" "joomlascript" "Joomla scripts"
-    done
-}
-
 check_landingpage() {
     echo -e "\nChecking Localhost landingpage:"
     check_version "index.php" "index" "local landingpage"
@@ -199,9 +147,6 @@ fi
 
 NRUPDATES=0
 check_scripts
-echo "${NRUPDATES} updates found."
-NRUPDATES=0
-check_joomla_scripts
 echo "${NRUPDATES} updates found."
 NRUPDATES=0
 check_landingpage

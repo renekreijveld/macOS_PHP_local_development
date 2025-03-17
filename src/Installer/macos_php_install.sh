@@ -23,8 +23,9 @@
 # 1.10 More consistent variable naming
 # 1.11 Added checks and handling of existing Homebrew based installation
 # 1.12 Added check if installed scripts are already in the PATH variable
+# 1.13 Moved all scripts to one Scripts folder
 
-THISVERSION=1.12
+THISVERSION=1.13
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
@@ -40,15 +41,11 @@ PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
 FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
 # Local scripts to install
-LOCAL_SCRIPTS=("addsite" "delsite" "adddb" "deldb" "restartdnsmasq" "restartmailpit" 
-    "restartmariadb" "restartnginx" "restartphpfpm" "startdnsmasq" "startmailpit" 
-    "startmariadb" "startnginx" "startphpfpm" "stopdnsmasq" "stopmailpit" "xdebug" 
-    "stopmariadb" "stopnginx" "stopphpfpm" "startdev" "stopdev" "restartdev" "setrights" 
-    "setsitephp" "startapache" "stopapache" "restartapache" "setserver")
-
-# Joomla scripts to install
-JOOMLA_SCRIPTS=("jfunctions" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
-    "jdbimp" "jlistjoomlas" "joomlainfo" "latestjoomla")
+LOCAL_SCRIPTS=( "adddb" "addsite" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" "jdbdumpall" 
+    "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" "restartdnsmasq" 
+    "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" "setsitephp" 
+    "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" "stopapache" 
+    "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
 
 # GitHub Repo Base URL
 GITHUB_BASE="https://github.com/renekreijveld/macOS_NginX_local_development/raw/refs/heads/main"
@@ -430,22 +427,6 @@ install_local_scripts() {
     done
 }
 
-install_joomla_scripts() {
-    echo -e "\nInstall Joomla scripts:"
-    for script in "${JOOMLA_SCRIPTS[@]}"; do
-        echo "- install ${script}."
-        curl -fsSL "${GITHUB_BASE}/src/Joomla_scripts/${script}" | tee "script.${script}" > /dev/null
-
-        if [ -f "${SCRIPTS_DEST}/${script}" ]; then
-            echo "${PASSWORD}" | sudo -S mv -f "${SCRIPTS_DEST}/${script}" "${SCRIPTS_DEST}/${script}.$(date +%Y%m%d-%H%M%S)"
-        fi
-
-        echo "${PASSWORD}" | sudo -S mv -f "script.${script}" "${SCRIPTS_DEST}/${script}" > /dev/null
-        echo "${PASSWORD}" | sudo -S chmod +x "${SCRIPTS_DEST}/${script}"
-        test_script_path "${SCRIPTS_DEST}/${script}"
-    done
-}
-
 install_root_tools() {
     cd "${ROOTFOLDER}"
     echo -e "\nInstall landingpage."
@@ -531,7 +512,6 @@ configure_dnsmasq
 create_local_folders
 install_ssl_certificates
 install_local_scripts
-install_joomla_scripts
 install_root_tools
 fix_sudoers
 report_existing_paths
