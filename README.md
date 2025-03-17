@@ -4,7 +4,7 @@ This is a command-line-driven local PHP development environment for macOS. It al
 
 ### Supported macOS Versions
 
-Compatible with Big Sur, Monterey, Ventura, Sonoma, and Sequoia on both Intel and Apple Silicon processors.Supported macOS versions: Big Sur, Monterey, Ventura, Sonoma, Sequoia running on Intel and Silicon prcessors.
+Compatible with **Big Sur, Monterey, Ventura, Sonoma, and Sequoia** on both **Intel** and **Apple Silicon** processors.
 
 ### Features
 
