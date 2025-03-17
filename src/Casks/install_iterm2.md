@@ -5,7 +5,7 @@ iTerm2 is a very good alternative for the default terminal on macOS.
 To install iTerm2 with Homebrew start a terminal and enter the following command:
 
 ```
-brew install cask iterm2
+brew install --cask iterm2
 ```
 
 After installation quit the default terminal and consider adding the iTerm2 icon to your dock.

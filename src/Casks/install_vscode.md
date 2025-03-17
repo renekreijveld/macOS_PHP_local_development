@@ -7,7 +7,7 @@ Visual Studio Code (VSCode) is a versatile code editor with lots of extensions a
 To install VSCode with Homebrew start a terminal and enter the following command:
 
 ```
-brew install cask visual-studio-code
+brew install --cask visual-studio-code
 ```
 
 After installation consider adding the VSCode icon to your dock.
