@@ -13,8 +13,9 @@
  * 1.3 Fixes some issues with the display of the table infos
  * 1.4 Improve htaccess check
  * 1.5 Added checkupdates documentation
+ * 1.6 Updated jdbdumpall documentation
  *
- * THISVERSION=1.5
+ * THISVERSION=1.6
  */
 
 # Determine oath of local etc folder
@@ -1218,11 +1219,14 @@ Default action is .tgz backup.
             </div>
             <div class="modal-body">
                 <strong>Create a database dump of all Joomla website databases</strong><br><br>
-                <pre><code>Usage: jdbdumpall [-s] [-h]
+                <pre><code>Usage: jdbdumpall [-t] [-c] [-f] [-s] [-h]
 
--s Silent. Do not display any messages to standard output.
--h Help. Display this info.</code></pre><br>
-                This scrips searches for all Joomla websites in the development environment and creates a database dump for each website found.<br>
+-t add timestamp to database dump.
+-c compress database dump .sql file with gzip.
+-f force: always overwrite existing backup files.
+-s silent, do not display any messages to standard output.
+-h help, display this info.</code></pre><br>
+                This scrips creates a database dump for all existing MariaDB databases.<br>
                 The database dumps are save in the Databases backup folder.
             </div>
             <div class="modal-footer">
