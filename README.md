@@ -23,4 +23,4 @@ Follow these <a href="../../blob/main/install.md">installation instructions</a> 
 
 Regular updates will be published in this repository. Follow these <a href="../../blob/main/update.md">update instructions</a> to update your local scripts.
 
-Do you like this tool? Feel free to <a href="https://buymeacoffee.com/renekreijveld" target="_blank">buy me a coffee</a>.
+If you like this tool, please consider <a href="https://renekreijveld.nl/donate" target="_blank">a donation</a> to support further development.

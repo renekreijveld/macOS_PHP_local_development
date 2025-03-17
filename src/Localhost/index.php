@@ -14,8 +14,9 @@
  * 1.4 Improve htaccess check
  * 1.5 Added checkupdates documentation
  * 1.6 Updated jdbdumpall documentation
+ * 1.7 Added donatiopn link
  *
- * THISVERSION=1.6
+ * THISVERSION=1.7
  */
 
 # Determine oath of local etc folder
@@ -1132,7 +1133,7 @@ foreach ( $phpVersions as $version )
             </div>
         </div>
     </div>
-    <p class="text-center" style="font-size: 0.9rem;">Do you like this tool? Feel free to <a href="https://buymeacoffee.com/renekreijveld" target="_blank">buy me a coffee</a>.</p>
+    <p class="text-center" style="font-size: 0.9rem;">Like this tool? Please consider <a href="https://renekreijveld.nl/donate" target="_blank">a donation</a> to support further development.</p>
 </div>
 
 
