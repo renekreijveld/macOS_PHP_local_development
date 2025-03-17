@@ -1132,7 +1132,9 @@ foreach ( $phpVersions as $version )
             </div>
         </div>
     </div>
+    <p class="text-center" style="font-size: 0.9rem;">Do you like this tool? Feel free to <a href="https://buymeacoffee.com/renekreijveld" target="_blank">buy me a coffee</a>.</p>
 </div>
+
 
 <div class="modal fade" id="jbackup_modal" tabindex="-1">
     <div class="modal-dialog modal-lg">
