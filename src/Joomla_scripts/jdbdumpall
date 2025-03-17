@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# jdbdumpall - Create a backup of the MySQL databases
+# jdbdumpall - Create a backup of all MariaDB databases
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
@@ -8,9 +8,10 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Rewrote to backup all MariaDB databases, not only the Joomla databases.
 
 # version
-THISVERSION=1.0
+THISVERSION=1.1
 
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
@@ -25,11 +26,7 @@ else
     exit 1
 fi   
 
-# display messages
-SILENT="no"
-
-# determine path of script
-MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+# Get name of this script
 MYNAME=$(basename "$0")
 
 # check if folder for backup storage exists
@@ -41,9 +38,12 @@ fi
 # display usage information
 usage() {
     echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} [-s] [-h]\n"
-    echo "-s Silent. Do not display any messages to standard output."
-    echo -e "-h Help. Display this info.\n"
+    echo -e "Usage: ${MYNAME} [-t] [-c] [-f] [-s] [-h]\n"
+    echo "-t add timestamp to database dump."
+    echo "-c compress database dump .sql file with gzip."
+    echo "-f force: always overwrite existing backup files."
+    echo "-s silent, do not display any messages to standard output."
+    echo -e "-h help, display this info.\n"
     exit 0
 }
 
@@ -54,9 +54,61 @@ showmessage() {
     fi
 }
 
+# Create a backup of a database
+create_backup() {
+    local dbname=$1
+
+    BACKUPFILE="${MARIADBBACKUP}/${dbname}${NOW}.sql"
+
+    # Set filename for output
+    if [ ${COMPRESS} == "yes" ] ; then
+        OUTPUTFILE="${BACKUPFILE}.gz"
+    else    
+        OUTPUTFILE="${BACKUPFILE}"
+    fi
+
+    # If backup file already exists and we are not forcing, ask for confirmation
+    if [ -f "${OUTPUTFILE}" ] && [ ${FORCES} == "no" ]; then
+        read -p "Backup for database ${dbname} already exists. Overwrite? (y/n): " confirm
+        if [[ "${confirm}" != "y" ]]; then
+            showmessage "Skipping backup for database ${dbname}"
+            return
+        fi
+    fi
+
+    # Create backup
+    mariadb-dump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --user=root --password=${MARIADBPW} "${dbname}" > "${BACKUPFILE}"
+
+    # If backup file was created, compress it if needed
+    if [ -f ${BACKUPFILE} ]; then
+        if [ ${COMPRESS} == "yes" ] ; then
+            gzip ${BACKUPFILE}
+            showmessage "Backup ready in file ${BACKUPFILE}.gz"
+        else
+            showmessage "Backup ready in file ${BACKUPFILE}"
+        fi
+    else
+        echo "Error: backup failed for database ${DATABASE}"
+    fi
+
+}
+
 # process the arguments
-while getopts sh opt; do
+TIMESTAMP="no"
+COMPRESS="no"
+FORCE="no"
+SILENT="no"
+while getopts tcfsh opt; do
     case "${opt}" in
+    t)
+        TIMESTAMP="yes"
+        ;;
+    c)
+        COMPRESS="yes"
+        ;;
+    f)
+        FORCE="yes"
+        ;;
     s)
         SILENT="yes"
         ;;
@@ -72,33 +124,22 @@ done
 
 showmessage "${MYNAME} ${THISVERSION}"
 
-for DIR in $(find ${ROOTFOLDER} -maxdepth 4 -type d); do
-    if [ -f ${DIR}/configuration.php ]; then
-        # possible joomla found
-        showmessage "Possible Joomla found at ${DIR}."
+if [ ${TIMESTAMP} == "yes" ]; then
+    NOW=$(date +".%Y%m%d-%H%M%S")
+else
+    NOW=""
+fi  
 
-        cd ${DIR}
+# Get list of all existing databases
+DBS=$(mariadb --user=root --password="${MARIADBPW}" -e"show databases" | tail -n +2)
 
-        if [ ! -e ${MYPATH}/jfunctions ]; then
-            showmessage "Cannot continue: script jfunctions not found, exiting."
-            exit 1
-        else
-            . ${MYPATH}/jfunctions
-        fi
-
-        # create backup
-        NOW=$(date +"%Y%m%d-%H%M%S")
-
-        # dump the database to a .sql file
-        if mariadb-dump --skip-opt --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host=${host} --user=${dbuser} --password=${password} ${database} > ${MARIADBBACKUP}/${database}.${NOW}.sql; then
-            showmessage "Database dump created for ${sitenameclean}"
-        else
-            showmessage "Error creating database dump."
-            exit 1
-        fi
-
-        showmessage "Database backup for ${sitenameclean} finished."
-    fi
+# Process all databases
+for DATABASE in ${DBS}; do
+    case "${DATABASE}" in
+        'information_schema'|'performance_schema'|'sys'|'mysql')
+            ;;
+        *)
+            create_backup "${DATABASE}"
+            ;;
+    esac
 done
-
-showmessage "Your database backups are ready in ${MARIADBBACKUP}."
