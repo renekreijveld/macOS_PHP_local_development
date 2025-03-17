@@ -36,9 +36,7 @@ Regular updates are provided in this repository. Use the <a href="../../blob/mai
 If you dislike working with the command line, this tool is not for you.<br>
 But if you're comfortable in the terminal, it provides a powerful, flexible, and customizable local PHP development environment.
 
-Is this better or easier than tools like MAMP, Laravel Valet, or Laravel Herd?<br>
-Probably not. 😄
-
+Is this better or easier than tools like MAMP, Laravel Valet, or Laravel Herd? Probably not. 😄<br>
 But it’s open, flexible, and free – and if you're not afraid of the macOS terminal, you can modify it to suit your needs.
 
 ### Support the Project
