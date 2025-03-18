@@ -17,8 +17,9 @@
  * 1.7 Added donatiopn link
  * 1.8 Moved Joomla scripts to Command line tools
  * 1.9 Added version number in header
+ * 1.10 Added documentation jrestore
  *
- * THISVERSION=1.9
+ * THISVERSION=1.10
  */
 
 # Determine oath of local etc folder
@@ -422,6 +423,14 @@ foreach ($phpVersions as $version) {
                                 <td>
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#jbackupall_modal">Create a
                                         backup of all local Joomla websites</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre><code><strong>jrestore</strong></code></pre>
+                                </td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#jrestore_modal">Restore a website backup</a>
                                 </td>
                             </tr>
                             <tr>
@@ -1365,6 +1374,31 @@ Default action is .tgz backup.
         </div>
     </div>
 
+    <div class="modal fade" id="jrestore_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">jrestore</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Create a tar gzip or zip backup a Joomla website</strong><br><br>
+                    <pre><code>Usage: jrestore [-c] [-s] [-h] backupfile
+
+-c cleanup the existing website files before restoring the backup.
+-s Silent mode, do not display any messages to standard output.
+-h Help, display this info.
+
+The jrestore script restores a website backup to the website folder.
+The backupfile must be in the current folder or in the sites backup folder.</code></pre><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="modal fade" id="jdbdump_modal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
