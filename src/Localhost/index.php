@@ -18,6 +18,7 @@
  * 1.8 Moved Joomla scripts to Command line tools
  * 1.9 Added version number in header
  * 1.10 Added documentation jrestore
+ * 1.11 Fix wording jrestore
  *
  * THISVERSION=1.10
  */
@@ -1382,7 +1383,7 @@ Default action is .tgz backup.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <strong>Create a tar gzip or zip backup a Joomla website</strong><br><br>
+                    <strong>Restore a website backup to the website folder</strong><br><br>
                     <pre><code>Usage: jrestore [-c] [-s] [-h] backupfile
 
 -c cleanup the existing website files before restoring the backup.
