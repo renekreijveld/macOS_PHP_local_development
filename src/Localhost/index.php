@@ -20,7 +20,7 @@
  * 1.10 Added documentation jrestore
  * 1.11 Fix wording jrestore
  *
- * THISVERSION=1.10
+ * THISVERSION=1.11
  */
 
 # Determine oath of local etc folder
