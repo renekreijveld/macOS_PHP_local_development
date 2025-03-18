@@ -9,8 +9,9 @@
 # Version history
 # 1.0 Initial version.
 # 1.1 Moved all scripts to one Scripts folder
+# 1.2 Added jrestore script
 
-VERSION=1.1
+VERSION=1.2
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
@@ -19,7 +20,7 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
 LOCAL_SCRIPTS=( "adddb" "addsite" "checkupdates" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" 
-    "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" 
+    "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "jrestore" "latestjoomla" "restartapache" "restartdev" 
     "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" 
     "setsitephp" "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" 
     "stopapache" "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )

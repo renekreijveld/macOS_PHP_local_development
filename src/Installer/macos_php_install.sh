@@ -24,8 +24,9 @@
 # 1.11 Added checks and handling of existing Homebrew based installation
 # 1.12 Added check if installed scripts are already in the PATH variable
 # 1.13 Moved all scripts to one Scripts folder
+# 1.14 Added jrestore script
 
-THISVERSION=1.13
+THISVERSION=1.14
 
 # Folder where scripts are installed
 HOMEBREW_PATH=$(brew --prefix)
@@ -42,7 +43,7 @@ FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
 
 # Local scripts to install
 LOCAL_SCRIPTS=( "adddb" "addsite" "checkupdates" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" 
-    "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "latestjoomla" "restartapache" "restartdev" 
+    "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "jrestore" "latestjoomla" "restartapache" "restartdev" 
     "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" 
     "setsitephp" "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" 
     "stopapache" "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
