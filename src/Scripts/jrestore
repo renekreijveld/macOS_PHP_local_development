@@ -1,0 +1,137 @@
+#!/bin/bash
+# jrestore -- restore a Joomla website backup
+#
+# This script supports Joomla versions 1.0 and up.
+#
+# Written by René Kreijveld - email@renekreijveld.nl
+# This script is free software; you may redistribute it and/or modify it.
+# This script comes without any warranty. Use it at your own risk.
+#
+# Warning! This script needs the file jfunctions. This has to be installed in the same directory as this script.
+#
+# Version history
+# 1.0 Initial version
+
+# version
+THISVERSION=1.0
+
+# general variables
+MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+MYNAME=$(basename "$0")
+
+# folder for phpdev configuration
+CONFIG_DIR="${HOME}/.config/phpdev"
+# path to the phpdev configuration file
+CONFIG_FILE="${CONFIG_DIR}/config"
+
+# Load configuration file defaults
+if [[ -f "${CONFIG_FILE}" ]]; then
+    source "${CONFIG_FILE}"
+fi   
+
+# show message function
+showmessage() {
+    if [[ ${SILENT} == "no" ]]; then
+        echo -e "$1"
+    fi
+}
+
+# display usage information
+usage() {
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-c] [-s] [-h] backupfile\n"
+    echo "-c cleanup the existing website files before restoring the backup."
+    echo "-s Silent mode, do not display any messages to standard output."
+    echo -e "-h Help, display this info.\n"
+    echo -e "The jrestore script restores a website backup to the website folder."
+    echo "The backupfile must be in the current folder or in the folder ${SITESBACKUP}."
+    exit 0
+}
+
+# process the arguments
+CLEANUP="no"
+SILENT="no"
+while getopts "csh" opt; do
+    case "${opt}" in
+    c)
+        CLEANUP="yes"
+        ;;
+    s)
+        SILENT="yes"
+        ;;
+    h)
+        usage
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    esac
+done
+
+# Shift off the options and optional --.
+shift "$((OPTIND-1))"
+
+# Main script logic
+
+showmessage "${MYNAME} ${THISVERSION}"
+
+# Check if backup_filename is provided
+if [[ $# -ne 1 ]]; then
+    echo "Error: no backupfile specified."
+    exit 1
+fi
+
+BACKUPFILE=$1
+
+if [[ -f ${BACKUPFILE} ]]; then
+    RESTOREFILE="$(pwd)/${BACKUPFILE}"
+elif [[ -f ${SITESBACKUP}/${BACKUPFILE} ]]; then
+    RESTOREFILE="${SITESBACKUP}/${BACKUPFILE}"
+else
+    echo "Error: backupfile ${BACKUPFILE} not found in current folder or in ${SITESBACKUP}."
+    exit 1
+fi
+
+# Extract the base name without extension and timestamp
+BASENAME=$(basename "${BACKUPFILE}")
+BASENAME=${BASENAME%%.*}  # Remove the extension
+BASENAME=${BASENAME%%.*}  # Remove the date timestamp if it exists
+
+# Extract the extension from the BACKUPFILE
+EXTENSION="${BACKUPFILE##*.}"
+
+# Check for usable backup file extension
+if [[ ${EXTENSION} != "tgz" ]] && [[ ${EXTENSION} != "zip" ]]; then
+    echo "Error: backupfile has an invalid extension, only .tgz and .zip are supported, exiting"
+    exit 1
+fi
+
+echo "The backup will be restored to ${ROOTFOLDER}/${BASENAME}."
+read -p "Press Enter continue or Ctrl-C to abort."
+
+if [[ ! -d ${ROOTFOLDER} ]]; then
+    echo "Error: websites folder ${ROOTFOLDER} not found, exiting."
+    exit 1
+fi
+
+cd "${ROOTFOLDER}"
+
+# Check if we need to cleanup first
+if [[ ${CLEANUP} == "yes" ]]; then
+    showmessage "Cleaning up ${ROOTFOLDER}/${BASENAME}."
+    rm -rf "${ROOTFOLDER}/${BASENAME}"
+fi
+
+showmessage "Extracting ${BACKUPFILE}."
+if [[ ${EXTENSION} == "tgz" ]]; then
+    tar xzf "${RESTOREFILE}"
+else
+    unzip -q -o "${RESTOREFILE}"
+fi
+
+showmessage "Restore completed."
+
+if find "${ROOTFOLDER}/${BASENAME}" -maxdepth 1 -type f -name "*.sql" | grep -q .; then
+    showmessage "Found a .sql file in folder ${BASENAME}. You might need to import that into the database."
+fi
