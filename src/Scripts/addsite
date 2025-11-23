@@ -240,6 +240,9 @@ case ${PHP_VERSION} in
 "8.4")
     PHP_FPM_URL="127.0.0.1:9084"
     ;;
+"8.5")
+    PHP_FPM_URL="127.0.0.1:9085"
+    ;;
 esac
 
 # Copy and modify the nginx configuration template

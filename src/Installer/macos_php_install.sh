@@ -36,7 +36,7 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
 # PHP Versions to Install
-PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
+PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
 
 # Homebrew Formulae to Install
 FORMULAE=("wget" "mariadb" "httpd" "nginx" "dnsmasq" "mkcert" "nss" "mailpit")
@@ -114,7 +114,7 @@ prechecks() {
         PROCESSOR="intel"
     fi
 
-    PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php")
+    PRECHECK_FORMULAE=("mariadb" "nginx" "dnsmasq" "mysql" "httpd" "mailhog" "mailpit" "apache2" "php@7.4" "php@8.1"  "php@8.2" "php@8.3" "php@8.4" "php@8.5" "php")
     echo "The installer will first check if some required formulae are already installed."
     
     INSTALLED_FORMULAE=()
@@ -206,9 +206,9 @@ install_formulae() {
         brew install --quiet "${PHP_REPO}/php@${php_version}" >>${INSTALL_LOG} 2>&1
     done
 
-    # Set commandline PHP version to 8.3
+    # Set commandline PHP version to 8.4
     brew unlink php >>${INSTALL_LOG} 2>&1
-    brew link --overwrite --force php@8.3 >>${INSTALL_LOG} 2>&1
+    brew link --overwrite --force php@8.4 >>${INSTALL_LOG} 2>&1
 }
 
 configure_mariadb() {

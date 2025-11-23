@@ -20,7 +20,7 @@ HOMEBREW_PATH=$(brew --prefix)
 BASE_DIR="${HOMEBREW_PATH}/etc/php"
 
 # PHP Versions
-PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4")
+PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
 
 # Rename all ext-xdebug.ini.disabled files to ext-xdebug.ini
 xdebug_on() {

@@ -19,9 +19,9 @@ CONFIG_DIR="${HOME}/.config/phpdev"
 CONFIG_FILE="${CONFIG_DIR}/config"
 
 homebrew_path=$(brew --prefix)
-brew_array=("7.4" "8.1" "8.2" "8.3" "8.4")
-php_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php@8.4")
-php_unlink_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php")
+brew_array=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
+php_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php@8.4" "php@8.5")
+php_unlink_array=("php@7.4" "php@8.1" "php@8.2" "php@8.3" "php@8.4" "php@8.5")
 php_version_nr="$1"
 php_version="php@$1"
 
