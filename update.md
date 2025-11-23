@@ -29,3 +29,13 @@ To update the installed command line tools and Joomla scripts enter the followin
 ```
 
 This will update all local scripts and the landingpage running at https://localhost.
+
+## Renewing you local SSL certificates
+
+To renew your local SSL sertificates do the following. Open a Terminal and run the following commands:
+
+```
+cd $HOMEBREW_PREFIX/etc/certs
+mkcert localhost
+mkcert mkcert "*.dev.test"
+```
