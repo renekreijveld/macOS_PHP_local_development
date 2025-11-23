@@ -37,5 +37,5 @@ To renew your local SSL sertificates do the following. Open a Terminal and run t
 ```
 cd $HOMEBREW_PREFIX/etc/certs
 mkcert localhost
-mkcert mkcert "*.dev.test"
+mkcert "*.dev.test"
 ```
