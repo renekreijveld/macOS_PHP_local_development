@@ -11,7 +11,7 @@ Compatible with **Big Sur, Monterey, Ventura, Sonoma, and Sequoia** on both **In
 - While the setup is command-line-based, a collection of scripts automates most of the heavy lifting.
 - Supports both Apache and NginX as web servers, allowing easy switching between the two.
 - Includes MariaDB as the database server.
-- Supports multiple PHP versions: 7.4, 8.1, 8.2, 8.3, 8.4 – allowing different local sites to run concurrently with different PHP versions.
+- Supports multiple PHP versions: 7.4, 8.1, 8.2, 8.3, 8.4, 8.5 – allowing different local sites to run concurrently with different PHP versions.
 - Xdebug is installed and enabled by default for all PHP versions, with an option to toggle it on or off.
 - Automatic SSL certificates for all local websites.
 - Mailpit for easy email testing.
