@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# delsite - delete a new site to the local NginX configuration
+# delsite - delete a new site from the local NginX/Apache configuration
 #
 # Written by René Kreijveld - email@renekreijveld.nl
 # This script is free software; you may redistribute it and/or modify it.
@@ -9,25 +9,24 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Request confirmation before deleting the website
+# 1.2 Added -f option to force deletion without confirmation and continue when site folder is missing
 
 # version
-THISVERSION=1.1
+THISVERSION=1.2
 # name of this
-MYNAME=$(basename ${0})
+MYNAME=$(basename "${0}")
 
 # Start directory of homebrew
 START_DIR=$(brew --prefix)
 
 # path where this script is located
-MYPATH=$(cd $(dirname ${0}); pwd -P)
+MYPATH=$(cd "$(dirname "${0}")" && pwd -P)
 # nginx folder for website configurations
-NGINX_CONF_DIR=${START_DIR}/etc/nginx/servers
+NGINX_CONF_DIR="${START_DIR}/etc/nginx/servers"
 # apache etc dir
-APACHE_DIR=${START_DIR}/etc/httpd
+APACHE_DIR="${START_DIR}/etc/httpd"
 # apache folder for website configurations
-APACHE_CONF_DIR=${APACHE_DIR}/vhosts
-# Websites root
-SITE_ROOT="/Users/$USER/Development/Sites"
+APACHE_CONF_DIR="${APACHE_DIR}/vhosts"
 # folder for phpdev configuration
 CONFIG_DIR="${HOME}/.config/phpdev"
 # path to the phpdev configuration file
@@ -35,7 +34,7 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 
 # show message function
 showmessage() {
-    if [ "${SILENT}" == "no" ]; then
+    if [[ "${SILENT}" == "no" ]]; then
         echo -e "$1"
     fi
 }
@@ -46,20 +45,10 @@ usage() {
     echo -e "Usage: ${MYNAME} -n <name> [-d] [-f] [-s] [-h]\n"
     echo "-n the name for the website (without spaces)."
     echo "-d also drop the database."
-    echo "-f force, do not ask confirmation before deleting website and database."
+    echo -e "-f force, don't ask confirmation before deleting website and database.\n   If the website folder doesn't exist, skip folder and database deletion but still delete the webserver configuration."
     echo "-s silent, no messages will be shown."
     echo -e "-h display this help.\n"
     exit 0
-}
-
-# Function to check if database exists
-database_exists() {
-    DATABASE_NAME=$1
-    if mariadb -u root -proot -e "use ${DATABASE_NAME}" 2>/dev/null; then
-        return 0
-    else
-        return 1
-    fi
 }
 
 # Parse command line arguments
@@ -112,60 +101,68 @@ fi
 
 # Check if the site folder already exists
 SITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
-if [ ! -d "${SITE_FOLDER}" ]; then
-    echo "Error: website folder '${SITE_FOLDER}' not found, exiting."
-    exit 1
-fi
-
-
-# Request confirmation
-# Request confirmation
-if [ "${FORCE}" == "no" ]; then
-    if [ "${DBDELETE}" == "yes" ]; then
-        read -p "Press Enter to delete website '${WEBSITE_NAME}' and its database or press Ctrl-C to abort."
-    else
-        read -p "Press Enter to delete the website '${WEBSITE_NAME}' or press Ctrl-C to abort."
-    fi
-fi
-
-
-# Get website information
-cd ${SITE_FOLDER}
-if [ "${DBDELETE}" == "yes" ]; then
-    # include general functions
-    if [ ! -e ${MYPATH}/jfunctions ]; then
-        echo -e "Cannot continue: script jfunctions not found.\n"
+FOLDER_EXISTS="yes"
+if [[ ! -d "${SITE_FOLDER}" ]]; then
+    if [[ "${FORCE}" == "no" ]]; then
+        echo -e "Error: website folder '${SITE_FOLDER}' not found. If you still want to delete the website configuration, use the -f option.\nExiting."
         exit 1
     else
-        # gather joomla information
-        . ${MYPATH}/jfunctions
-        # Drop the database
-        showmessage "Dropping database ${database}."
-        deldb -d ${database} -f -s
+        showmessage "Warning: website folder '${SITE_FOLDER}' not found, skipping folder and database deletion."
+        FOLDER_EXISTS="no"
     fi
 fi
 
-# Delete website folder
-cd ${ROOTFOLDER}
-showmessage "Delete website folder."
-rm -rf ${SITE_FOLDER}
-
-# Delete the NginX configuration
-NGINX_CONF_FILE=${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf
-rm -f ${NGINX_CONF_FILE}
-
-# Delete the Apache configuration
-APACHE_CONF_FILE=${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf
-rm -f ${APACHE_CONF_FILE}
-
-if [ "${WEBSERVER}" == "nginx" ]; then
-    # Restart NginX
-    showmessage "Restarting nginx."
-    sudo brew services restart nginx
+# Request confirmation
+if [[ "${FORCE}" == "no" ]]; then
+    if [[ "${DBDELETE}" == "yes" ]]; then
+        read -rp "Press Enter to delete website '${WEBSITE_NAME}' and its database or press Ctrl-C to abort."
+    else
+        read -rp "Press Enter to delete the website '${WEBSITE_NAME}' or press Ctrl-C to abort."
+    fi
 fi
 
-if [ "${WEBSERVER}" == "apache" ]; then
-    # Restart Apache
+# Get website information and delete database (only if folder exists)
+if [[ "${FOLDER_EXISTS}" == "yes" ]]; then
+    cd "${SITE_FOLDER}" || exit 1
+    if [[ "${DBDELETE}" == "yes" ]]; then
+        # include general functions
+        if [[ ! -e "${MYPATH}/jfunctions" ]]; then
+            echo -e "Cannot continue: script jfunctions not found.\n"
+            exit 1
+        else
+            # gather joomla information
+            . "${MYPATH}/jfunctions"
+            # Drop the database
+            showmessage "Dropping database ${database}."
+            deldb -d "${database}" -f -s
+        fi
+    fi
+
+    # Delete website folder
+    cd "${ROOTFOLDER}" || exit 1
+    showmessage "Deleting website folder."
+    rm -rf "${SITE_FOLDER}"
+fi
+
+# Delete the NginX configuration
+NGINX_CONF_FILE="${NGINX_CONF_DIR}/${WEBSITE_NAME}.conf"
+if [[ -f "${NGINX_CONF_FILE}" ]]; then
+    showmessage "Deleting NginX configuration."
+    rm -f "${NGINX_CONF_FILE}"
+fi
+
+# Delete the Apache configuration
+APACHE_CONF_FILE="${APACHE_CONF_DIR}/${WEBSITE_NAME}.conf"
+if [[ -f "${APACHE_CONF_FILE}" ]]; then
+    showmessage "Deleting Apache configuration."
+    rm -f "${APACHE_CONF_FILE}"
+fi
+
+# Restart the webserver
+if [[ "${WEBSERVER}" == "nginx" ]]; then
+    showmessage "Restarting nginx."
+    sudo brew services restart nginx
+elif [[ "${WEBSERVER}" == "apache" ]]; then
     showmessage "Restarting apache."
     brew services restart httpd
 fi
