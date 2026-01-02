@@ -15,9 +15,10 @@
 # 1.2 Modification of all echo -e statements
 # 1.3 Added test if jfunctions exists
 # 1.4 Code optimisations
+# 1.5 Added -f option to specify custom database dump file
 
 # version
-THISVERSION=1.4
+THISVERSION=1.5
 
 # general variables
 MYPATH=$(cd $(dirname ${0}); pwd -P)
@@ -42,7 +43,8 @@ fi
 # Display usage information
 usage() {
     echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
-    echo -e "Usage: ${MYNAME} [-s] [-h]\n"
+    echo -e "Usage: ${MYNAME} [-f dumpfile] [-s] [-h]\n"
+    echo "-f dumpfile, use the specified file instead of {database}.sql (optional)."
     echo "-s silent, no messages will be shown (optional)."
     echo -e "-h Help. Display this info.\n"
     echo -e "Run ${MYNAME} at the root of your website, where the configuration.php is.\n"
@@ -51,8 +53,12 @@ usage() {
 
 # Process the arguments
 SILENT="no"
-while getopts "sh" opt; do
+DUMPFILE=""
+while getopts "f:sh" opt; do
     case "${opt}" in
+    f)
+        DUMPFILE="${OPTARG}"
+        ;;
     s)
         SILENT="yes"
         ;;
@@ -66,20 +72,25 @@ while getopts "sh" opt; do
     esac
 done
 
+# If no custom dump file specified, use default database name
+if [ -z "${DUMPFILE}" ]; then
+    DUMPFILE="${database}.sql"
+fi
+
 showmessage "${MYNAME} ${THISVERSION}"
 
 # check if database dump exists.
-if [ ! -e ${database}.sql ]; then
-	echo "Database dump file not found. The filename should be ${database}.sql."
+if [ ! -e "${DUMPFILE}" ]; then
+	echo "Database dump file not found: ${DUMPFILE}"
 	exit 1
 fi
 
-showmessage "This is a Joomla! ${jversion} site. Starting database import of file ${database}.sql."
+showmessage "This is a Joomla! ${jversion} site. Starting database import of file ${DUMPFILE}."
 
 # import the database from a .sql file
-if mariadb --user=${dbuser} --password=${password} ${database} < ${database}.sql
+if mariadb --user=${dbuser} --password=${password} ${database} < "${DUMPFILE}"
 then
-	showmessage "${database}.sql imported."
+	showmessage "${DUMPFILE} imported into database ${database}."
 	exit 0
 else
 	echo "Error importing database dump."

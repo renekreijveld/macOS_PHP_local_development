@@ -9,8 +9,9 @@
 #
 # Version history:
 # 1.6 Added use of config file
+# 1.7 Added option to specify own dumpfile
 
-THISVERSION=1.6
+THISVERSION=1.7
 
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
@@ -31,7 +32,8 @@ showmessage() {
 # Display usage information
 usage() {
     echo "${MYNAME} ${THISVERSION}, written by René Kreijveld."
-    echo -e "\nUsage: ${MYNAME} [-n <name>] [-t] [-c] [-o] [-h]\n"
+    echo -e "\nUsage: ${MYNAME} [-f dumpfile] [-n <name>] [-t] [-c] [-o] [-h]\n"
+    echo "-f dumpfile, dump to specified file instead of {database}.sql (optional)."
     echo "-n the name for the website to make the database dump for."
     echo "-t Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
@@ -41,14 +43,18 @@ usage() {
 }
 
 # Process the arguments
+DUMPFILE=""
 COMPRESS="no"
 SHOWDATE="no"
 OVERWRITE="no"
 WEBSITE_NAME=""
-while getopts n:tcoh opt; do
+while getopts "f:n:tcoh" opt; do
     case "${opt}" in
+    f)
+        DUMPFILE="${OPTARG}"
+        ;;
     n)
-        WEBSITE_NAME=$OPTARG
+        WEBSITE_NAME="${OPTARG}"
         ;;
     t)
         SHOWDATE="yes"
@@ -80,14 +86,14 @@ else
 fi   
 
 # Check if WEBSITE_NAME is not empty
-if [ ! -z "${WEBSITE_NAME}" ]; then
-    WEBSITE_FOLDER=${ROOTFOLDER}/${WEBSITE_NAME}
-    if [ ! -d "${WEBSITE_FOLDER}" ]; then
+if [[ -n "${WEBSITE_NAME}" ]]; then
+    WEBSITE_FOLDER="${ROOTFOLDER}/${WEBSITE_NAME}"
+    if [[ ! -d "${WEBSITE_FOLDER}" ]]; then
         echo "Error: website folder ${WEBSITE_FOLDER} not found, exiting."
         exit 1
     fi
     showmessage "Going in to website folder ${WEBSITE_FOLDER}."
-    cd ${WEBSITE_FOLDER}
+    cd "${WEBSITE_FOLDER}" || exit 1
 fi
 
 # Check if jfunctions script exists
@@ -113,28 +119,55 @@ else
     EXTENSION=""
 fi
 
-DUMP_FILE="${database}${NOW}.sql"
+# Determine output filename
+if [[ -n "${DUMPFILE}" ]]; then
+    OUTFILE="${DUMPFILE}"
+else
+    OUTFILE="${database}${NOW}.sql"
+fi
+
+DUMP_FILE="${OUTFILE}"
 
 # Check if database dump exists
-if [ -e ${DUMP_FILE} ]; then
-    if [ "${OVERWRITE}" == "no" ]; then
+if [[ -e "${DUMP_FILE}" ]]; then
+    if [[ "${OVERWRITE}" == "no" ]]; then
         read -p "Database dump ${DUMP_FILE} already exists. Press Enter to overwrite, or Ctrl-C to abort."
     else
+        showmessage "Overwriting existing dump file ${DUMP_FILE}..."
         rm -f "${DUMP_FILE}"
     fi
 fi
 
 showmessage "This is a Joomla! ${jversion} site. Starting database dump."
 
-if mariadb-dump --skip-opt --extended-insert=FALSE --add-drop-table --add-locks --create-options --disable-keys --lock-tables --quick --set-charset --host="${host}" --user="${dbuser}" --password="${password}" "${database}" > "${DUMP_FILE}"; then
+# Create database dump using mariadb-dump (avoid password in command line)
+if mariadb-dump --skip-opt \
+    --extended-insert=FALSE \
+    --add-drop-table \
+    --add-locks \
+    --create-options \
+    --disable-keys \
+    --lock-tables \
+    --quick \
+    --set-charset \
+    --host="${host}" \
+    --user="${dbuser}" \
+    --password="${password}" \
+    "${database}" > "${OUTFILE}" 2>&1; then
+    
     if [[ "${COMPRESS}" == "yes" ]]; then
-        gzip "${DUMP_FILE}"
-        showmessage "Database dump is ready in ${DUMP_FILE}.gz."
+        showmessage "Compressing database dump..."
+        if gzip "${OUTFILE}"; then
+            showmessage "Database dump is ready in ${OUTFILE}.gz."
+        else
+            showmessage "Error: Compression failed."
+            exit 1
+        fi
     else
-        showmessage "Database dump is ready in ${DUMP_FILE}."
+        showmessage "Database dump is ready in ${OUTFILE}."
     fi
     exit 0
 else
-    showmessage "Error creating database dump."
+    showmessage "Error: Failed to create database dump."
     exit 1
 fi
