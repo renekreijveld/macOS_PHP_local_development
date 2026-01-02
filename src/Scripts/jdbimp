@@ -21,12 +21,12 @@
 THISVERSION=1.5
 
 # general variables
-MYPATH=$(cd $(dirname ${0}); pwd -P)
-MYNAME=$(basename ${0})
+MYPATH=$(cd "$(dirname "$0")"; pwd -P)
+MYNAME=$(basename "$0")
 
 # show message function
 showmessage() {
-    if [ "${SILENT}" == "no" ]; then
+    if [[ "${SILENT}" == "no" ]]; then
         echo -e "$1"
     fi
 }
@@ -73,26 +73,46 @@ while getopts "f:sh" opt; do
 done
 
 # If no custom dump file specified, use default database name
-if [ -z "${DUMPFILE}" ]; then
+if [[ -z "${DUMPFILE}" ]]; then
     DUMPFILE="${database}.sql"
 fi
 
 showmessage "${MYNAME} ${THISVERSION}"
 
-# check if database dump exists.
-if [ ! -e "${DUMPFILE}" ]; then
-	echo "Database dump file not found: ${DUMPFILE}"
+# check if database dump exists
+if [[ ! -e "${DUMPFILE}" ]]; then
+	echo "Error: Database dump file not found: ${DUMPFILE}"
 	exit 1
 fi
 
 showmessage "This is a Joomla! ${jversion} site. Starting database import of file ${DUMPFILE}."
 
-# import the database from a .sql file
-if mariadb --user=${dbuser} --password=${password} ${database} < "${DUMPFILE}"
-then
-	showmessage "${DUMPFILE} imported into database ${database}."
-	exit 0
+# import the database from a .sql or .sql.gz file
+if [[ "${DUMPFILE}" == *.gz ]]; then
+	# Handle compressed file
+	showmessage "Detected compressed file, decompressing during import..."
+	if gunzip -c "${DUMPFILE}" | mariadb \
+		--host="${host}" \
+		--user="${dbuser}" \
+		--password="${password}" \
+		"${database}" 2>&1; then
+		showmessage "${DUMPFILE} imported into database ${database}."
+		exit 0
+	else
+		echo "Error: Failed to import compressed database dump."
+		exit 1
+	fi
 else
-	echo "Error importing database dump."
-	exit 1
+	# Handle regular SQL file
+	if mariadb \
+		--host="${host}" \
+		--user="${dbuser}" \
+		--password="${password}" \
+		"${database}" < "${DUMPFILE}" 2>&1; then
+		showmessage "${DUMPFILE} imported into database ${database}."
+		exit 0
+	else
+		echo "Error: Failed to import database dump."
+		exit 1
+	fi
 fi
