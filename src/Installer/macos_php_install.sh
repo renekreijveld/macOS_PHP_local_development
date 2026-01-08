@@ -364,18 +364,24 @@ configure_apache() {
 
 configure_dnsmasq() {
     echo -e "\nConfigure Dnsmasq."
-    if [ -f "${HOMEBREW_PATH}/etc/dnsmasq.conf" ]; then
-        echo "- Dnsmasq already configured."
-    else
-        echo 'address=/.dev.test/127.0.0.1' >> ${HOMEBREW_PATH}/etc/dnsmasq.conf
+    local DNSMASQ_CONF="${HOMEBREW_PATH}/etc/dnsmasq.conf"
+    
+    # Create config file if it doesn't exist
+    if [ ! -f "${DNSMASQ_CONF}" ]; then
+        echo "${PASSWORD}" | sudo -S touch "${DNSMASQ_CONF}" > /dev/null
+    fi
+    
+    # Add address configuration if not already present
+    if ! grep -q "address=/.dev.test/127.0.0.1" "${DNSMASQ_CONF}" 2>/dev/null; then
+        echo "address=/.dev.test/127.0.0.1" | echo "${PASSWORD}" | sudo -S tee -a "${DNSMASQ_CONF}" > /dev/null
     fi
 
+    # Configure resolver
     if [ -f "/etc/resolver/test" ]; then
         echo "- Resolver already configured."
     else
         echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
-        echo "nameserver 127.0.0.1" | tee resolver.test > /dev/null
-        echo "${PASSWORD}" | sudo -S mv -f resolver.test /etc/resolver/test > /dev/null
+        echo "nameserver 127.0.0.1" | echo "${PASSWORD}" | sudo -S tee /etc/resolver/test > /dev/null
     fi
 }
 
