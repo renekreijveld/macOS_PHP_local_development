@@ -12,7 +12,7 @@
 THISVERSION=1.0
 
 # Syntax: xdebug [on|off]
-# This script will enable or disable xdebug by renaming the ext-xdebug.ini file to ext-xdebug.ini.disabled for all installed PHP versions.
+# This script will enable or disable xdebug by renaming the 20-xdebug.ini file to 20-xdebug.ini.disabled for all installed PHP versions.
 
 OPTION=$1
 
@@ -22,18 +22,18 @@ BASE_DIR="${HOMEBREW_PATH}/etc/php"
 # PHP Versions
 PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
 
-# Rename all ext-xdebug.ini.disabled files to ext-xdebug.ini
+# Rename all 20-xdebug.ini.disabled files to 20-xdebug.ini
 xdebug_on() {
-    # Find all files named 'ext-xdebug.ini.disabled' in subdirectories and rename them
-    find "${BASE_DIR}" -type f -name "ext-xdebug.ini.disabled" | while read -r file; do
+    # Find all files named '20-xdebug.ini.disabled' in subdirectories and rename them
+    find "${BASE_DIR}" -type f -name "20-xdebug.ini.disabled" | while read -r file; do
         mv "$file" "${file%.disabled}"
     done
 }
 
-# Rename all ext-xdebug.ini files to ext-xdebug.ini.disabled
+# Rename all 20-xdebug.ini files to 20-xdebug.ini.disabled
 xdebug_off() {
-    # Find all files named 'ext-xdebug.ini' in subdirectories and rename them
-    find "${BASE_DIR}" -type f -name "ext-xdebug.ini" | while read -r file; do
+    # Find all files named '20-xdebug.ini' in subdirectories and rename them
+    find "${BASE_DIR}" -type f -name "20-xdebug.ini" | while read -r file; do
         mv "${file}" "${file}.disabled"
     done
 }
@@ -41,7 +41,7 @@ xdebug_off() {
 # Get the status of xdebug
 xdebug_status() {
     for php_version in "${PHP_VERSIONS[@]}"; do
-        if [[ -f "${BASE_DIR}"/${php_version}/conf.d/ext-xdebug.ini ]]; then
+        if [[ -f "${BASE_DIR}"/${php_version}/conf.d/20-xdebug.ini ]]; then
             echo "PHP ${php_version}: Xdebug enabled."
         else
             echo "PHP ${php_version}: Xdebug disabled."

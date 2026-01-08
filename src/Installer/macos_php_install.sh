@@ -196,6 +196,9 @@ install_formulae() {
     PHP_REPO="shivammathur/php"
     brew tap "${PHP_REPO}" >>${INSTALL_LOG} 2>&1
 
+    PHP_EXTENSIONS_REPO="shivammathur/extensions"
+    brew tap "${PHP_EXTENSIONS_REPO}" >>${INSTALL_LOG} 2>&1
+
     for formula in "${FORMULAE[@]}"; do
         echo "- install ${formula}."
         brew install --quiet ${formula} >>${INSTALL_LOG} 2>&1
@@ -280,42 +283,44 @@ install_php_switcher() {
 
 install_xdebug() {
     echo -e "\n\nInstall Xdebug:"
-    for php_version in "${PHP_VERSIONS[@]}"; do
-        # Skip Xdebug installation for PHP 8.5
-        if [ "${php_version}" == "8.5" ]; then
-            echo "- skipping Xdebug for PHP ${php_version} (not yet supported)."
-            continue
-        fi
-        
-        echo "- install Xdebug for PHP ${php_version}."
-        sphp "${php_version}" >>${INSTALL_LOG} 2>&1
-
-        if [ "${php_version}" == "7.4" ]; then
-            pecl install xdebug-3.1.6 >>${INSTALL_LOG} 2>&1
-        else    
-            pecl install xdebug >>${INSTALL_LOG} 2>&1
-        fi
-    done
+    echo -e "\nPHP 7.4:"
+    sphp 7.4
+    brew install shivammathur/extensions/xdebug2@7.4 >>${INSTALL_LOG} 2>&1
+    echo -e "\nPHP 8.1:"
+    sphp 8.1
+    brew install shivammathur/extensions/xdebug@8.1 >>${INSTALL_LOG} 2>&1
+    echo -e "\nPHP 8.2:"
+    sphp 8.2
+    brew install shivammathur/extensions/xdebug@8.2 >>${INSTALL_LOG} 2>&1
+    echo -e "\nPHP 8.3:"
+    sphp 8.3
+    brew install shivammathur/extensions/xdebug@8.3 >>${INSTALL_LOG} 2>&1
+    echo -e "\nPHP 8.4:"
+    sphp 8.4
+    brew install shivammathur/extensions/xdebug@8.4 >>${INSTALL_LOG} 2>&1
+    echo -e "\nPHP 8.5:"
+    sphp 8.5
+    brew install shivammathur/extensions/xdebug@8.5 >>${INSTALL_LOG} 2>&1
 }
 
 configure_php_ini() {
     echo -e "\nInstall php.ini files:"
+    XDEBUG_NEW="${GITHUB_BASE}/src/PHP_ini_files/ext-xdebug.ini"
+    curl -fsSL "${XDEBUG_NEW}" | tee "${HOMEBREW_PATH}/etc/php/ext-xdebug.ini" > /dev/null
     for php_version in "${PHP_VERSIONS[@]}"; do
         INI_FILE="${HOMEBREW_PATH}/etc/php/${php_version}/php.ini"
-        XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/ext-xdebug.ini"
+        XDEBUG_INI="${HOMEBREW_PATH}/etc/php/${php_version}/conf.d/20-xdebug.ini"
         BACKUPFILE="${INI_FILE}.$(date +%Y%m%d-%H%M%S)"
-        BACKUPFILEXDB="${XDEBUG_INI}.$(date +%Y%m%d-%H%M%S)"
         INI_NEW="${GITHUB_BASE}/src/PHP_ini_files/php${php_version}.ini"
-        XDEBUG_NEW="${GITHUB_BASE}/src/PHP_ini_files/ext-xdebug${php_version}.ini"
 
         echo "- install php.ini for PHP ${php_version}."
         cp "${INI_FILE}" "${BACKUPFILE}"
-        cp "${XDEBUG_INI}" "${BACKUPFILEXDB}"
         echo "- existing php.ini file backupped to ${BACKUPFILE}."
         echo "- existing ext-xdebug.ini file backupped to ${BACKUPFILEXDB}."
         curl -fsSL "${INI_NEW}" | tee "${INI_FILE}" > /dev/null
-        curl -fsSL "${XDEBUG_NEW}" | sed "s|<lib_path>|${HOMEBREW_PATH}|g" | tee "${XDEBUG_INI}" > /dev/null
+        cat "${HOMEBREW_PATH}/etc/php/ext-xdebug.ini" >> "${XDEBUG_INI}" > /dev/null
     done
+    rm -f "${HOMEBREW_PATH}/etc/php/ext-xdebug.ini"
 }
 
 configure_nginx() {
