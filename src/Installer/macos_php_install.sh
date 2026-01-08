@@ -281,6 +281,12 @@ install_php_switcher() {
 install_xdebug() {
     echo -e "\n\nInstall Xdebug:"
     for php_version in "${PHP_VERSIONS[@]}"; do
+        # Skip Xdebug installation for PHP 8.5
+        if [ "${php_version}" == "8.5" ]; then
+            echo "- skipping Xdebug for PHP ${php_version} (not yet supported)."
+            continue
+        fi
+        
         echo "- install Xdebug for PHP ${php_version}."
         sphp "${php_version}" >>${INSTALL_LOG} 2>&1
 
