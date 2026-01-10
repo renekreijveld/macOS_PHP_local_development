@@ -11,10 +11,11 @@
 
 THISVERSION=1.0
 
+# Array of PHP versions
+PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
+
 # Stop PHP-FPM
-brew services stop php@7.4
-brew services stop php@8.1
-brew services stop php@8.2
-brew services stop php@8.3
-brew services stop php@8.4
-brew services stop php@8.5
+for version in "${PHP_VERSIONS[@]}"; do
+    echo "Stop PHP ${version}"
+    brew services stop php@${version} > /dev/null
+done

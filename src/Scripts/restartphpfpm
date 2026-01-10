@@ -8,13 +8,10 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Changed to use stopphpfpm and startphpfpm scripts
 
-THISVERSION=1.0
+THISVERSION=1.1
 
-# Restart PHP-FPM
-brew services restart php@7.4
-brew services restart php@8.1
-brew services restart php@8.2
-brew services restart php@8.3
-brew services restart php@8.4
-brew services restart php@8.5
+/usr/local/bin/stopphpfpm
+sleep 3s
+/usr/local/bin/startphpfpm

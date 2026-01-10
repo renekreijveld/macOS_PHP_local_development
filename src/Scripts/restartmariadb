@@ -8,8 +8,11 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Changed to use stopmariadb and startmariadb scripts
 
-THISVERSION=1.0
+THISVERSION=1.1
 
 # Restart MariaDB
-brew services restart mariadb
+/usr/local/bin/stopmariadb
+sleep 3s
+/usr/local/bin/startmariadb

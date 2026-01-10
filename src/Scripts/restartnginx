@@ -8,8 +8,11 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Changed to use stopnginx and startnginx scripts
 
-THISVERSION=1.0
+THISVERSION=1.1
 
 # Restart NginX
-sudo brew services restart nginx
+/usr/local/bin/stopnginx
+sleep 3s
+/usr/local/bin/startnginx

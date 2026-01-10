@@ -8,9 +8,11 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Changed to use stopdnsmasq and startdnsmasq scripts
 
-THISVERSION=1.0
-
+THISVERSION=1.1
 
 # Restart Dnsmasq
-sudo brew services restart dnsmasq
+/usr/local/bin/stopdnsmasq
+sleep 3s
+/usr/local/bin/startdnsmasq

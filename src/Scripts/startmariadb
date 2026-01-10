@@ -12,4 +12,5 @@
 THISVERSION=1.0
 
 # Start MariaDB
-brew services start mariadb
+echo "Start MariaDB"
+brew services start mariadb > /dev/null
