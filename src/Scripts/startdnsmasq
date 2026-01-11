@@ -13,3 +13,4 @@ THISVERSION=1.0
 
 # Start Dnsmasq
 echo "Start Dnsmasq"
+sudo brew services start dnsmasq > /dev/null
