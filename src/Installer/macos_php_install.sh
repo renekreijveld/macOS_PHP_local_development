@@ -384,7 +384,7 @@ configure_dnsmasq() {
     
     # Add address configuration if not already present
     if ! grep -q "address=/.dev.test/127.0.0.1" "${DNSMASQ_CONF}" 2>/dev/null; then
-        echo "address=/.dev.test/127.0.0.1" | echo "${PASSWORD}" | sudo -S tee -a "${DNSMASQ_CONF}" > /dev/null
+        echo "${PASSWORD}" | sudo -S tee -a "${DNSMASQ_CONF}" <<< "address=/.dev.test/127.0.0.1" > /dev/null
     fi
 
     # Configure resolver
@@ -392,7 +392,7 @@ configure_dnsmasq() {
         echo "- Resolver already configured."
     else
         echo "${PASSWORD}" | sudo -S mkdir -p /etc/resolver > /dev/null
-        echo "nameserver 127.0.0.1" | echo "${PASSWORD}" | sudo -S tee /etc/resolver/test > /dev/null
+        echo "${PASSWORD}" | sudo -S tee /etc/resolver/test <<< "nameserver 127.0.0.1" > /dev/null
     fi
 }
 
