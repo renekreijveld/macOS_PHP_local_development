@@ -70,6 +70,7 @@ function getPhpVersionFromNginXConfig($configFile)
         '9082' => '8.2',
         '9083' => '8.3',
         '9084' => '8.4',
+        '9085' => '8.5'
     ];
 
     // Read the config file
