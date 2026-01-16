@@ -19,8 +19,9 @@
  * 1.9 Added version number in header
  * 1.10 Added documentation jrestore
  * 1.11 Fix wording jrestore
+ * 1.12 Fix display PHP version 8.5 sites
  *
- * THISVERSION=1.11
+ * THISVERSION=1.12
  */
 
 # Determine oath of local etc folder
