@@ -194,6 +194,17 @@ check_scripts_dest() {
     else
         echo "${SCRIPTS_DEST} directory already exists."
     fi
+    
+    # Add SCRIPTS_DEST to PATH if not already present
+    SHELL_CONFIG="${HOME}/.zshrc"
+    if [[ ":$PATH:" != *":${SCRIPTS_DEST}:"* ]]; then
+        echo "Adding ${SCRIPTS_DEST} to PATH in ${SHELL_CONFIG}."
+        echo "" >> "${SHELL_CONFIG}"
+        echo "# Added by macOS PHP installer" >> "${SHELL_CONFIG}"
+        echo "export PATH=\"${SCRIPTS_DEST}:\$PATH\"" >> "${SHELL_CONFIG}"
+    else
+        echo "${SCRIPTS_DEST} is already in PATH."
+    fi
 }
 
 disable_old_apache() {
