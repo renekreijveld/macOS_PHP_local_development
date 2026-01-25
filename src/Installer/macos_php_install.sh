@@ -25,6 +25,7 @@
 # 1.12 Added check if installed scripts are already in the PATH variable
 # 1.13 Moved all scripts to one Scripts folder
 # 1.14 Added jrestore script
+# 1.15 Added check for scripts destination directory
 
 THISVERSION=1.14
 
@@ -181,6 +182,18 @@ ask_defaults() {
     echo "WEBSERVER=nginx" >> "${CONFIG_FILE}"
     echo "INSTALLER_VERSION=${THISVERSION}" >> "${CONFIG_FILE}"
     check_configfile
+}
+
+check_scripts_dest() {
+    clear
+    echo "Check for existance of /usr/local/bin"
+    # Create SCRIPTS_DEST directory if it doesn't exist
+    if [ ! -d "${SCRIPTS_DEST}" ]; then
+        echo "Creating ${SCRIPTS_DEST} directory."
+        echo "${PASSWORD}" | sudo -S mkdir -p "${SCRIPTS_DEST}" > /dev/null
+    else
+        echo "${SCRIPTS_DEST} directory already exists."
+    fi
 }
 
 disable_old_apache() {
@@ -517,6 +530,7 @@ start
 prechecks
 ask_defaults
 source "${CONFIG_FILE}"
+check_scripts_dest()
 disable_old_apache
 install_formulae
 configure_mariadb
