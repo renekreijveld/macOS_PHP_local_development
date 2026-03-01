@@ -9,9 +9,10 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Changed to use stopphpfpm and startphpfpm scripts
+# 1.2 Added -v verbose mode
 
-THISVERSION=1.1
+THISVERSION=1.2
 
-/usr/local/bin/stopphpfpm
+/usr/local/bin/stopphpfpm -v
 sleep 3s
-/usr/local/bin/startphpfpm
+/usr/local/bin/startphpfpm -v

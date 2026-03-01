@@ -9,10 +9,11 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Changed to use stopnginx and startnginx scripts
+# 1.2 Added -v verbose mode
 
-THISVERSION=1.1
+THISVERSION=1.2
 
 # Restart NginX
-/usr/local/bin/stopnginx
+/usr/local/bin/stopnginx -v
 sleep 3s
-/usr/local/bin/startnginx
+/usr/local/bin/startnginx -v

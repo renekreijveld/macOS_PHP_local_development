@@ -9,10 +9,11 @@
 # Version history
 # 1.0 Initial version
 # 1.1 Changed to use stopmariadb and startmariadb scripts
+# 1.2 Added -v verbose mode
 
-THISVERSION=1.1
+THISVERSION=1.2
 
 # Restart MariaDB
-/usr/local/bin/stopmariadb
+/usr/local/bin/stopmariadb -v
 sleep 3s
-/usr/local/bin/startmariadb
+/usr/local/bin/startmariadb -v

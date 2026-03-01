@@ -44,4 +44,3 @@ fi
 
 # Restart Mailpit
 /usr/local/bin/restartmailpit
-

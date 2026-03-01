@@ -8,8 +8,11 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added -v verbose mode
 
-THISVERSION=1.0
+THISVERSION=1.1
 
 # Restart Apache
-brew services restart httpd
+/usr/local/bin/stopapache -v
+sleep 3s
+/usr/local/bin/startapache -v
