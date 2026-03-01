@@ -8,9 +8,48 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added -v verbose mode, exit codes and verification
 
-THISVERSION=1.0
+THISVERSION=1.1
+
+EXIT_OK=0
+EXIT_BREW_MISSING=10
+EXIT_STOP_FAILED=11
+EXIT_VERIFY_FAILED=12
+
+VERBOSE=0
+
+while getopts ":v" opt; do
+	case "$opt" in
+	v)
+		VERBOSE=1
+		;;
+	esac
+done
+
+log() {
+	if [ "$VERBOSE" -eq 1 ]; then
+		echo "$1"
+	fi
+}
 
 # Stop MariaDB
-echo "Stop MariaDB"
-brew services stop mariadb > /dev/null
+log "Stop MariaDB version $THISVERSION"
+
+if ! command -v brew >/dev/null 2>&1; then
+	log "Error: Homebrew (brew) is not installed or not in PATH"
+	exit $EXIT_BREW_MISSING
+fi
+
+if ! brew services stop mariadb >/dev/null 2>&1; then
+    log "Error: failed to stop MariaDB"
+    exit $EXIT_STOP_FAILED
+fi
+
+if brew services list 2>/dev/null | grep -E "^mariadb[[:space:]]+started\b" >/dev/null 2>&1; then
+    log "Error: MariaDB stop command returned success, but service status is still 'started'"
+    exit $EXIT_VERIFY_FAILED
+fi
+
+log "MariaDB stopped successfully"
+exit $EXIT_OK

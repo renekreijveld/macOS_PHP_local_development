@@ -8,9 +8,48 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added -v verbose mode, exit codes and verification
 
-THISVERSION=1.0
+THISVERSION=1.1
+
+EXIT_OK=0
+EXIT_BREW_MISSING=10
+EXIT_START_FAILED=11
+EXIT_VERIFY_FAILED=12
+
+VERBOSE=0
+
+while getopts ":v" opt; do
+	case "$opt" in
+	v)
+		VERBOSE=1
+		;;
+	esac
+done
+
+log() {
+	if [ "$VERBOSE" -eq 1 ]; then
+		echo "$1"
+	fi
+}
 
 # Start Apache
-echo "Start Apache"
-brew services start httpd > /dev/null
+log "Start Apache version $THISVERSION"
+
+if ! command -v brew >/dev/null 2>&1; then
+	log "Error: Homebrew (brew) is not installed or not in PATH"
+	exit $EXIT_BREW_MISSING
+fi
+
+if brew services start httpd >/dev/null 2>&1; then
+	if ps -ef | grep -E '[h]ttpd' >/dev/null 2>&1; then
+		log "Apache started successfully"
+		exit $EXIT_OK
+	fi
+
+	log "Error: Apache start command returned success, but no running httpd process was found"
+	exit $EXIT_VERIFY_FAILED
+fi
+
+log "Error: Failed to start Apache"
+exit $EXIT_START_FAILED

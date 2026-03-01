@@ -8,14 +8,55 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added -v verbose mode, exit codes and per-version verification
 
-THISVERSION=1.0
+THISVERSION=1.1
+
+EXIT_OK=0
+EXIT_BREW_MISSING=10
+EXIT_START_FAILED=11
+EXIT_VERIFY_FAILED=12
+
+VERBOSE=0
+
+while getopts ":v" opt; do
+    case "$opt" in
+    v)
+        VERBOSE=1
+        ;;
+    esac
+done
+
+log() {
+    if [ "$VERBOSE" -eq 1 ]; then
+        echo "$1"
+    fi
+}
 
 # Array of PHP versions
 PHP_VERSIONS=("7.4" "8.1" "8.2" "8.3" "8.4" "8.5")
 
-# Stop PHP-FPM
+# Start PHP-FPM
+log "Start PHP-FPM version $THISVERSION"
+
+if ! command -v brew >/dev/null 2>&1; then
+    log "Error: Homebrew (brew) is not installed or not in PATH"
+    exit $EXIT_BREW_MISSING
+fi
+
 for version in "${PHP_VERSIONS[@]}"; do
-    echo "Start PHP ${version}"
-    brew services start php@${version} > /dev/null
+    log "Start PHP ${version}"
+
+    if ! brew services start php@${version} >/dev/null 2>&1; then
+        log "Error: Failed to start php@${version}"
+        exit $EXIT_START_FAILED
+    fi
+
+    if ! brew services list 2>/dev/null | grep -E "^php@${version}[[:space:]]+started\b" >/dev/null 2>&1; then
+        log "Error: php@${version} started, but service status is not 'started'"
+        exit $EXIT_VERIFY_FAILED
+    fi
 done
+
+log "All PHP-FPM versions started successfully"
+exit $EXIT_OK

@@ -8,9 +8,48 @@
 #
 # Version history
 # 1.0 Initial version
+# 1.1 Added -v verbose mode, exit codes and verification
 
-THISVERSION=1.0
+THISVERSION=1.1
+
+EXIT_OK=0
+EXIT_BREW_MISSING=10
+EXIT_START_FAILED=11
+EXIT_VERIFY_FAILED=12
+
+VERBOSE=0
+
+while getopts ":v" opt; do
+	case "$opt" in
+	v)
+		VERBOSE=1
+		;;
+	esac
+done
+
+log() {
+	if [ "$VERBOSE" -eq 1 ]; then
+		echo "$1"
+	fi
+}
 
 # Start Mailpit
-echo "Start Mailpit"
-brew services start mailpit > /dev/null
+log "Start Mailpit version $THISVERSION"
+
+if ! command -v brew >/dev/null 2>&1; then
+	log "Error: Homebrew (brew) is not installed or not in PATH"
+	exit $EXIT_BREW_MISSING
+fi
+
+if ! brew services start mailpit >/dev/null 2>&1; then
+    log "Error: failed to start mailpit"
+    exit $EXIT_START_FAILED
+fi
+
+if ! brew services list 2>/dev/null | grep -E "^mailpit[[:space:]]+started\b" >/dev/null 2>&1; then
+    log "Error: mailpit started, but service status is not 'started'"
+    exit $EXIT_VERIFY_FAILED
+fi
+
+log "Mailpit started successfully"
+exit $EXIT_OK
