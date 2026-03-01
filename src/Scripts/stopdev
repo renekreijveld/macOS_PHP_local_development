@@ -27,25 +27,25 @@ else
 fi   
 
 # Stop Mailpit
-/usr/local/bin/stopmailpit
+/usr/local/bin/stopmailpit -v
 
 # Stop MariaDB
-/usr/local/bin/stopmariadb
+/usr/local/bin/stopmariadb -v
 
 if [ "${WEBSERVER}" == "apache" ]; then
     # Stop Apache
-    /usr/local/bin/stopapache
+    /usr/local/bin/stopapache -v
 fi
 
 if [ "${WEBSERVER}" == "nginx" ]; then
     # Stop NginX
-    /usr/local/bin/stopnginx
+    /usr/local/bin/stopnginx -v
 fi
 
 # Stop PHP-FPM
-/usr/local/bin/stopphpfpm
+/usr/local/bin/stopphpfpm -v
 
 # Stop Dnsmasq
-/usr/local/bin/stopdnsmasq
+/usr/local/bin/stopdnsmasq -v
 
 echo -e "\nTo start the services again, run the startdev script."

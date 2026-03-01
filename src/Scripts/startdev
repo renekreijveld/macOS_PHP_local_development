@@ -28,26 +28,26 @@ else
 fi   
 
 # Start Dnsmasq
-/usr/local/bin/startdnsmasq
+/usr/local/bin/startdnsmasq -v
 
 # Start PHP-FPM
-/usr/local/bin/startphpfpm
+/usr/local/bin/startphpfpm -v
 
 if [ "${WEBSERVER}" == "apache" ]; then
     # Start Apache
-    /usr/local/bin/startapache
+    /usr/local/bin/startapache -v
 fi
 
 if [ "${WEBSERVER}" == "nginx" ]; then
     # Start NginX
-    /usr/local/bin/startnginx
+    /usr/local/bin/startnginx -v
 fi
 
 # Start MariaDB
-/usr/local/bin/startmariadb
+/usr/local/bin/startmariadb -v
 
 # Start Mailpit
-/usr/local/bin/startmailpit
+/usr/local/bin/startmailpit -v
 
 # Open landingpage in browser
 open "https://localhost"
