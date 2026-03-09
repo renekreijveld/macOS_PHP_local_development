@@ -57,11 +57,9 @@ prompt_for_input() {
 }
 
 start() {
-    clear
     echo -e "Welcome to the Apache, NginX, PHP, MariaDB, Xdebug, Mailpit local macOS development script updater ${VERSION}.\n"
     echo -e "This updater and the software it installs come without any warranty. Use it at your own risk.\nAlways backup your data and software before running the installer and use the software it installs.\n"
     read -s -p "Input your password, this is needed for updating system files: " PASSWORD
-    echo ""
 
     # Validate the password
     if ! echo "${PASSWORD}" | sudo -S -v 2>/dev/null; then
