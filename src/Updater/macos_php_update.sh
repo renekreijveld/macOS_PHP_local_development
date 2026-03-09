@@ -22,7 +22,7 @@ CONFIG_FILE="${CONFIG_DIR}/config"
 LOCAL_SCRIPTS=( "adddb" "addsite" "checkupdates" "deldb" "delsite" "jbackup" "jbackupall" "jdbdropall" "jdbdump" 
     "jdbdumpall" "jdbimp" "jfunctions" "jlistjoomlas" "joomlainfo" "jrestore" "latestjoomla" "restartapache" "restartdev" 
     "restartdnsmasq" "restartmailpit" "restartmariadb" "restartnginx" "restartphpfpm" "setrights" "setserver" 
-    "setsitephp" "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" 
+    "setsitephp" "sphp" "startapache" "startdev" "startdnsmasq" "startmailpit" "startmariadb" "startnginx" "startphpfpm" 
     "stopapache" "stopdev" "stopdnsmasq" "stopmailpit" "stopmariadb" "stopnginx" "stopphpfpm" "xdebug" )
 
 # GitHub Repo Base URL
