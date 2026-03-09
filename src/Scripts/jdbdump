@@ -10,8 +10,9 @@
 # Version history:
 # 1.6 Added use of config file
 # 1.7 Added option to specify own dumpfile
+# 1.8 Added -s silent option, improved password security, code cleanup
 
-THISVERSION=1.7
+THISVERSION=1.8
 
 MYPATH=$(cd "$(dirname "$0")"; pwd -P)
 MYNAME=$(basename "$0")
@@ -31,14 +32,15 @@ showmessage() {
 
 # Display usage information
 usage() {
-    echo "${MYNAME} ${THISVERSION}, written by René Kreijveld."
-    echo -e "\nUsage: ${MYNAME} [-f dumpfile] [-n <name>] [-t] [-c] [-o] [-h]\n"
+    echo -e "${MYNAME} ${THISVERSION}, written by René Kreijveld.\n"
+    echo -e "Usage: ${MYNAME} [-f dumpfile] [-n <name>] [-t] [-c] [-o] [-s] [-h]\n"
     echo "-f dumpfile, dump to specified file instead of {database}.sql (optional)."
     echo "-n the name for the website to make the database dump for."
     echo "-t Add a date-time-stamp to the database dump filename."
     echo "-c Compress the database dump with gzip."
     echo "-o Overwrite existing database dump."
-    echo "-h Help. Display this info.\n"
+    echo "-s Silent mode, no messages will be shown."
+    echo -e "-h Help. Display this info.\n"
     exit 0
 }
 
@@ -48,7 +50,7 @@ COMPRESS="no"
 SHOWDATE="no"
 OVERWRITE="no"
 WEBSITE_NAME=""
-while getopts "f:n:tcoh" opt; do
+while getopts "f:n:tcohs" opt; do
     case "${opt}" in
     f)
         DUMPFILE="${OPTARG}"
@@ -64,6 +66,9 @@ while getopts "f:n:tcoh" opt; do
         ;;
     o)
         OVERWRITE="yes"
+        ;;
+    s)
+        SILENT="yes"
         ;;
     h)
         usage
@@ -126,22 +131,37 @@ else
     OUTFILE="${database}${NOW}.sql"
 fi
 
-DUMP_FILE="${OUTFILE}"
-
-# Check if database dump exists
-if [[ -e "${DUMP_FILE}" ]]; then
+# Check if database dump exists (also check compressed version if -c is used)
+if [[ -e "${OUTFILE}" ]] || { [[ "${COMPRESS}" == "yes" ]] && [[ -e "${OUTFILE}.gz" ]]; }; then
     if [[ "${OVERWRITE}" == "no" ]]; then
-        read -p "Database dump ${DUMP_FILE} already exists. Press Enter to overwrite, or Ctrl-C to abort."
+        read -p "Database dump ${OUTFILE}$([[ "${COMPRESS}" == "yes" ]] && echo ".gz") already exists. Press Enter to overwrite, or Ctrl-C to abort."
     else
-        showmessage "Overwriting existing dump file ${DUMP_FILE}..."
-        rm -f "${DUMP_FILE}"
+        showmessage "Overwriting existing dump file..."
     fi
+    rm -f "${OUTFILE}" "${OUTFILE}.gz" 2>/dev/null
 fi
 
 showmessage "This is a Joomla! ${jversion} site. Starting database dump."
 
-# Create database dump using mariadb-dump (avoid password in command line)
-if mariadb-dump --skip-opt \
+# Create temporary credentials file for secure password handling
+CREDENTIALS_FILE=$(mktemp)
+chmod 600 "${CREDENTIALS_FILE}"
+cat > "${CREDENTIALS_FILE}" <<EOF
+[client]
+user=${dbuser}
+password=${password}
+host=${host}
+EOF
+
+# Cleanup function to remove credentials file
+cleanup() {
+    rm -f "${CREDENTIALS_FILE}"
+}
+trap cleanup EXIT
+
+# Create database dump using mariadb-dump with secure credentials file
+if mariadb-dump --defaults-extra-file="${CREDENTIALS_FILE}" \
+    --skip-opt \
     --extended-insert=FALSE \
     --add-drop-table \
     --add-locks \
@@ -150,9 +170,6 @@ if mariadb-dump --skip-opt \
     --lock-tables \
     --quick \
     --set-charset \
-    --host="${host}" \
-    --user="${dbuser}" \
-    --password="${password}" \
     "${database}" > "${OUTFILE}" 2>&1; then
     
     if [[ "${COMPRESS}" == "yes" ]]; then
