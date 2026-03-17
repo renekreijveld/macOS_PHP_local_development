@@ -1298,7 +1298,7 @@ foreach ($phpVersions as $version) {
                             <li>Both Apache and NginX are installed as webservers. You can easyily switch between the
                                 two.</li>
                             <li>MariaDB database server.</li>
-                            <li>PHP 7.4/8.1/8.2/8.3/8.4, multiple local sites can run concurrently with different PHP
+                            <li>PHP 7.4/8.1/8.2/8.3/8.4/8.5, multiple local sites can run concurrently with different PHP
                                 versions.</li>
                             <li>Xdebug installed and enabled in all PHP versions.</li>
                             <li>Option to disable/enable Xdebug.</li>
